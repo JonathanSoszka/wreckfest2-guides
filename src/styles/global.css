@@ -130,6 +130,29 @@ main { padding: 2rem 0 1rem; }
   letter-spacing: 0;
 }
 
+/* --- car index card (editorial) --- */
+.car-card h3 { font-size: 1.28rem; margin: 0 0 0.4rem; }
+.card-eyebrow {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--link);
+  margin: 0 0 0.35rem;
+}
+.car-card > p { color: var(--text-dim); font-size: 0.93rem; margin: 0; }
+.card-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin-top: 0.9rem;
+  padding-top: 0.7rem;
+  border-top: 1px solid var(--border);
+}
+.card-arch { font-size: 0.8rem; color: var(--text-dim); }
+.card-foot .tags { margin: 0; }
+
 /* --- filter bar --- */
 .car-filters {
   display: flex;

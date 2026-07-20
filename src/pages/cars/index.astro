@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 
 const cars = (await getCollection('cars'))
   .filter((c) => !c.data.draft)
-  .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+  .sort((a, b) => a.data.name.localeCompare(b.data.name));
 
 const drivetrains = [...new Set(cars.map((c) => c.data.drivetrain))].sort();
 const classes = [...new Set(cars.map((c) => c.data.carClass).filter(Boolean))].sort();
@@ -36,16 +36,17 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
 
   <div class="grid car-grid">
     {cars.map((car) => (
-      <a href={`/cars/${car.id}/`} class="card" data-dt={car.data.drivetrain} data-class={car.data.carClass ?? ''}>
+      <a href={`/cars/${car.id}/`} class="card car-card" data-dt={car.data.drivetrain} data-class={car.data.carClass ?? ''}>
+        {car.data.inspiration && <p class="card-eyebrow">{car.data.inspiration}</p>}
         <h3>{car.data.name}</h3>
-        {(car.data.archetype || car.data.inspiration) && (
-          <p class="card-meta">{[car.data.archetype, car.data.inspiration].filter(Boolean).join(' · ')}</p>
-        )}
         <p>{car.data.summary}</p>
-        <p class="tags">
-          <span class={dtClass(car.data.drivetrain)}>{car.data.drivetrain}</span>
-          {car.data.carClass && <span class="tag tag-plain">Class {car.data.carClass}</span>}
-        </p>
+        <div class="card-foot">
+          {car.data.archetype && <span class="card-arch">{car.data.archetype}</span>}
+          <span class="tags">
+            <span class={dtClass(car.data.drivetrain)}>{car.data.drivetrain}</span>
+            {car.data.carClass && <span class="tag tag-plain">{car.data.carClass}</span>}
+          </span>
+        </div>
       </a>
     ))}
   </div>
