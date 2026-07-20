@@ -1,0 +1,10 @@
+# Cloudflare Pages headers — https://developers.cloudflare.com/pages/configuration/headers/
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+
+# Astro fingerprints these filenames, so they can cache forever.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
