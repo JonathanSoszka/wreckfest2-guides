@@ -1,0 +1,95 @@
+---
+title: Hurricane Setup
+kind: car
+carId: car02
+drivetrain: RWD
+summary: The Hurricane's setup — tame the power oversteer, help the nose in, and gear it long for the early redline.
+order: 11
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. Recommendations tuned to the Hurricane, to test against your own feel.';
+
+export const values = {
+  'brake.balance': { note: 'A little extra rear bias to help the nose turn in', surfaces: { mud: 48, gravel: 52, asphalt: 56 } },
+  'brake.pressure': { note: 'Less on loose (light car locks easily), more on grip', surfaces: { mud: 78, gravel: 92, asphalt: 115 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction; opened further than a RoadSlayer on grip to tame the torque-forward snap', surfaces: { mud: 78, gravel: 70, asphalt: 50 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 60, gravel: 57, asphalt: 46 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 28, gravel: 21, asphalt: 10 } },
+  'finalDrive': { note: 'Gear it long — the Hurricane runs out of revs early', surfaces: { mud: 3.5, gravel: 3.3, asphalt: 3.1 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 44, gravel: 56, asphalt: 74 } },
+  'springs.rear': { note: 'Keep some rear compliance for traction on power', surfaces: { mud: 24, gravel: 31, asphalt: 40 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Stiffer than the rear to trim the mild entry understeer', surfaces: { mud: 44, gravel: 56, asphalt: 74 } },
+  'arb.rear': { note: 'Kept soft so the rear hooks up under power', surfaces: { mud: 38, gravel: 48, asphalt: 62 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+Two things drive the Hurricane's setup more than anything else.
+
+The **Differential** runs opposite to instinct — **locked on loose, opener on grip.** On mud and
+gravel, locking it drives both rear wheels for traction (the loose surface and the low-end torque
+still rotate the car). On asphalt, the torque-forward rear snaps both wheels loose together if the
+diff is tight, so open it up — further than the RoadSlayer, because the Hurricane bites harder.
+Come down more still if the exit is catching you out on a pad.
+
+The **Final Drive** matters more here than on most cars because the engine runs out of revs
+early. Gearing it taller (toward top speed) keeps you in the fat part of the torque curve instead
+of bouncing off the limiter down the straights.
+
+Everything else follows the surface, trimmed for the car: a stiffer front anti-roll bar than the
+rear to settle the mild entry understeer, and a soft rear bar so the rear hooks the torque up on exit.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+The Hurricane's lighter tail and low-down torque make it lively on mud — it rotates on the
+throttle without much persuasion. Soften and raise everything to ride the ruts, and **lock the diff
+up** for traction on the low grip: a tight diff drives both rear wheels instead of spinning the
+inside one away, and the loose surface still lets you steer with the throttle.
+
+Gear it long even here — the early redline still bites, and wheelspin on mud is lost drive, not
+speed. Feed the throttle smoothly and let the rotation do the steering.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is where the Hurricane is at its best, and it sits close to the hybrid setup. The power
+oversteer becomes a tool — back off to set the nose, then feed the torque to rotate and drive out.
+
+Keep the rear bar soft so the slide is progressive rather than a snap, which matters on a pad where
+a big stick input overshoots.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt is where the torque-forward rear is most likely to bite. Stiffen the springs and front
+bar, drop the car, and — the key move — **open the diff up** and keep the rear bar soft, so the
+rear grips the tarmac and the power stays progressive instead of snapping both wheels loose together.
+
+Gear it as long as the track allows to stay off the limiter, and keep some compliance for the
+bumps and kerbs so a mid-corner hit does not snap the rear loose.
+
+</Fragment>
+</SetupTabs>

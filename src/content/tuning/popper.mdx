@@ -1,0 +1,94 @@
+---
+title: "Popper Setup"
+kind: car
+carId: car10
+drivetrain: RWD
+summary: A tiny rear-engine toy — hopeless on straights, brilliant on tight tracks; gear it short and steady the tail.
+order: 22
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward to keep the light tail in line', surfaces: { mud: 55, gravel: 58, asphalt: 62 } },
+  'brake.pressure': { note: 'Tiny and light — very easy to lock', surfaces: { mud: 70, gravel: 84, asphalt: 104 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Rear weight gives traction — moderate lock', surfaces: { mud: 70, gravel: 60, asphalt: 50 } },
+  'diff.coast': { note: 'More coast lock to steady the tail on lift', surfaces: { mud: 64, gravel: 58, asphalt: 50 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 24, gravel: 16, asphalt: 10 } },
+  'finalDrive': { note: 'Very short — keep the tiny engine in its powerband', surfaces: { mud: 4.4, gravel: 4.2, asphalt: 3.9 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Very soft, tiny front', surfaces: { mud: 32, gravel: 42, asphalt: 54 } },
+  'springs.rear': { note: 'The rear carries the engine', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 23.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 25.5 } },
+  'arb.front': { note: 'Stiff front to tame the rear-engine swing', surfaces: { mud: 44, gravel: 56, asphalt: 68 } },
+  'arb.rear': { note: 'Soft rear for grip and stability', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -1.5, gravel: -2.0, asphalt: -3.0 } },
+  'camber.rear': { note: 'The rear carries the weight and the drive', surfaces: { mud: -1.5, gravel: -2.0, asphalt: -3.0 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Toe-in — steady the rear-engine tail' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Popper is tiny, light, and rear-engined, so the engine sits behind the rear axle and every
+setup choice is about steadying the tail. It has almost no straight-line speed, but on a tight
+technical track that barely matters — it points and darts. The **Final Drive** runs very short to
+keep the tiny twin in its powerband; gear it any taller and it falls off the boil out of slow
+corners.
+
+The rest tames the pendulum. A **stiff front bar with a soft rear bar** plants the back, forward
+brake bias keeps the featherweight tail in line, and **rear toe-in** holds it straight on the lift.
+The **Differential** follows the site rule — more locked on loose, more open on grip — with the
+coast side kept high to steady the car when you come off the throttle.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface, so soften the springs and bars and raise the ride height to clear
+the ruts. Lock the diff up harder — on a loose surface a tight diff drives both rear wheels instead
+of spinning the inside one away, and the rear weight gives you the traction to use it. Extra preload
+and coast lock keep the light tail from stepping out when you lift.
+
+With so little mass and grip the car can snap fast here. Get it settled and pointed before you feed
+the power in, and keep steering inputs gentle.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel sits close to the hybrid setup and suits the Popper well — it is a tight, technical surface
+where the car's darty rotation is an asset. The changes off the baseline are small: keep the front
+bar stiff and the rear soft so the tail stays planted while the nose does the turning.
+
+Small, smooth inputs win here. A rear-engine car this light will swap ends if you snap it from lock
+to lock, which on a pad is easy to overdo.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the springs and bars stiffen and the car drops closer to the road. The **diff opens up**
+— on high grip a locked diff breaks both rear wheels loose together, and this car needs no help
+losing the rear. More front camber and brake bias let the nose bite so you turn on the front, not
+the tail. The very short gearing still helps you claw back speed out of the corners.
+
+The pendulum is the thing to watch: a sharp lift on turn-in pitches the rear out. Brake in a
+straight line, be off the pedal before you commit, and let the grip carry you through.
+
+</Fragment>
+</SetupTabs>

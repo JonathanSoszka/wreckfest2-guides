@@ -1,0 +1,94 @@
+---
+title: RoadSlayer Setup
+kind: car
+carId: car01
+drivetrain: RWD
+summary: A hybrid RoadSlayer setup plus surface-by-surface changes, in the game's own units.
+order: 10
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Slight rear bias to help it rotate on lift', surfaces: { mud: 52, gravel: 55, asphalt: 60 } },
+  'brake.pressure': { note: 'Less on loose (locks easily), more on grip', surfaces: { mud: 80, gravel: 95, asphalt: 118 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip to tame the exit snap', surfaces: { mud: 82, gravel: 72, asphalt: 58 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 62, gravel: 56, asphalt: 48 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 30, gravel: 20, asphalt: 12 } },
+  'finalDrive': { note: 'Shorter keeps you in the torque out of slow corners', surfaces: { mud: 3.9, gravel: 3.6, asphalt: 3.3 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 45, gravel: 58, asphalt: 76 } },
+  'springs.rear': { note: 'Runs notably softer than the front — rear grip for the torque', surfaces: { mud: 24, gravel: 31, asphalt: 42 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'A touch stiffer than the rear — anti-snap', surfaces: { mud: 40, gravel: 54, asphalt: 70 } },
+  'arb.rear': { note: 'Kept softer for exit traction', surfaces: { mud: 38, gravel: 50, asphalt: 64 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The **Differential** is the RoadSlayer's biggest lever, and it runs opposite to instinct: **locked
+on loose, opener on grip.** On mud and gravel, low grip means an open diff just spins the inside
+rear away — locking it drives both wheels and puts the torque down (the loose surface still lets
+you rotate on the throttle). On asphalt, a locked diff snaps both rear wheels loose together, so
+opening it up keeps the exit progressive.
+
+Everything else follows the surface: soft/high/less-brake on loose, stiff/low/more-brake on grip.
+The rear stays a touch softer than the front (springs and bar) so the torque hooks up on exit
+rather than snapping.
+
+Worth noting: the rear springs run much softer than the front, and brake Pressure's scale runs
+50–150%, so 100% is mid-travel, not the max.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+The RoadSlayer's weight and low-down torque work against it in mud — the rear digs and lights up.
+Soften the springs and bars, raise the ride height to clear the ruts, and **lock the diff up**: on
+low grip a tight diff drives both rear wheels instead of spinning the inside one away, and the
+loose surface still lets you steer with the throttle.
+
+Roll onto the power smoothly out of corners rather than stabbing it — a bogged-down muscle car is
+very hard to recover.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is the RoadSlayer at its most fun, and it sits close to the hybrid setup. It oversteers on
+exit, which is what you want on a loose surface — steer it with the throttle and keep corrections
+small, which matters on a pad where a big stick input overshoots.
+
+Let the car rotate on power and drive out of it; do not try to hold it dead straight.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the RoadSlayer has real grip to lean on, but it snaps the rear on power if you get
+greedy. The springs and bars stiffen, brake pressure climbs, and the car drops closer to the road
+— and the **diff opens up**: on high grip a locked diff breaks both rear wheels loose together, so
+a looser diff keeps the exit progressive.
+
+Keep some compliance even here — Wreckfest's tarmac is bumpy and kerbed, and a mid-corner bump can
+step the rear out unexpectedly.
+
+</Fragment>
+</SetupTabs>

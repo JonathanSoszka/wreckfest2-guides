@@ -1,0 +1,21 @@
+---
+const path = Astro.url.pathname;
+const isActive = (base: string) =>
+  base === '/' ? path === '/' : path.startsWith(base);
+const links = [
+  { href: '/cars/', label: 'Cars' },
+  { href: '/tracks/', label: 'Tracks' },
+  { href: '/tuning/', label: 'Tuning' },
+  { href: '/lessons/', label: 'Racing Lessons' },
+];
+---
+<header class="site-header">
+  <div class="wrap">
+    <a href="/" class="brand"><span class="mark">▛</span> Wreckfest 2 Guides</a>
+    <nav class="nav">
+      {links.map((l) => (
+        <a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>{l.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>

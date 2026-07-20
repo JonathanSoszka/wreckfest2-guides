@@ -1,0 +1,91 @@
+---
+title: "Jackal Setup"
+kind: car
+carId: car26
+drivetrain: RWD
+summary: The lightest, twitchiest muscle car — calm its snap oversteer and live-axle hop, and reward smooth inputs.
+order: 15
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'A touch forward to calm the snappy rear', surfaces: { mud: 50, gravel: 53, asphalt: 57 } },
+  'brake.pressure': { note: 'Light car locks easily — go easy on loose', surfaces: { mud: 74, gravel: 88, asphalt: 108 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Ease the lock — it snaps on power; still locked on loose', surfaces: { mud: 74, gravel: 64, asphalt: 50 } },
+  'diff.coast': { note: 'More coast lock to steady the lift-off snap', surfaces: { mud: 64, gravel: 58, asphalt: 50 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 26, gravel: 18, asphalt: 10 } },
+  'finalDrive': { note: 'Short-ish keeps you in the torque', surfaces: { mud: 3.9, gravel: 3.7, asphalt: 3.4 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 44, gravel: 56, asphalt: 72 } },
+  'springs.rear': { note: 'Soft rear for grip and to absorb axle hop', surfaces: { mud: 22, gravel: 28, asphalt: 38 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.5 } },
+  'rideHeight.rear': { note: 'A touch up to clear the hopping axle over bumps', surfaces: { mud: 28.5, gravel: 27.5, asphalt: 25.0 } },
+  'arb.front': { note: 'Stiffer front to trim; keep the rear soft', surfaces: { mud: 42, gravel: 56, asphalt: 72 } },
+  'arb.rear': { note: 'Softest rear — traction and anti-snap', surfaces: { mud: 34, gravel: 44, asphalt: 56 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Toe-in for stability — the live axle is nervous on lift' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Jackal is the lightest and twitchiest muscle car — a short wheelbase over a live rear axle, so
+it snaps into oversteer when you lift and hops the axle over bumps. Everything here adds rear grip
+and calms the tail: the softest rear springs and rear **anti-roll bar** of the group, a slightly
+raised rear to let the axle work, and toe-in to steady it on lift.
+
+The **Differential** matters as much as ever, but the lock is eased back — a fully locked diff
+snaps this light car loose on power. It still runs locked on loose and opener on grip; the coast
+side is turned up to steady the lift-off snap. Reward smooth inputs: this car punishes a stab or a
+sudden lift. Brake Pressure's scale runs 50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface, and a light car both spins and locks easily — ease the brake
+pressure and feed the throttle gently. Soften everything and raise the ride height to clear the
+ruts, and lock the diff up more than you would on grip to drive both rear wheels.
+
+Smooth is fast here — a stab of power or a sharp lift lights the tail up before the loose surface
+can catch it.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel suits the light Jackal well and sits close to the hybrid. The loose surface takes the edge
+off the snap, so you can lean on the rotation — steer it with the throttle and keep corrections
+small, which matters doubly on a twitchy car and a pad where a big stick input overshoots.
+
+Keep your inputs smooth and let it rotate on power; do not try to hold it dead straight.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt gives the Jackal real grip, but the live axle still hops over kerbs and the tail still
+snaps on a greedy lift. The springs and bars stiffen and the car drops, but the rear stays the
+softest end and rides a touch higher than usual to let the axle absorb bumps instead of hopping.
+The **diff opens up** further on grip so it can't break both rear wheels loose together.
+
+Be smooth with the throttle and gentle over the kerbs — a mid-corner bump can step this short car
+out before you feel it coming.
+
+</Fragment>
+</SetupTabs>

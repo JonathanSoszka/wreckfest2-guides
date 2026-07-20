@@ -1,0 +1,90 @@
+---
+title: "Rocket Setup"
+kind: car
+carId: car03
+drivetrain: RWD
+summary: A balanced, neutral muscle car — tune it to taste rather than fighting a single vice.
+order: 12
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Slight rear bias to help it rotate', surfaces: { mud: 50, gravel: 54, asphalt: 58 } },
+  'brake.pressure': { note: 'Less on loose, more on grip', surfaces: { mud: 82, gravel: 96, asphalt: 118 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip', surfaces: { mud: 78, gravel: 68, asphalt: 54 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 60, gravel: 54, asphalt: 46 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 26, gravel: 18, asphalt: 12 } },
+  'finalDrive': { note: 'Short-ish keeps you in the torque', surfaces: { mud: 3.8, gravel: 3.6, asphalt: 3.3 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 46, gravel: 58, asphalt: 74 } },
+  'springs.rear': { note: 'A touch softer than the front for exit traction', surfaces: { mud: 26, gravel: 33, asphalt: 44 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Close to the rear — the car is fairly neutral', surfaces: { mud: 40, gravel: 52, asphalt: 66 } },
+  'arb.rear': { note: 'A touch softer for exit traction', surfaces: { mud: 40, gravel: 51, asphalt: 64 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Rocket is the rare muscle car with no single vice to fight, so these numbers sit close together
+front to rear — the **anti-roll bars** and springs are nearly matched, which is what keeps it
+neutral. Small moves swing it either way, so treat this hybrid as a centre point and lean it toward
+turn-in or stability to taste.
+
+The **Differential** is still the biggest lever, and it runs opposite to instinct: locked on loose,
+opener on grip. On mud and gravel a tight diff drives both rear wheels and puts the torque down; on
+asphalt it snaps both loose together, so opening it keeps the exit progressive. Brake Pressure's
+scale runs 50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface, and even a balanced car will light the rear up early. Soften the
+springs and bars, raise the ride height to clear the ruts, and lock the diff up so it drives both
+rear wheels instead of spinning the inside one away.
+
+Feed the throttle in smoothly out of the slow corners — the Rocket rotates willingly, so a stab of
+power just wastes it in wheelspin.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is where the Rocket's balance pays off — it sits close to the hybrid and asks for almost
+nothing. The car slides predictably at both ends, so steer it with the throttle and keep
+corrections small, which matters on a pad where a big stick input overshoots.
+
+Let it rotate on power and drive out of the slide; do not try to hold it dead straight.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the Rocket has real grip to lean on. The springs and bars stiffen, brake pressure
+climbs, and the car drops closer to the road — and the **diff opens up** so a locked rear axle
+can't break both wheels loose together on exit.
+
+Keep some compliance even here — Wreckfest's tarmac is bumpy and kerbed, and a mid-corner bump can
+step the rear out on a car this neutral.
+
+</Fragment>
+</SetupTabs>

@@ -1,0 +1,47 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const published = (c: { data: { draft: boolean } }) => !c.data.draft;
+const cars = (await getCollection('cars')).filter(published);
+const tracks = (await getCollection('tracks')).filter(published);
+const tuning = (await getCollection('tuning')).filter(published);
+const lessons = (await getCollection('lessons')).filter(published);
+
+const sections = [
+  { href: '/cars/', label: 'Car Profiles', count: cars.length, blurb: 'Drivetrain, handling, and how each car actually drives.' },
+  { href: '/tracks/', label: 'Track Profiles', count: tracks.length, blurb: 'Surface, layout, and where the race is won or lost.' },
+  { href: '/tuning/', label: 'Tuning Guides', count: tuning.length, blurb: 'Generic FWD/RWD/AWD setups, then car-specific sheets.' },
+  { href: '/lessons/', label: 'Racing Lessons', count: lessons.length, blurb: 'Racecraft for dirt, gravel, and bumpy tarmac.' },
+];
+---
+<BaseLayout title="Wreckfest 2 Guides" description="Unofficial car, track, tuning, and racing guides for Wreckfest 2.">
+  <section class="hero">
+    <p class="eyebrow">Unofficial guides</p>
+    <h1>Get faster in Wreckfest 2.</h1>
+    <p class="lead">
+      Car and track breakdowns, tuning setups you can actually feel, and racecraft
+      built for Wreckfest's mix of dirt, gravel, and bumpy tarmac — plus a lot of contact.
+    </p>
+  </section>
+
+  <div class="grid" style="margin-top: 2rem;">
+    {sections.map((s) => (
+      <a href={s.href} class="card">
+        <h3>{s.label}</h3>
+        <p>{s.blurb}</p>
+        <p class="tags"><span class="tag tag-plain">{s.count} {s.count === 1 ? 'guide' : 'guides'}</span></p>
+      </a>
+    ))}
+  </div>
+
+  <section class="start-here">
+    <h2>New to Wreckfest 2? Start here</h2>
+    <ol>
+      <li><a href="/cars/roadslayer/">Pick a forgiving starter</a> — the RoadSlayer, a stable rear-drive muscle car you're handed by default.</li>
+      <li><a href="/lessons/braking-on-loose-surfaces/">Learn to brake on the loose stuff</a> — the biggest early time-saver on dirt and gravel.</li>
+      <li><a href="/lessons/racing-with-contact/">Use contact as a tool</a> — when to lean on a rival, when to take the hit, when to leave.</li>
+      <li><a href="/tuning/generic-rwd/">Tune your first setup</a> — the generic RWD guide walks through every slider in the game's own units.</li>
+    </ol>
+  </section>
+</BaseLayout>

@@ -1,0 +1,95 @@
+---
+title: "Buggy Setup"
+kind: car
+carId: car09
+drivetrain: RWD
+summary: A light rear-engine hopper that swings on the lift — set it up for stability, not more rotation.
+order: 21
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward — the rear-engine tail needs front brake to stay in line', surfaces: { mud: 55, gravel: 58, asphalt: 62 } },
+  'brake.pressure': { note: 'Light car — easy to lock', surfaces: { mud: 74, gravel: 88, asphalt: 108 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Rear weight gives good traction — moderate lock', surfaces: { mud: 72, gravel: 62, asphalt: 50 } },
+  'diff.coast': { note: 'More coast lock to steady the pendulum on lift', surfaces: { mud: 64, gravel: 58, asphalt: 50 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 26, gravel: 18, asphalt: 12 } },
+  'finalDrive': { note: 'Short — torque-light flat-four', surfaces: { mud: 4.1, gravel: 3.9, asphalt: 3.6 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Soft, light front', surfaces: { mud: 38, gravel: 48, asphalt: 62 } },
+  'springs.rear': { note: 'Firmer — the rear carries the engine', surfaces: { mud: 34, gravel: 44, asphalt: 58 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 23.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 25.5 } },
+  'arb.front': { note: 'Stiff front to tame the rear-engine swing', surfaces: { mud: 46, gravel: 58, asphalt: 70 } },
+  'arb.rear': { note: 'Soft rear for grip — calm the pendulum', surfaces: { mud: 32, gravel: 42, asphalt: 54 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -1.5, gravel: -2.0, asphalt: -3.0 } },
+  'camber.rear': { note: 'The rear carries the weight and the drive', surfaces: { mud: -1.5, gravel: -2.0, asphalt: -3.0 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Toe-in — critical to steady a rear-engine car' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The engine sits behind the rear axle, so the whole setup is about taming the tail rather than
+freeing it. Weight over the back means the Buggy hooks up well on power, but lift off mid-corner and
+that same mass swings the rear around like a pendulum. The two big levers pull against it: a **stiff
+front bar with a soft rear bar** to plant the back, and **rear toe-in** to keep it pointed straight
+when the weight shifts.
+
+The **Differential** follows the site rule — more locked on loose, more open on grip — but the coast
+side runs high everywhere, because it is coast lock that steadies the car on the lift that would
+otherwise start the swing. Brake balance sits forward for the same reason: front brake keeps the
+light rear in line under braking.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is low grip and full of ruts, so soften the springs and bars and raise the ride height to clear
+the worst of it. Lock the diff up harder — on a loose surface a tight diff drives both rear wheels
+instead of spinning the inside one away, and the rear weight already gives you traction to lean on.
+More preload and coast lock hold the tail steady when you come off the throttle.
+
+The pendulum is at its most vicious here because there is little grip to catch it. Lift off early and
+gently, get the car settled before you turn, and feed the power back in smoothly.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel sits close to the hybrid setup — small moves off the baseline. The rear weight puts the power
+down well and the car rotates willingly, so the job is keeping that rotation controlled rather than
+chasing more of it. Keep the front bar stiff and the rear soft so the tail stays planted through the
+middle of the corner.
+
+Steer with small inputs and let the car settle between direction changes — a rear-engine car punishes
+a fast flick from one lock to the other, which on a pad is easy to overdo.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt there is real grip, so the springs and bars stiffen and the car drops closer to the road.
+The **diff opens up** — on high grip a locked diff breaks both rear wheels loose together, and this
+car needs no help breaking the rear loose. More front camber and brake bias help the nose bite so you
+are not relying on the tail to turn.
+
+The pendulum still lurks: a sharp lift on turn-in can pitch the rear out fast. Brake in a straight
+line, get off the pedal before you commit to the corner, and the extra grip does the rest.
+
+</Fragment>
+</SetupTabs>

@@ -1,0 +1,139 @@
+---
+/**
+ * Read-only tuning bar showing a surface-specific setting AND its change from baseline, in
+ * real units. Filled marker = setting, hollow tick = baseline, coloured segment + signed badge
+ * = delta (green higher, blue lower, `±0` unchanged).
+ *
+ *   <TuningDelta param={param} baseline={param.base} value={surfaceValue} />
+ */
+import type { TuningParam } from './tuning';
+import { positionOf, formatValue, formatDelta } from './tuning';
+
+interface Props {
+  param: TuningParam;
+  baseline: number;
+  value: number;
+}
+const { param, baseline, value } = Astro.props;
+
+const delta = value - baseline;
+const dir = delta > 0 ? 'up' : delta < 0 ? 'down' : 'zero';
+const deltaLabel = formatDelta(param, delta, value);
+const display = formatValue(param, value);
+
+const posValue = positionOf(param, value);
+const posBase = positionOf(param, baseline);
+const segLeft = Math.min(posBase, posValue);
+const segWidth = Math.abs(posValue - posBase);
+const ariaChange =
+  delta === 0 ? `unchanged from baseline ${formatValue(param, baseline)}` : `${deltaLabel} from baseline ${formatValue(param, baseline)}`;
+---
+<div
+  class="tuning-delta"
+  data-dir={dir}
+  role="meter"
+  aria-label={`${param.label}: ${display}, ${ariaChange}`}
+  aria-valuemin={param.rangeMin ?? 0}
+  aria-valuemax={param.rangeMax ?? 100}
+  aria-valuenow={value}
+>
+  <div class="td-head">
+    <span class="td-label">{param.label}</span>
+    <span class="td-meta">
+      <span class="td-value">{display}</span>
+      <span class="td-delta">{deltaLabel}</span>
+    </span>
+  </div>
+  <div class="td-track">
+    {segWidth > 0 && <div class="td-seg" style={`left:${segLeft}%;width:${segWidth}%`}></div>}
+    <div class="td-base" style={`left:${posBase}%`}></div>
+    <div class="td-thumb" style={`left:${posValue}%`}></div>
+  </div>
+  {(param.min || param.max) && (
+    <div class="td-ends"><span>{param.min}</span><span>{param.max}</span></div>
+  )}
+</div>
+
+<style>
+  .tuning-delta {
+    --td-up: var(--surf-mixed);
+    --td-down: var(--surf-tarmac);
+    padding: 0.55rem 0;
+  }
+
+  .td-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.45rem;
+  }
+  .td-label { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+  .td-meta { display: inline-flex; align-items: baseline; gap: 0.4rem; }
+  .td-value {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--text);
+    background: var(--bg-panel-2);
+    padding: 0.05em 0.5em;
+    border-radius: 5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .td-delta {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 650;
+    padding: 0.05em 0.45em;
+    border-radius: 5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+  .tuning-delta[data-dir='up'] .td-delta { color: var(--td-up); background: color-mix(in srgb, var(--td-up) 16%, transparent); }
+  .tuning-delta[data-dir='down'] .td-delta { color: var(--td-down); background: color-mix(in srgb, var(--td-down) 16%, transparent); }
+  .tuning-delta[data-dir='zero'] .td-delta { color: var(--text-faint); background: var(--bg-panel-2); }
+
+  .td-track {
+    position: relative;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+  }
+  .td-seg { position: absolute; top: 0; height: 100%; border-radius: 2px; }
+  .tuning-delta[data-dir='up'] .td-seg { background: color-mix(in srgb, var(--td-up) 70%, transparent); }
+  .tuning-delta[data-dir='down'] .td-seg { background: color-mix(in srgb, var(--td-down) 70%, transparent); }
+
+  .td-base {
+    position: absolute;
+    top: 50%;
+    width: 2px;
+    height: 16px;
+    background: var(--text-faint);
+    transform: translate(-50%, -50%);
+    border-radius: 2px;
+  }
+  .td-thumb {
+    position: absolute;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 3px solid var(--accent);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+    z-index: 1;
+  }
+
+  .td-ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.35rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+  }
+</style>

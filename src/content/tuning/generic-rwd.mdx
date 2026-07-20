@@ -1,0 +1,122 @@
+---
+title: Generic RWD Tuning
+kind: generic
+drivetrain: RWD
+summary: A starting setup and the reasoning behind it for any rear-wheel-drive car, in the game's own units.
+order: 1
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. A generic rear-drive baseline to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Slight rear bias to help it rotate on lift', surfaces: { mud: 52, gravel: 55, asphalt: 59 } },
+  'brake.pressure': { note: 'Firm, but not lock-happy on a pad — less on loose, more on grip', surfaces: { mud: 80, gravel: 94, asphalt: 116 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip to tame the exit snap', surfaces: { mud: 78, gravel: 66, asphalt: 52 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 60, gravel: 54, asphalt: 46 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 26, gravel: 18, asphalt: 12 } },
+  'finalDrive': { note: 'Short-ish keeps you in the torque out of slow corners', surfaces: { mud: 3.8, gravel: 3.6, asphalt: 3.3 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 44, gravel: 56, asphalt: 74 } },
+  'springs.rear': { note: 'A touch softer than the front for exit traction', surfaces: { mud: 26, gravel: 33, asphalt: 44 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'A touch stiffer than the rear — calms the car', surfaces: { mud: 42, gravel: 54, asphalt: 68 } },
+  'arb.rear': { note: "Kept softer than the front so it won't snap on power", surfaces: { mud: 38, gravel: 50, asphalt: 62 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+<div class="tune-grid">
+<div class="tune-presets">
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The **Differential** is the biggest lever on a rear-drive car, and it runs opposite to instinct:
+**locked on loose, opener on grip.** On mud and gravel, low grip means an open diff just spins the
+inside rear away — locking it drives both wheels and puts the torque down (the loose surface still
+lets you rotate on the throttle). On asphalt, a locked diff snaps both rear wheels loose together,
+so opening it up keeps the exit progressive.
+
+Everything else follows the surface: soft/high/less-brake on loose, stiff/low/more-brake on grip.
+The rear stays a touch softer than the front (springs and bar) so the torque hooks up on exit
+rather than snapping the tail loose.
+
+Brake Pressure's scale runs 50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface — soft, draggy, full of ruts. The rear sinks and spins and power
+oversteer comes early, so soften the springs and bars, raise the ride height to clear the ruts, and
+**lock the diff up**: on low grip a tight diff drives both rear wheels instead of spinning the
+inside one away, and the loose surface still lets you steer with the throttle.
+
+A bogged-down car is hard to recover — feed the throttle smoothly rather than stabbing it.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is the middle ground and sits closest to the hybrid setup — the changes are small. The car
+already slides predictably; steer it with the throttle and keep corrections small, which matters on
+a pad where a big stick input overshoots.
+
+Let the car rotate on power and drive out of it; do not try to hold it dead straight.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt has real grip, so the springs and bars stiffen, brake pressure climbs, and the car drops
+closer to the road — and the **diff opens up**: on high grip a locked diff breaks both rear wheels
+loose together, so a looser diff keeps the exit progressive.
+
+Keep some compliance even here — Wreckfest's tarmac is bumpy and kerbed, and a mid-corner bump can
+step the rear out unexpectedly.
+
+</Fragment>
+</SetupTabs>
+
+</div>
+<div class="tune-notes">
+
+<p class="eyebrow">Generic Tuning</p>
+
+<h1>Generic RWD Setup</h1>
+
+<p class="tags"><span class="tag tag-rwd">RWD</span></p>
+
+<p class="lead">A starting setup and the reasoning behind it for any rear-wheel-drive car, in the game's own units.</p>
+
+<div class="callout"><p>Have a car-specific guide? Those refine these numbers for a single car. Otherwise start here.</p></div>
+
+The baseline for rear-drive cars — the muscle coupes and the heavier vehicles. The job is a car
+that **rotates into tight corners without spinning** when you get on the power over a bump. The
+**Hybrid** tab on the left is an all-round setup that does OK on any surface, in the game's real
+sliders and units; each surface tab shows what to change from it. Everything here is a starting
+point — change one thing, drive the same corner twice, feel it. Gamepad players: Steering Ratio one
+notch slower than shown.
+
+## Reading the presets
+
+The filled marker is the setting, the tick is the hybrid value, and the coloured number is the
+change from it (green higher, blue lower). Each tab's own **Why these changes** panel — below its
+settings — explains the reasoning for that surface.
+
+</div>
+</div>

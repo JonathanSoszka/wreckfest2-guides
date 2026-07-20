@@ -1,0 +1,104 @@
+---
+/**
+ * Read-only graphical slider showing a recommended tuning setting. Displays the real value
+ * (with unit) and positions the marker along the slider's true range. Display only.
+ *
+ *   <TuningSlider param={param} value={param.base} />
+ */
+import type { TuningParam } from './tuning';
+import { positionOf, formatValue } from './tuning';
+
+interface Props {
+  param: TuningParam;
+  value: number;
+}
+const { param, value } = Astro.props;
+const pos = positionOf(param, value);
+const display = formatValue(param, value);
+---
+<div
+  class="tuning-slider"
+  role="meter"
+  aria-label={`${param.label}: ${display}`}
+  aria-valuemin={param.rangeMin ?? 0}
+  aria-valuemax={param.rangeMax ?? 100}
+  aria-valuenow={value}
+>
+  <div class="ts-head">
+    <span class="ts-label">{param.label}</span>
+    <span class="ts-value">{display}</span>
+  </div>
+  <div class="ts-track">
+    <div class="ts-fill" style={`width:${pos}%`}></div>
+    <div class="ts-thumb" style={`left:${pos}%`}></div>
+  </div>
+  {(param.min || param.max) && (
+    <div class="ts-ends">
+      <span>{param.min}</span>
+      <span>{param.max}</span>
+    </div>
+  )}
+  {param.note && <p class="ts-note">{param.note}</p>}
+</div>
+
+<style>
+  .tuning-slider { padding: 0.55rem 0; }
+
+  .ts-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+  }
+  .ts-label { font-weight: 600; font-size: 0.95rem; color: var(--text); }
+  .ts-value {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--text);
+    background: var(--bg-panel-2);
+    padding: 0.05em 0.5em;
+    border-radius: 5px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ts-track {
+    position: relative;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+  }
+  .ts-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 999px 0 0 999px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--accent) 55%, transparent), var(--accent));
+  }
+  .ts-thumb {
+    position: absolute;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--text);
+    border: 3px solid var(--accent);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  }
+
+  .ts-ends {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.35rem;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+  }
+  .ts-note { margin: 0.4rem 0 0; font-size: 0.85rem; color: var(--text-dim); }
+</style>

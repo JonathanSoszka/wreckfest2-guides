@@ -1,0 +1,90 @@
+---
+title: "Gizmo Setup"
+kind: car
+carId: car06
+drivetrain: FWD
+summary: "A tiny, nimble hatch that rotates on the lift — carry corner speed and keep it in the torque."
+order: 24
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward; keep some rear to help it rotate', surfaces: { mud: 60, gravel: 62, asphalt: 65 } },
+  'brake.pressure': { note: 'Very light car — easy to lock', surfaces: { mud: 74, gravel: 88, asphalt: 110 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose so the driven wheels put power down; opener on grip so it stops fighting your steering', surfaces: { mud: 60, gravel: 50, asphalt: 40 } },
+  'diff.coast': { note: 'Low — the light rear already rotates on lift', surfaces: { mud: 30, gravel: 24, asphalt: 18 } },
+  'diff.preload': { note: 'A little on loose for stability, less on grip', surfaces: { mud: 18, gravel: 12, asphalt: 8 } },
+  'finalDrive': { note: 'Short — weak power-down, keep it in the torque', surfaces: { mud: 4.1, gravel: 3.9, asphalt: 3.6 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Very soft — light car', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'springs.rear': { note: 'Firm, but it already rotates on lift', surfaces: { mud: 40, gravel: 52, asphalt: 68 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front — keep the driven wheels compliant', surfaces: { mud: 28, gravel: 38, asphalt: 50 } },
+  'arb.rear': { note: 'Stiff rear, eased a little — lift-off does some of the work', surfaces: { mud: 48, gravel: 60, asphalt: 74 } },
+  'camber.front': { note: 'Front-heavy camber budget — the front does the cornering', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'Toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Near neutral or slightly out to help rotation' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Gizmo is tiny and light with a short wheelbase, so it darts into corners and rotates readily —
+sometimes too readily, since it carries pronounced lift-off oversteer on loose surfaces. That
+rotation is a tool, but it can bite, so the rear is stiff without going overboard. **Soft front,
+firm rear** points the nose, and you lean on the light chassis to carry corner speed rather than
+power.
+
+The **differential** governs the driven front wheels: locked on loose to put the weak power down,
+opener on grip so it stops fighting your steering. Keep the coast side low — the light rear already
+comes round on the lift, so you do not need much braking lock to rotate it. Gear it short and keep
+the little engine in its torque out of slow corners.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud punishes the weak power-down worst — the driven front wheels dig and the nose pushes. Soften
+the front, raise the ride height, and **lock the diff up** so both front wheels claw the car out
+together.
+
+The light rear will still rotate on the lift, so let the entry do the turning and roll smoothly onto
+the power; you cannot bully your way out of mud with this little engine.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel suits the Gizmo — it sits close to the hybrid setup and the lift-off rotation becomes a
+genuine weapon. Back off to bring the nose round, then feed the power in and carry the momentum out.
+
+Keep corrections tiny; on a pad the short wheelbase means a big stick input overshoots fast, and
+this car is already eager to rotate.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt's grip exposes exit understeer as the driven front runs out of grip. Stiffen the rear, drop
+the car, firm the front, and **open the diff** so it stops fighting your steering out of the corner.
+
+Add front negative camber to plant the outside edge, but do not chase more rear stiffness — the
+light tail already rotates on lift, and overdoing it makes the car snappy on grip.
+
+</Fragment>
+</SetupTabs>

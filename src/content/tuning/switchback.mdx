@@ -1,0 +1,92 @@
+---
+title: "Switchback Setup"
+kind: car
+carId: car11
+drivetrain: RWD
+summary: A heavy straight-line brawler — help the reluctant nose turn in and brake early into the tight stuff.
+order: 13
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Slight rear bias for turn-in; brake early into technical sections', surfaces: { mud: 52, gravel: 55, asphalt: 60 } },
+  'brake.pressure': { note: 'Heavy car — less on loose, more on grip', surfaces: { mud: 82, gravel: 96, asphalt: 118 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip', surfaces: { mud: 80, gravel: 70, asphalt: 56 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 60, gravel: 54, asphalt: 46 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 28, gravel: 20, asphalt: 12 } },
+  'finalDrive': { note: 'Long-ish — it lives at high speed', surfaces: { mud: 3.8, gravel: 3.5, asphalt: 3.2 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Firm — heavy nose', surfaces: { mud: 48, gravel: 62, asphalt: 80 } },
+  'springs.rear': { note: 'Softer than the front for traction', surfaces: { mud: 28, gravel: 35, asphalt: 46 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front to free the reluctant nose', surfaces: { mud: 36, gravel: 48, asphalt: 62 } },
+  'arb.rear': { note: 'Stiffer rear to rotate the understeery car', surfaces: { mud: 44, gravel: 58, asphalt: 72 } },
+  'camber.front': { note: 'More front camber to wake the nose', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Switchback is a heavy straight-line brawler with a reluctant nose — it wants to understeer in
+the tight stuff. The setup is built to free that nose: a soft front **anti-roll bar** and a stiffer
+rear bar shift grip forward and let the tail come round, and extra front camber gives the outside
+tyre something to bite with on turn-in.
+
+The **Differential** is still the biggest lever, and it runs opposite to instinct: locked on loose,
+opener on grip. Brake early — a heavy car takes distance to slow, and a slight rear brake bias
+helps it rotate as you trail into a corner. Brake Pressure's scale runs 50–150%, so 100% is
+mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface and the understeer only gets worse — the heavy nose pushes wide.
+Soften the springs and raise the ride height to clear the ruts, keep the rear bar stiff relative to
+the front to keep some rotation, and lock the diff up to drive both rear wheels.
+
+Brake in a straight line before you turn — a heavy car that is still slowing mid-corner just plows
+straight on.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel sits close to the hybrid. The loose surface takes some of the edge off the understeer, so
+the car rotates more willingly — steer it with the throttle and keep corrections small, which
+matters on a pad where a big stick input overshoots.
+
+Slow the car early, get it pointed, then drive out; trying to brake and turn together wastes the
+front tyres.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt is where the Switchback belongs — high speed and long corners suit its stability. The
+springs and bars stiffen, brake pressure climbs, and the car drops closer to the road, but the
+front bar stays soft relative to the rear to keep the nose alive. The **diff opens up** on grip so
+the rear stays progressive on exit.
+
+Brake early into the technical sections and let the long gearing carry you everywhere else — this
+car makes its time on the fast parts, not the hairpins.
+
+</Fragment>
+</SetupTabs>

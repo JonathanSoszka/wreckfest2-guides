@@ -1,0 +1,90 @@
+---
+title: "Xalken Setup"
+kind: car
+carId: car16
+drivetrain: FWD
+summary: "A low-power, snappy all-rounder that wins on momentum — tune for agility and manage the launch wheelspin."
+order: 27
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward; keep some rear to help it rotate', surfaces: { mud: 60, gravel: 62, asphalt: 65 } },
+  'brake.pressure': { note: 'Back off if the fronts lock and wash wide', surfaces: { mud: 76, gravel: 90, asphalt: 112 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'A little extra lock on loose to hook up the launch; opener on grip so it stops fighting your steering', surfaces: { mud: 62, gravel: 52, asphalt: 42 } },
+  'diff.coast': { note: 'Keep it low — too much makes the driven axle push on entry', surfaces: { mud: 32, gravel: 26, asphalt: 20 } },
+  'diff.preload': { note: 'A little on loose for stability, less on grip', surfaces: { mud: 20, gravel: 14, asphalt: 10 } },
+  'finalDrive': { note: 'Mid — low power, gear for corner exit', surfaces: { mud: 4.0, gravel: 3.8, asphalt: 3.5 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Soft so the driven wheels stay planted', surfaces: { mud: 34, gravel: 44, asphalt: 58 } },
+  'springs.rear': { note: 'Firm to rotate the nose-heavy car', surfaces: { mud: 46, gravel: 58, asphalt: 76 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front — keep the driven wheels compliant', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'arb.rear': { note: 'Stiff rear rotates the nose', surfaces: { mud: 54, gravel: 66, asphalt: 82 } },
+  'camber.front': { note: 'Front-heavy camber budget — the front does the cornering', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'Toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Near neutral or slightly out to help rotation' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Xalken is a nose-heavy front-driver with modest power that handles well — a momentum car. You
+win by carrying corner speed, not by out-dragging anyone, so the whole setup is tuned for agility.
+**Soft front, firm rear** loosens the tail and points the nose so you can keep the car turning
+without lifting to a crawl.
+
+The **differential** governs the driven front wheels. It carries a little extra lock on loose to
+hook up the launch — this car will light the fronts off the line — and opens on grip so it stops
+fighting your steering. Keep the coast side low so the driven axle does not push on entry, and gear
+it for corner exit since there is not much power to stretch a tall final drive.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud plus low power means the driven front bogs and pushes. Soften the front, raise the ride height,
+and **lock the diff up** so both front wheels drag the car out together.
+
+Feed the throttle in progressively off the line and out of corners — this car spins the fronts
+easily, and wheelspin in mud just digs you in and kills the momentum you rely on.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel rewards the Xalken's momentum and sits close to the hybrid setup. Lift-off rotation points
+the nose — back off to rotate, then feed the power in and carry speed out.
+
+Keep the rear bar firm so the nose stays willing, and mind the launch: a clean, progressive getaway
+on gravel is worth more than any straight-line tweak on a car this light on power.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt exposes exit understeer as the loaded front runs out of grip. Stiffen the rear, drop the
+car, firm the front to use the grip, and **open the diff** so it stops fighting your steering out of
+the corner.
+
+Add front negative camber to plant the outside edge, and stay smooth on the throttle off the line —
+even on grip this car will spin the fronts if you mash it, and the launch is where you gain or lose
+places.
+
+</Fragment>
+</SetupTabs>

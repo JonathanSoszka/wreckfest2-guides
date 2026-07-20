@@ -1,0 +1,126 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const cars = (await getCollection('cars')).filter((c) => !c.data.draft);
+  return cars.map((car) => ({ params: { slug: car.id }, props: { car } }));
+}
+
+const { car } = Astro.props;
+const { Content } = await render(car);
+
+// This car's setup sheet (its per-car tuning guide), rendered inline as the Setup section.
+const setup = (await getCollection('tuning')).find(
+  (t) => !t.data.draft && t.data.kind === 'car' && t.data.carId === car.data.internalId,
+);
+const SetupContent = setup ? (await render(setup)).Content : null;
+
+const dt = car.data.drivetrain.toLowerCase();
+const dtClass = `tag tag-${dt}`;
+
+// All cars, grouped by drivetrain, for the quick-switch dropdown.
+const allCars = (await getCollection('cars')).filter((c) => !c.data.draft);
+const switchGroups = ['RWD', 'FWD', 'AWD']
+  .map((d) => ({
+    dt: d,
+    cars: allCars
+      .filter((c) => c.data.drivetrain === d)
+      .sort((a, b) => a.data.name.localeCompare(b.data.name)),
+  }))
+  .filter((g) => g.cars.length);
+---
+<BaseLayout title={car.data.name} description={car.data.summary}>
+  <div class="car-topbar">
+    <a href="/cars/" class="back">← All cars</a>
+    <select id="car-switcher" class="car-switcher" aria-label="Jump to another car">
+      {switchGroups.map((g) => (
+        <optgroup label={g.dt}>
+          {g.cars.map((c) => (
+            <option value={`/cars/${c.id}/`} selected={c.id === car.id}>{c.data.name}</option>
+          ))}
+        </optgroup>
+      ))}
+    </select>
+  </div>
+  <p class="eyebrow">Car Profile</p>
+  <h1>{car.data.name}</h1>
+  {(car.data.archetype || car.data.inspiration) && (
+    <p class="card-meta" style="font-size: 0.9rem;">{[car.data.archetype, car.data.inspiration].filter(Boolean).join(' · ')}</p>
+  )}
+  <p class="tags" style="margin-bottom: 1rem;">
+    <span class={dtClass}>{car.data.drivetrain}</span>
+    {car.data.carClass && <span class="tag tag-plain">Class {car.data.carClass}</span>}
+  </p>
+  <p class="lead">{car.data.summary}</p>
+
+  {SetupContent && (
+    <nav class="page-nav" aria-label="On this page">
+      <a href="#setup">Setup</a>
+      <a href="#overview">Overview</a>
+    </nav>
+  )}
+
+  <div class:list={['car-body', SetupContent && 'car-body--split']} id="carBody">
+  {SetupContent && (
+    <section id="setup" class="car-setup">
+      <h2>Setup</h2>
+      <p class="lead">
+        The <strong>Hybrid</strong> tab is an all-round setup that does OK on any surface, in the
+        game's real sliders and units; each surface tab shows what to change from it. The filled
+        marker is the setting, the tick is the hybrid value, and the coloured number is the change
+        (green higher, blue lower). Gamepad players: Steering Ratio one notch slower than shown.
+      </p>
+      <SetupContent />
+      <div class="callout">
+        <p>
+          Want the full theory behind every slider? See the
+          <a href={`/tuning/generic-${dt}/`}>generic {car.data.drivetrain} guide</a>. New to
+          Wreckfest racing? Read the <a href="/lessons/">racing lessons</a>.
+        </p>
+      </div>
+    </section>
+  )}
+
+  <section id="overview" class="car-overview">
+    <button type="button" class="ov-rail" data-ov-toggle aria-label="Expand overview">
+      <span class="ov-chevron" aria-hidden="true">‹</span>
+      <span class="ov-rail-label">Overview</span>
+    </button>
+    <div class="ov-head">
+      <h2>Overview</h2>
+      <button type="button" class="ov-collapse" data-ov-toggle aria-expanded="true" aria-controls="ov-body" aria-label="Collapse overview to the right">
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+    <div id="ov-body" class="ov-body">
+      <article class="prose">
+        <Content />
+      </article>
+    </div>
+  </section>
+  </div>
+</BaseLayout>
+
+<script>
+  const sel = document.getElementById('car-switcher') as HTMLSelectElement | null;
+  sel?.addEventListener('change', () => {
+    if (sel.value) window.location.href = sel.value;
+  });
+
+  // Collapse the Overview column to a thin right rail (large screens); remembered across cars.
+  const body = document.getElementById('carBody');
+  const toggles = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-ov-toggle]'));
+  const KEY = 'wf2:overview-collapsed';
+  const apply = (collapsed: boolean) => {
+    body?.classList.toggle('is-collapsed', collapsed);
+    toggles.forEach((t) => t.setAttribute('aria-expanded', String(!collapsed)));
+    try { localStorage.setItem(KEY, collapsed ? '1' : '0'); } catch {}
+  };
+  if (body) {
+    try { if (localStorage.getItem(KEY) === '1') apply(true); } catch {}
+    toggles.forEach((t) =>
+      t.addEventListener('click', () => apply(!body.classList.contains('is-collapsed'))),
+    );
+  }
+</script>

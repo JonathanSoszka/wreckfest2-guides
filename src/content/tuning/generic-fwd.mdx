@@ -1,0 +1,124 @@
+---
+title: Generic FWD Tuning
+kind: generic
+drivetrain: FWD
+summary: How front-drive tuning inverts the rear-drive habits — stiffen the rear to help the nose — in the game's own units.
+order: 2
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. A generic front-drive baseline to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward — the front does the stopping; keep some rear to help it rotate', surfaces: { mud: 60, gravel: 62, asphalt: 65 } },
+  'brake.pressure': { note: 'Back off if the fronts lock and wash the nose wide', surfaces: { mud: 76, gravel: 90, asphalt: 112 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose so the driven wheels put power down; opener on grip so it stops fighting your steering', surfaces: { mud: 60, gravel: 50, asphalt: 40 } },
+  'diff.coast': { note: 'Keep it low — too much lock makes the driven axle push on entry', surfaces: { mud: 32, gravel: 26, asphalt: 20 } },
+  'diff.preload': { note: 'A little on loose for stability, less on grip', surfaces: { mud: 20, gravel: 14, asphalt: 10 } },
+  'finalDrive': { note: 'Mid — stay in the torque out of slow corners', surfaces: { mud: 4.0, gravel: 3.8, asphalt: 3.5 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Soft so the driven wheels stay planted', surfaces: { mud: 34, gravel: 44, asphalt: 58 } },
+  'springs.rear': { note: 'Firm to help the light tail rotate — the inversion', surfaces: { mud: 46, gravel: 58, asphalt: 76 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front — keep the driven wheels compliant', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'arb.rear': { note: 'Stiff rear rotates the nose — the key FWD move', surfaces: { mud: 54, gravel: 66, asphalt: 82 } },
+  'camber.front': { note: 'Front-heavy camber budget — the front does almost all the cornering', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'Toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Near neutral or slightly out to help the rear rotate' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+<div class="tune-grid">
+<div class="tune-presets">
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+Front-wheel drive inverts most of what you do to a rear-drive car. The front tyres already steer
+**and** drive, so they are always the limiting factor; the whole job is to take work off the front
+axle and hand it to the rear. Tune it like a muscle car and it understeers everywhere.
+
+**Suspension and bars are the inversion made concrete: soft front, stiff rear.** Stiffen the rear
+bar and springs to loosen the tail and point the nose; keep the front soft and compliant so the
+driven wheels stay planted.
+
+The **Differential** still locks on loose for traction, but opens further on grip than a rear-drive
+car would — a tight driven diff on tarmac just adds understeer as it fights your steering. Keep the
+coast side low: too much lock there makes the nose push on entry.
+
+Brakes sit forward of a rear-drive car since the front does the stopping anyway — but keep a slice
+of rear brake dialled in on purpose, because it helps the light tail rotate on entry.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the worst surface for a front-drive car — the driven front wheels dig in and understeer is
+the default. You cannot power through it, so soften the front, raise the ride height, and **lock
+the diff up** to pull the nose out of corners.
+
+Brake early and light, and get all your rotation done on the entry lift; the setup only helps if
+the technique matches it.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is where a disciplined FWD driver is competitive, and it sits close to the hybrid setup.
+Lift-off oversteer becomes the tool — back off to rotate the light rear, point the nose, then drive
+out in a straight line.
+
+Practise the rotate-then-drive rhythm until it is automatic; setup alone will not do it.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt's grip exposes FWD's exit understeer most clearly — the front runs out of grip trying to
+steer and drive at once. Stiffen the rear further, lower the car, firm the front to use the grip,
+and **open the diff** so it stops fighting your steering.
+
+Add more front negative camber too, and keep a slice of rear brake so you do not lose the entry
+rotation you rely on.
+
+</Fragment>
+</SetupTabs>
+
+</div>
+<div class="tune-notes">
+
+<p class="eyebrow">Generic Tuning</p>
+
+<h1>Generic FWD Setup</h1>
+
+<p class="tags"><span class="tag tag-fwd">FWD</span></p>
+
+<p class="lead">How front-drive tuning inverts the rear-drive habits — stiffen the rear to help the nose — in the game's own units.</p>
+
+<div class="callout"><p>Have a car-specific guide? Those refine these numbers for a single car. Otherwise start here.</p></div>
+
+Front-wheel-drive cars ask for the opposite of a muscle car: the enemy is **understeer**,
+especially power-on understeer out of corners, and the light rear is a *tool* to fight it. The
+**Hybrid** tab on the left is an all-round setup that does OK on any surface, in the game's real
+sliders and units; each surface tab shows what to change from it. Gamepad players: Steering Ratio
+one notch slower than shown.
+
+## Reading the presets
+
+The filled marker is the setting, the tick is the hybrid value, and the coloured number is the
+change from it (green higher, blue lower). Each tab's own **Why these changes** panel — below its
+settings — explains the reasoning for that surface.
+
+</div>
+</div>

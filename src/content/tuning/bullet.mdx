@@ -1,0 +1,90 @@
+---
+title: "Bullet Setup"
+kind: car
+carId: car21
+drivetrain: RWD
+summary: A long, heavy cruiser — geared long for top speed, set up to buy rotation in the slow corners.
+order: 14
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Slight rear bias to help the long car rotate', surfaces: { mud: 52, gravel: 55, asphalt: 60 } },
+  'brake.pressure': { note: 'Heavy — less on loose, more on grip', surfaces: { mud: 84, gravel: 98, asphalt: 120 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip', surfaces: { mud: 80, gravel: 70, asphalt: 56 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 60, gravel: 54, asphalt: 46 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 30, gravel: 20, asphalt: 12 } },
+  'finalDrive': { note: 'Long — heavy car, high top speed', surfaces: { mud: 3.7, gravel: 3.4, asphalt: 3.1 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Firm — long, heavy nose', surfaces: { mud: 50, gravel: 64, asphalt: 82 } },
+  'springs.rear': { note: 'Softer than the front for exit traction', surfaces: { mud: 28, gravel: 36, asphalt: 48 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front to help turn-in', surfaces: { mud: 38, gravel: 50, asphalt: 64 } },
+  'arb.rear': { note: 'Stiffer rear to buy rotation in the slow stuff', surfaces: { mud: 42, gravel: 56, asphalt: 70 } },
+  'camber.front': { note: 'More front camber for the reluctant nose', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Bullet is long, heavy and long in the wheelbase — the best high-speed stability of any of the
+muscle cars, and the worst agility. Its slides build slowly and take distance to gather, so the
+setup buys rotation for the slow corners: a soft front **anti-roll bar** and a stiffer rear bar
+free the nose, extra front camber wakes it on turn-in, and a long **Final Drive** trades launch for
+top speed.
+
+The **Differential** is still the biggest lever, and it runs opposite to instinct: locked on loose,
+opener on grip. Once it is sliding, steer with the throttle and be patient — a car this long does
+not snap back quickly. Brake Pressure's scale runs 50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface and the long car feels its worst here — reluctant to turn, slow to
+gather a slide. Soften the springs and raise the ride height to clear the ruts, keep the rear bar
+stiff relative to the front to buy rotation, and lock the diff up to drive both rear wheels.
+
+Slow it well before the corner and give every input time to take — a heavy cruiser punishes rushing.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel sits close to the hybrid, and the loose surface helps the long car rotate. Let the momentum
+work for you — steer it with the throttle and keep corrections small, which matters on a pad where a
+big stick input overshoots on a slide this slow to gather.
+
+Point it early, commit, and drive out; do not try to hold it dead straight.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt rewards the Bullet's stability at speed. The springs and bars stiffen, brake pressure
+climbs, and the car drops closer to the road, but the front bar stays soft relative to the rear to
+keep the reluctant nose turning. The **diff opens up** on grip so the long rear stays progressive on
+exit.
+
+Use the long gearing on the straights and brake early for the slow corners — the Bullet makes its
+time carrying speed, not diving into hairpins.
+
+</Fragment>
+</SetupTabs>

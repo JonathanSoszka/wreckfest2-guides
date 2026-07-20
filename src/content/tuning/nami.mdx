@@ -1,0 +1,94 @@
+---
+title: "Nami Setup"
+kind: car
+carId: car14
+drivetrain: RWD
+summary: A tiny, light roadster that rotates beautifully and bites just as fast — win on momentum, not slides.
+order: 19
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Slight rear bias, but keep it honest — the rear bites fast', surfaces: { mud: 52, gravel: 55, asphalt: 59 } },
+  'brake.pressure': { note: 'Very light car — easy to lock', surfaces: { mud: 72, gravel: 86, asphalt: 106 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Moderate — do not scrub its meagre exit drive', surfaces: { mud: 70, gravel: 60, asphalt: 48 } },
+  'diff.coast': { note: 'More coast lock to manage the fast lift-off bite', surfaces: { mud: 62, gravel: 56, asphalt: 48 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 24, gravel: 16, asphalt: 10 } },
+  'finalDrive': { note: 'Short — peaky low-torque four, keep it in the powerband', surfaces: { mud: 4.0, gravel: 3.8, asphalt: 3.5 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Light car — soft', surfaces: { mud: 42, gravel: 54, asphalt: 70 } },
+  'springs.rear': { note: 'Softer than the front for exit traction', surfaces: { mud: 24, gravel: 30, asphalt: 40 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'A touch stiffer than the rear', surfaces: { mud: 42, gravel: 56, asphalt: 70 } },
+  'arb.rear': { note: 'Soft-ish rear to calm the quick bite', surfaces: { mud: 36, gravel: 46, asphalt: 58 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.5, gravel: -2.0, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Toe-in to steady the snappy rear' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Nami is tiny and light with a short wheelbase, so it rotates beautifully — and bites back just
+as fast. The trap is over-tuning for rotation: it already turns, and it makes so little power that a
+too-loose rear just scrubs away its meagre exit drive. So you manage the tail from both ends. The
+**Differential** carries more coast lock than usual to catch the quick lift-off bite, with only
+moderate power lock so you don't waste the drive you have.
+
+Everything else is a steadying hand on a nervous car — soft-ish rear bar, rear toe-in, honest brake
+balance. Follow the surface for the rest: locked diff and soft/high on loose, opener diff and
+stiff/low on grip. The **Final Drive** stays short to keep the peaky little four in its powerband.
+Brake Pressure's scale runs 50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface, and on this little car the rear steps out with almost no warning.
+Soften the springs and bars, raise the ride height to clear the ruts, and **lock the diff up**: on
+low grip a tight diff drives both rear wheels instead of spinning the inside one away, and the loose
+surface still lets you steer with the throttle.
+
+Carry your speed in — the Nami has next to no power to make it back up. Momentum through the corner,
+not drive out of it, is how you win here.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is the middle ground and sits closest to the hybrid setup — the changes are small. The Nami
+is at its most fun here, rotating on the throttle, but the bite is quick; keep corrections small,
+which matters double on a pad where a big stick input overshoots.
+
+Ride the momentum and stay smooth. A tidy, flowing line beats a lurid slide every time in a car
+this underpowered.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the Nami finally has grip to lean on, and it can carry real corner speed for such a small
+car. The springs and bars stiffen, brake pressure climbs, and the car drops closer to the road — and
+the **diff opens up**: on high grip a locked diff breaks both rear wheels loose together, so a
+looser diff keeps the exit progressive.
+
+Win on line and momentum, not slides. Brake in a straight line — that quick rear bite is unforgiving
+if you trail into the corner and unsettle it.
+
+</Fragment>
+</SetupTabs>

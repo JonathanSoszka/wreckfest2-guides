@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const guides = (await getCollection('tuning'))
+  .filter((t) => !t.data.draft)
+  .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
+
+const generic = guides.filter((g) => g.data.kind === 'generic');
+const perCar = guides.filter((g) => g.data.kind === 'car');
+
+// Per-car setups live on the car profile now — map each to its car slug for linking.
+const cars = await getCollection('cars');
+const carHref = (carId?: string) => {
+  const c = cars.find((x) => x.data.internalId === carId);
+  return c ? `/cars/${c.id}/#setup` : '/cars/';
+};
+---
+<BaseLayout title="Tuning Guides" description="Generic FWD/RWD/AWD tuning plus car-specific setup sheets for Wreckfest 2.">
+  <p class="eyebrow">Tuning Guides</p>
+  <h1>Tuning</h1>
+  <p class="lead">Start with the generic guide for your drivetrain, then fine-tune with a car-specific sheet.</p>
+
+  <div class="callout">
+    <p>
+      Every guide uses the game's own tuning sliders, categories, and units. The
+      <strong>Hybrid</strong> tab is an all-round setup; each surface tab shows what to change from
+      it. Percentage sliders describe position along the slider's travel, since Wreckfest's readouts
+      can exceed 100%. Gamepad note: set Steering Ratio one notch slower than shown.
+    </p>
+  </div>
+
+  <h2>By drivetrain</h2>
+  <div class="grid">
+    {generic.map((g) => (
+      <a href={`/tuning/${g.id}/`} class="card">
+        <h3>{g.data.title}</h3>
+        <p>{g.data.summary}</p>
+        {g.data.drivetrain && <p class="tags"><span class={`tag tag-${g.data.drivetrain.toLowerCase()}`}>{g.data.drivetrain}</span></p>}
+      </a>
+    ))}
+    {generic.length === 0 && <p class="lead">No generic guides published yet.</p>}
+  </div>
+
+  <h2>By car</h2>
+  <p class="lead" style="font-size:1rem;">Each car's setup lives on its profile, alongside how it drives.</p>
+  <div class="grid">
+    {perCar.map((g) => (
+      <a href={carHref(g.data.carId)} class="card">
+        <h3>{g.data.title}</h3>
+        <p>{g.data.summary}</p>
+        {g.data.drivetrain && <p class="tags"><span class={`tag tag-${g.data.drivetrain.toLowerCase()}`}>{g.data.drivetrain}</span></p>}
+      </a>
+    ))}
+    {perCar.length === 0 && <p class="lead">No car-specific sheets published yet.</p>}
+  </div>
+</BaseLayout>

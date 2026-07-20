@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const cars = (await getCollection('cars'))
+  .filter((c) => !c.data.draft)
+  .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+
+const drivetrains = [...new Set(cars.map((c) => c.data.drivetrain))].sort();
+const classes = [...new Set(cars.map((c) => c.data.carClass).filter(Boolean))].sort();
+const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
+---
+<BaseLayout title="Car Profiles" description="Every Wreckfest 2 car: drivetrain, handling, and setup notes.">
+  <p class="eyebrow">Car Profiles</p>
+  <h1>Cars</h1>
+  <p class="lead">How each car behaves on track, and the setup to match.</p>
+
+  <div class="car-filters" aria-label="Filter cars">
+    <div class="filter-group">
+      <span class="filter-label">Drive</span>
+      <button type="button" class="filter-chip active" data-filter="dt:all">All</button>
+      {drivetrains.map((d) => (
+        <button type="button" class="filter-chip" data-filter={`dt:${d}`}>{d}</button>
+      ))}
+    </div>
+    {classes.length > 0 && (
+      <div class="filter-group">
+        <span class="filter-label">Class</span>
+        <button type="button" class="filter-chip active" data-filter="class:all">All</button>
+        {classes.map((c) => (
+          <button type="button" class="filter-chip" data-filter={`class:${c}`}>{c}</button>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <div class="grid car-grid">
+    {cars.map((car) => (
+      <a href={`/cars/${car.id}/`} class="card" data-dt={car.data.drivetrain} data-class={car.data.carClass ?? ''}>
+        <h3>{car.data.name}</h3>
+        {(car.data.archetype || car.data.inspiration) && (
+          <p class="card-meta">{[car.data.archetype, car.data.inspiration].filter(Boolean).join(' · ')}</p>
+        )}
+        <p>{car.data.summary}</p>
+        <p class="tags">
+          <span class={dtClass(car.data.drivetrain)}>{car.data.drivetrain}</span>
+          {car.data.carClass && <span class="tag tag-plain">Class {car.data.carClass}</span>}
+        </p>
+      </a>
+    ))}
+  </div>
+  <p class="lead car-empty" style="display:none;">No cars match that filter.</p>
+  {cars.length === 0 && <p class="lead">No car profiles published yet.</p>}
+</BaseLayout>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.car-filters');
+  if (bar) {
+    const cards = Array.from(document.querySelectorAll<HTMLElement>('.car-grid .card'));
+    const empty = document.querySelector<HTMLElement>('.car-empty');
+    const state: Record<string, string> = { dt: 'all', class: 'all' };
+    bar.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLElement>('[data-filter]');
+      if (!chip) return;
+      const [kind, val] = chip.dataset.filter!.split(':');
+      state[kind] = val;
+      bar.querySelectorAll(`[data-filter^="${kind}:"]`).forEach((c) => c.classList.toggle('active', c === chip));
+      let shown = 0;
+      for (const card of cards) {
+        const ok = (state.dt === 'all' || card.dataset.dt === state.dt) &&
+                   (state.class === 'all' || card.dataset.class === state.class);
+        card.style.display = ok ? '' : 'none';
+        if (ok) shown++;
+      }
+      if (empty) empty.style.display = shown ? 'none' : '';
+    });
+  }
+</script>

@@ -1,0 +1,93 @@
+---
+title: "Bravion Setup"
+kind: car
+carId: car04
+drivetrain: RWD
+summary: A balanced, rev-happy sports saloon — calm its eager rear and make it a point-and-shoot exit car.
+order: 18
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward to stop the entry snap', surfaces: { mud: 54, gravel: 57, asphalt: 61 } },
+  'brake.pressure': { note: 'Less on loose, more on grip', surfaces: { mud: 80, gravel: 94, asphalt: 116 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Less lock than a muscle car — it already rotates', surfaces: { mud: 72, gravel: 62, asphalt: 48 } },
+  'diff.coast': { note: 'Some coast lock to calm lift-off oversteer', surfaces: { mud: 58, gravel: 52, asphalt: 44 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 24, gravel: 16, asphalt: 10 } },
+  'finalDrive': { note: 'Rev-happy — gear for the track', surfaces: { mud: 3.7, gravel: 3.4, asphalt: 3.1 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 46, gravel: 58, asphalt: 76 } },
+  'springs.rear': { note: 'Not too soft — keep the eager rear calm', surfaces: { mud: 26, gravel: 33, asphalt: 44 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Stiffer front, softer rear — calm the rear', surfaces: { mud: 44, gravel: 58, asphalt: 72 } },
+  'arb.rear': { note: 'Soft rear for exit traction and to tame oversteer', surfaces: { mud: 34, gravel: 44, asphalt: 56 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.5, gravel: -2.0, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Toe-in to steady the rear on entry' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Bravion already rotates — a near 50/50 saloon with a rev-happy engine that will oversteer on
+power and on lift. So the job here is the opposite of a muscle car: calm the rear rather than wake
+it. The **Differential** runs less power lock than a nose-heavy car needs (it doesn't need help
+rotating), with a helping of coast lock to settle the lift-off snap into corners.
+
+The rest is a steadying hand. Brake balance sits forward to stop the entry snap, the rear anti-roll
+bar stays soft for exit traction, and rear toe-in keeps the tail planted. Follow the surface for
+everything else: locked diff and soft/high on loose, opener diff and stiff/low on grip. Brake
+Pressure's scale runs 50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud has the least grip, so the eager rear is easiest to catch out here. Soften the springs and
+bars, raise the ride height to clear the ruts, and **lock the diff up**: on low grip a tight diff
+drives both rear wheels instead of spinning the inside one away, and the loose surface still lets
+you steer with the throttle.
+
+Feed the power in smoothly and let the nose lead — stabbing the throttle just lights the rear up
+and throws away the Bravion's balance.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is the middle ground and sits closest to the hybrid setup — the changes are small. The
+Bravion slides willingly and predictably here; steer it with the throttle and keep corrections
+small, which matters on a pad where a big stick input overshoots.
+
+Let it rotate a touch on power and drive out, but don't chase the slide — this car rewards a tidy
+line over a showy one.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the Bravion has grip to lean on, but the rev-happy rear will still snap if you get
+greedy. The springs and bars stiffen, brake pressure climbs, and the car drops closer to the road —
+and the **diff opens up**: on high grip a locked diff breaks both rear wheels loose together, so a
+looser diff keeps the exit progressive.
+
+Roll onto the throttle in one smooth motion out of the corner. This is a point-and-shoot exit car
+when you're patient with the right foot; jab it and the tail steps out.
+
+</Fragment>
+</SetupTabs>

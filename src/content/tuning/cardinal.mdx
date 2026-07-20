@@ -1,0 +1,95 @@
+---
+title: "Cardinal Setup"
+kind: car
+carId: car08
+drivetrain: RWD
+summary: The heaviest car in the roster — a high-speed tank geared long, tuned to find any front grip it can.
+order: 17
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward for stability — heaviest car in the roster', surfaces: { mud: 53, gravel: 56, asphalt: 61 } },
+  'brake.pressure': { note: 'Heaviest car — brake early and progressively', surfaces: { mud: 86, gravel: 100, asphalt: 122 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip', surfaces: { mud: 78, gravel: 68, asphalt: 56 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 58, gravel: 52, asphalt: 44 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 28, gravel: 20, asphalt: 12 } },
+  'finalDrive': { note: 'Long — it wants top speed', surfaces: { mud: 3.6, gravel: 3.3, asphalt: 3.0 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Very firm — huge nose weight', surfaces: { mud: 54, gravel: 68, asphalt: 88 } },
+  'springs.rear': { note: 'Softer than the front for traction', surfaces: { mud: 30, gravel: 38, asphalt: 50 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front to fight the heavy understeer', surfaces: { mud: 32, gravel: 44, asphalt: 58 } },
+  'arb.rear': { note: 'Stiffest rear bias — rotate the heaviest car', surfaces: { mud: 48, gravel: 62, asphalt: 78 } },
+  'camber.front': { note: 'Plenty of front camber to find any front grip', surfaces: { mud: -3.0, gravel: -3.5, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.5, gravel: -2.0, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Cardinal is the heaviest car in the roster, with a high top speed, huge strength, and the worst
+cornering of anything on the grid. You do not tune it into a corner-carver; you gear it long, lean
+on its mass and durability, and claw back whatever front grip you can. A soft front bar against the
+**stiffest rear bar** in these guides is the main lever, backed by plenty of front camber and a very
+firm front spring to cope with the nose weight.
+
+The **Differential** runs locked on loose, opener on grip: a tight diff drives both rear wheels on
+mud and gravel, while opening it on asphalt stops both wheels breaking loose together. The **Final
+Drive** runs long — this car wants top speed, not acceleration, and its mass carries the speed it
+builds. Brake Pressure's scale runs 50–150%, so 100% is mid-travel; a 1,937 kg car sits well above
+it because stopping this much mass takes everything.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud punishes weight, and the Cardinal has the most of it — the nose plows and the rear sinks. Soften
+everything, raise the ride height to clear the ruts, and **lock the diff up** so both rear wheels
+drive instead of spinning the inside one away. Ease the brakes back; all that mass locks the wheels
+easily on a loose surface.
+
+Brake early, in a straight line, and let the car settle before you ask it to turn. Trail-braking
+two tonnes into mud just buries the front.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel sits close to the hybrid setup — small changes. The soft-front, stiff-rear bar split does its
+best work on a surface that still lets a heavy car rotate, so use it: steer with the throttle and
+keep corrections small, which matters on a pad where a big stick input overshoots.
+
+Carry the momentum. The Cardinal takes an age to rebuild speed, so roll it through the corner rather
+than scrubbing it all off and trying to point the nose.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the Cardinal has grip to lean on at last, so the springs and bars stiffen, brake pressure
+climbs to its highest, and the car drops closer to the road. The **diff opens up**: on high grip a
+locked diff breaks both rear wheels loose together, so a looser diff keeps the exit progressive.
+Maximum front camber helps the outside tyre find an edge through the heavy understeer.
+
+Use the straights — this is where the long gearing and high top speed pay off. Brake early and
+smooth into the corners, set your entry speed before turning, and let the mass carry you through.
+
+</Fragment>
+</SetupTabs>

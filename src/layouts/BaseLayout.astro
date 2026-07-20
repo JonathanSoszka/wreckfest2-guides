@@ -1,0 +1,36 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+const fullTitle = title === 'Wreckfest 2 Guides' ? title : `${title} — Wreckfest 2 Guides`;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{fullTitle}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="color-scheme" content="dark light" />
+  </head>
+  <body>
+    <Header />
+    <main>
+      <div class="wrap">
+        <slot />
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">
+        Unofficial fan-made guides for Wreckfest 2. Not affiliated with Bugbear or THQ Nordic.
+        Game data extracted from local install files.
+      </div>
+    </footer>
+  </body>
+</html>

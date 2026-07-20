@@ -1,0 +1,244 @@
+---
+/**
+ * One tabbed widget for a guide's whole setup: a Hybrid tab (an all-round setup that does OK on
+ * every surface — the mean of the surface recommendations) plus Asphalt / Gravel / Mud tabs (each
+ * surface's setting + delta from the hybrid). Derived from one setup, so the numbers live in a
+ * single place.
+ *
+ * Accepts either `params` (flat — generic guides, 0–100 positions) or `groups` (category-grouped
+ * — real-data car guides, real units). Each category is a full-width, collapsible section with its
+ * settings in two columns inside; a full-width "why" panel (named slots) sits below. Radio-driven
+ * tabs need no JS; a small script only syncs each category's collapsed state across the four tabs.
+ */
+import TuningSlider from './TuningSlider.astro';
+import TuningDelta from './TuningDelta.astro';
+import type { TuningParam, TuningGroup, Surface } from './tuning';
+import { toGroups, hybridValue } from './tuning';
+
+interface Props {
+  params?: TuningParam[];
+  groups?: TuningGroup[];
+  caption?: string;
+  id?: string;
+}
+const { params, groups, caption, id = 'setup' } = Astro.props;
+const grouped = toGroups({ params, groups });
+
+const tabs = [
+  { key: 'hybrid', label: 'Hybrid' },
+  { key: 'asphalt', label: 'Asphalt' },
+  { key: 'gravel', label: 'Gravel' },
+  { key: 'mud', label: 'Mud' },
+] as const;
+
+const surfaceValue = (p: TuningParam, surface: Surface) => p.surfaces?.[surface] ?? p.base;
+const has = (name: string) => Astro.slots.has(name);
+const surfaces: Surface[] = ['asphalt', 'gravel', 'mud'];
+---
+<div class="setup-tabs">
+  {tabs.map((t, i) => (
+    <input class="st-radio" type="radio" name={id} id={`${id}-${t.key}`} data-tab={t.key} checked={i === 0} autocomplete="off" />
+  ))}
+  <div class="st-tablist" role="tablist" aria-label="Setup by surface">
+    {tabs.map((t) => (
+      <label class="st-tab" for={`${id}-${t.key}`} data-tab={t.key}>{t.label}</label>
+    ))}
+  </div>
+
+  <div class="st-panel" data-tab="hybrid">
+    <div class="st-settings">
+      {grouped.map((g) => g.category ? (
+        <details class="st-cat" data-cat={g.category} open>
+          <summary class="st-cat-head">{g.category}</summary>
+          <div class="st-cat-body">
+            {g.params.map((p) => <TuningSlider param={p} value={hybridValue(p)} />)}
+          </div>
+        </details>
+      ) : (
+        <div class="st-cat-body">
+          {g.params.map((p) => <TuningSlider param={p} value={hybridValue(p)} />)}
+        </div>
+      ))}
+    </div>
+    {has('hybrid') && <div class="st-why"><slot name="hybrid" /></div>}
+  </div>
+
+  {surfaces.map((surface) => (
+    <div class="st-panel" data-tab={surface}>
+      <div class="st-settings">
+        {grouped.map((g) => g.category ? (
+          <details class="st-cat" data-cat={g.category} open>
+            <summary class="st-cat-head">{g.category}</summary>
+            <div class="st-cat-body">
+              {g.params.map((p) => (
+                <TuningDelta param={p} baseline={hybridValue(p)} value={surfaceValue(p, surface)} />
+              ))}
+            </div>
+          </details>
+        ) : (
+          <div class="st-cat-body">
+            {g.params.map((p) => (
+              <TuningDelta param={p} baseline={hybridValue(p)} value={surfaceValue(p, surface)} />
+            ))}
+          </div>
+        ))}
+      </div>
+      {has(surface) && <div class="st-why"><slot name={surface} /></div>}
+    </div>
+  ))}
+
+  {caption && <p class="st-caption">{caption}</p>}
+</div>
+
+<script>
+  // Progressive enhancement: keep each category's collapsed state in sync across the four tab
+  // panels (each tab has its own copy of the category). Without JS, categories still collapse —
+  // just independently per tab.
+  document.querySelectorAll<HTMLElement>('.setup-tabs').forEach((widget) => {
+    widget.addEventListener(
+      'toggle',
+      (e) => {
+        const d = e.target as HTMLDetailsElement;
+        if (!(d instanceof HTMLDetailsElement) || !d.dataset.cat) return;
+        widget.querySelectorAll<HTMLDetailsElement>('details.st-cat').forEach((other) => {
+          if (other !== d && other.dataset.cat === d.dataset.cat && other.open !== d.open) {
+            other.open = d.open;
+          }
+        });
+      },
+      true, // capture — the toggle event does not bubble
+    );
+  });
+</script>
+
+<style>
+  .setup-tabs {
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+    overflow: hidden;
+  }
+
+  .st-radio { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+  .st-tablist { display: flex; border-bottom: 1px solid var(--border); background: var(--bg-panel-2); }
+  .st-tab {
+    flex: 1;
+    text-align: center;
+    padding: 0.7rem 0.75rem;
+    font-weight: 650;
+    font-size: 0.88rem;
+    letter-spacing: 0.02em;
+    color: var(--text-dim);
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+  }
+  .st-tab:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+
+  .st-panel { display: none; padding: 0.9rem 1.25rem 0.6rem; }
+  .st-settings { display: block; }
+
+  /* Collapsible category section — full width, so categories align across the two setting columns. */
+  .st-cat { border-top: 1px solid var(--border); }
+  .st-cat:first-child { border-top: none; }
+  .st-cat-head {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.7rem;
+    margin: 0.55rem 0 0.2rem;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    user-select: none;
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .st-cat:first-child .st-cat-head { margin-top: 0.1rem; }
+  .st-cat-head::-webkit-details-marker { display: none; }
+  .st-cat-head::before {
+    content: '▸';
+    color: var(--accent);
+    font-size: 0.9em;
+    transition: transform 0.15s ease;
+  }
+  .st-cat[open] > .st-cat-head::before { transform: rotate(90deg); }
+  .st-cat-head:hover { border-color: var(--accent); background: var(--bg-panel); }
+
+  /* Two-column grid of settings inside a category. */
+  .st-cat-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1.75rem;
+    padding: 0.1rem 0.3rem 0.5rem;
+  }
+
+  /* Bottom: full-width "why" section. */
+  .st-why {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+    color: var(--text-dim);
+    max-width: 78ch;
+  }
+  .st-why :global(h4) {
+    margin: 0.15rem 0 0.6rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    font-weight: 650;
+  }
+  .st-why :global(p) { margin: 0 0 0.7rem; }
+  .st-why :global(p:last-child) { margin-bottom: 0; }
+
+  @media (max-width: 640px) {
+    .st-cat-body { grid-template-columns: 1fr; }
+  }
+
+  .st-radio[data-tab='hybrid']:checked ~ .st-panel[data-tab='hybrid'],
+  .st-radio[data-tab='mud']:checked ~ .st-panel[data-tab='mud'],
+  .st-radio[data-tab='gravel']:checked ~ .st-panel[data-tab='gravel'],
+  .st-radio[data-tab='asphalt']:checked ~ .st-panel[data-tab='asphalt'] {
+    display: block;
+  }
+
+  .st-radio[data-tab='hybrid']:checked ~ .st-tablist .st-tab[data-tab='hybrid'] {
+    color: var(--accent); border-bottom-color: var(--accent); background: var(--bg-panel);
+  }
+  .st-radio[data-tab='mud']:checked ~ .st-tablist .st-tab[data-tab='mud'] {
+    color: var(--surf-dirt); border-bottom-color: var(--surf-dirt); background: var(--bg-panel);
+  }
+  .st-radio[data-tab='gravel']:checked ~ .st-tablist .st-tab[data-tab='gravel'] {
+    color: var(--surf-gravel); border-bottom-color: var(--surf-gravel); background: var(--bg-panel);
+  }
+  .st-radio[data-tab='asphalt']:checked ~ .st-tablist .st-tab[data-tab='asphalt'] {
+    color: var(--surf-tarmac); border-bottom-color: var(--surf-tarmac); background: var(--bg-panel);
+  }
+
+  .st-radio[data-tab='hybrid']:focus-visible ~ .st-tablist .st-tab[data-tab='hybrid'],
+  .st-radio[data-tab='mud']:focus-visible ~ .st-tablist .st-tab[data-tab='mud'],
+  .st-radio[data-tab='gravel']:focus-visible ~ .st-tablist .st-tab[data-tab='gravel'],
+  .st-radio[data-tab='asphalt']:focus-visible ~ .st-tablist .st-tab[data-tab='asphalt'] {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+  .st-caption {
+    margin: 0;
+    padding: 0.6rem 1.25rem 0.8rem;
+    font-size: 0.8rem;
+    color: var(--text-faint);
+    border-top: 1px solid var(--border);
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+title: "Grandstar Setup"
+kind: car
+carId: car13
+drivetrain: FWD
+summary: "A nose-heavy, tippy minivan — stiffen it, drop it, and use the mass as a weapon rather than fighting the roll."
+order: 26
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Well forward — huge nose weight does the stopping', surfaces: { mud: 60, gravel: 63, asphalt: 66 } },
+  'brake.pressure': { note: 'Heavy — brake early', surfaces: { mud: 78, gravel: 92, asphalt: 114 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose so the driven wheels put power down; opener on grip so it stops fighting your steering', surfaces: { mud: 58, gravel: 48, asphalt: 40 } },
+  'diff.coast': { note: 'Keep it low — too much makes the driven axle push on entry', surfaces: { mud: 32, gravel: 26, asphalt: 20 } },
+  'diff.preload': { note: 'A little on loose for stability, less on grip', surfaces: { mud: 20, gravel: 14, asphalt: 10 } },
+  'finalDrive': { note: 'Mid — heavy, stay in the torque', surfaces: { mud: 4.0, gravel: 3.8, asphalt: 3.5 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Firm — heavy nose', surfaces: { mud: 40, gravel: 52, asphalt: 68 } },
+  'springs.rear': { note: 'Very stiff rear — rotate the heavy nose and cut the roll', surfaces: { mud: 50, gravel: 64, asphalt: 82 } },
+  'rideHeight.front': { note: 'Low as allowed — high CG rolls', surfaces: { mud: 26.5, gravel: 24.5, asphalt: 21.0 } },
+  'rideHeight.rear': { surfaces: { mud: 27.5, gravel: 26.5, asphalt: 23.5 } },
+  'arb.front': { note: 'Firmer than a light FWD to control roll', surfaces: { mud: 38, gravel: 50, asphalt: 64 } },
+  'arb.rear': { note: 'Very stiff rear — rotation and roll control', surfaces: { mud: 56, gravel: 70, asphalt: 86 } },
+  'camber.front': { note: 'Front-heavy camber budget — the front does the cornering', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'Toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Grandstar is a heavy, very nose-heavy minivan with a high centre of gravity — strong understeer
+and a real rollover risk. You cannot make it agile, so make it stable and use the mass. **Stiff
+everywhere and low as allowed:** firm springs and bars to control the roll, and the ride height
+dropped further than a lighter FWD to keep the tall body from tipping.
+
+The rear runs very stiff — it both rotates the heavy nose and cuts the roll. The **differential**
+governs the driven front wheels: locked on loose to drag the mass out of corners, opener on grip so
+it stops fighting your steering. Brakes sit well forward since the huge nose weight does the
+stopping, and you brake early because there is a lot of car to slow down.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud plus a heavy understeering nose is the worst case — the driven front digs and pushes wide.
+Soften slightly and raise the ride height off the lowest setting to clear the ruts, and **lock the
+diff up** so both front wheels haul the mass out.
+
+Brake early and get the nose pointed on the entry lift; once this thing is understeering under power
+in mud, nothing brings it back but patience.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel gives you a little rotation to work with and sits close to the hybrid setup. Lift off to
+bring the heavy nose round, then feed the power in smoothly and let the mass carry you out.
+
+Keep the rear bar very stiff — it is the only thing rotating this nose — and remember the mass is an
+asset in traffic; a well-placed Grandstar shrugs off contact that spins lighter cars.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt is where the high CG and nose weight fight you hardest — roll and exit understeer both peak.
+Stiffen everything further, drop the car as low as allowed, and **open the diff** so it stops adding
+understeer as it fights your steering.
+
+Add front negative camber to keep the outside front planted through the roll, and stay smooth on
+turn-in; a sudden input tips weight onto that tall outside corner and the nose just pushes.
+
+</Fragment>
+</SetupTabs>

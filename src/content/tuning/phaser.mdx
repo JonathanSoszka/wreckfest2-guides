@@ -1,0 +1,88 @@
+---
+title: "Phaser Setup"
+kind: car
+carId: car12
+drivetrain: FWD
+summary: "A peaky, high-revving corner-carver — keep the revs up and steady the light rear on rough tracks."
+order: 25
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward; keep some rear to help it rotate', surfaces: { mud: 60, gravel: 62, asphalt: 65 } },
+  'brake.pressure': { note: 'Back off if the fronts lock and wash wide', surfaces: { mud: 76, gravel: 90, asphalt: 112 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose so the driven wheels put power down; opener on grip so it stops fighting your steering', surfaces: { mud: 60, gravel: 50, asphalt: 40 } },
+  'diff.coast': { note: 'Keep it low — too much makes the driven axle push on entry', surfaces: { mud: 32, gravel: 26, asphalt: 20 } },
+  'diff.preload': { note: 'A little on loose for stability, less on grip', surfaces: { mud: 20, gravel: 14, asphalt: 10 } },
+  'finalDrive': { note: 'Short — peaky high-rev four, keep the revs up', surfaces: { mud: 4.2, gravel: 4.0, asphalt: 3.7 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Soft so the driven wheels stay planted', surfaces: { mud: 34, gravel: 44, asphalt: 58 } },
+  'springs.rear': { note: 'Firm to rotate, but the light rear can snap — do not overdo it', surfaces: { mud: 42, gravel: 54, asphalt: 70 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { note: 'A touch up on rough tracks to steady the light rear', surfaces: { mud: 28.5, gravel: 27.5, asphalt: 25.0 } },
+  'arb.front': { note: 'Soft front — keep the driven wheels compliant', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'arb.rear': { note: 'Stiff rear, trimmed back to calm the snap over kerbs', surfaces: { mud: 48, gravel: 60, asphalt: 76 } },
+  'camber.front': { note: 'Front-heavy camber budget — the front does the cornering', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'Toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in on rough tracks to steady the rear' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Phaser is a nose-heavy corner-carver with a peaky, high-revving four. It makes its power up top,
+so gear it short and keep the revs up — it will not lug out of a corner like a V8. The chassis is
+nimble, but the light FWD rear can snap over kerbs and jumps, so the rear is firm to rotate the nose
+yet trimmed back from a full-attack setting.
+
+The **differential** governs the driven front wheels: locked on loose to put power down, opener on
+grip so it stops fighting your steering. **Soft front, firm rear** points the nose, but on rough
+tracks add a touch of rear ride height and a little rear toe-in to steady that light tail. Keep the
+coast side low so the driven axle does not push on entry.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud punishes the driven front — the wheels dig and the nose washes wide. Soften the front, raise the
+ride height, and **lock the diff up** so both front wheels pull the car out.
+
+Keep the revs up out of slow corners since the engine makes nothing down low, and get your rotation
+done on the entry lift rather than trying to power the nose round.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel suits the Phaser's agility and sits close to the hybrid setup. Lift-off rotation points the
+nose neatly — back off to rotate, then feed the revs back in and drive out.
+
+This is where the trimmed-back rear pays off: the light tail can snap over the rough stuff, so keep
+the rear bar firm but not vicious, and keep pad corrections small.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt exposes exit understeer as the loaded front runs out of grip. Stiffen the rear, drop the
+front, firm the front to use the grip, and **open the diff** so it stops fighting your steering.
+
+Add front negative camber to plant the outside edge, but keep the rear settings honest — Wreckfest
+tarmac is kerbed and bumpy, and a light rear on a stiff bar will step out over a mid-corner bump.
+
+</Fragment>
+</SetupTabs>

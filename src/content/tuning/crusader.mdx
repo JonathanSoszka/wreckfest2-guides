@@ -1,0 +1,90 @@
+---
+title: "Crusader Setup"
+kind: car
+carId: car05
+drivetrain: FWD
+summary: "Textbook front-drive — rotate it on entry, then protect the loaded front on exit."
+order: 23
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward; keep some rear to help it rotate', surfaces: { mud: 60, gravel: 62, asphalt: 65 } },
+  'brake.pressure': { note: 'Back off if the fronts lock and wash wide', surfaces: { mud: 76, gravel: 90, asphalt: 112 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose so the driven wheels put power down; opener on grip so it stops fighting your steering', surfaces: { mud: 60, gravel: 50, asphalt: 40 } },
+  'diff.coast': { note: 'Keep it low — too much makes the driven axle push on entry', surfaces: { mud: 32, gravel: 26, asphalt: 20 } },
+  'diff.preload': { note: 'A little on loose for stability, less on grip', surfaces: { mud: 20, gravel: 14, asphalt: 10 } },
+  'finalDrive': { note: 'Mid — modest torque, stay in it', surfaces: { mud: 4.0, gravel: 3.8, asphalt: 3.5 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Soft so the driven wheels stay planted', surfaces: { mud: 34, gravel: 44, asphalt: 58 } },
+  'springs.rear': { note: 'Firm to help the tail rotate', surfaces: { mud: 46, gravel: 58, asphalt: 76 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front — keep the driven wheels compliant', surfaces: { mud: 30, gravel: 40, asphalt: 52 } },
+  'arb.rear': { note: 'Stiff rear rotates the nose', surfaces: { mud: 54, gravel: 66, asphalt: 82 } },
+  'camber.front': { note: 'Front-heavy camber budget — the front does the cornering', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.0, gravel: -1.5, asphalt: -2.0 } },
+  'toe.front': { note: 'Toe-out sharpens turn-in' },
+  'toe.rear': { note: 'Near neutral or slightly out to help rotation' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Crusader is the textbook front-driver: nose-heavy, modest torque, and prone to understeer the
+moment you ask the front to steer and drive at once. The whole setup is about taking work off the
+front axle. **Soft front, stiff rear** — a firm rear bar and springs loosen the tail so the nose
+rotates on entry, then you protect the loaded front on the way out.
+
+The **differential** governs the driven front wheels here. It locks up on loose surfaces to put the
+modest torque down, and opens on grip so it stops fighting your steering — a tight driven diff on
+tarmac just piles on understeer. Keep the coast side low so the driven axle does not push on entry,
+and bias the brakes forward while leaving a slice at the rear to help the light tail come round.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is where front-drive understeer bites hardest — the driven wheels dig and the nose washes wide.
+Soften the front, raise the ride height to clear the ruts, and **lock the diff up** so both front
+wheels pull the car out instead of spinning the inside one away.
+
+Get all your rotation done on the entry lift and roll onto the power smoothly; stabbing the throttle
+just loads the front and pushes you straight on.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is the Crusader at its best and sits close to the hybrid setup. Lift-off rotation is your
+friend here — ease off to bring the nose round, then feed the power back in and drive out straight.
+
+Keep the rear bar firm so the tail stays willing to rotate, and keep corrections small; the modest
+torque means momentum is everything on a loose surface.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt exposes the exit understeer most clearly — the loaded front runs out of grip trying to do
+two jobs. Stiffen the rear further, drop the car, firm the front to use the grip, and **open the
+diff** so it stops fighting your steering out of the corner.
+
+Add more front negative camber to keep the outside edge planted, and hold onto that slice of rear
+brake so you do not lose the entry rotation the car leans on.
+
+</Fragment>
+</SetupTabs>

@@ -1,0 +1,120 @@
+---
+title: Generic AWD Tuning
+kind: generic
+drivetrain: AWD
+summary: Balancing an all-wheel-drive car — traction everywhere, so the setup decides whether it understeers or rotates — in the game's own units.
+order: 3
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. A generic all-wheel-drive baseline to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Near centre, a touch forward', surfaces: { mud: 54, gravel: 56, asphalt: 59 } },
+  'brake.pressure': { note: 'Heavy and stable — can run a little higher; less on loose, more on grip', surfaces: { mud: 82, gravel: 96, asphalt: 118 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip; a tight diff on tarmac adds understeer', surfaces: { mud: 64, gravel: 54, asphalt: 44 } },
+  'diff.coast': { note: 'Some lock on loose for braking stability', surfaces: { mud: 56, gravel: 50, asphalt: 42 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 24, gravel: 16, asphalt: 10 } },
+  'finalDrive': { note: 'Mid — traction lets you gear for the track rather than the corners', surfaces: { mud: 3.8, gravel: 3.6, asphalt: 3.3 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Soft-ish — keep all four tyres planted', surfaces: { mud: 42, gravel: 54, asphalt: 70 } },
+  'springs.rear': { note: 'Matched close to the front — the car is balanced by design', surfaces: { mud: 38, gravel: 50, asphalt: 66 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Stiffen to calm the car, soften to free the nose', surfaces: { mud: 44, gravel: 56, asphalt: 70 } },
+  'arb.rear': { note: 'Stiffen to add rotation — your main balance trim', surfaces: { mud: 44, gravel: 56, asphalt: 70 } },
+  'camber.front': { note: 'Even camber budget front-to-rear — all four tyres corner', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+<div class="tune-grid">
+<div class="tune-presets">
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+All-wheel drive changes the problem. Traction out of corners is rarely the issue — power goes to all
+four tyres — so an AWD car puts power down on loose surfaces better than a FWD or RWD car. What you
+tune instead is **balance**: an AWD car can understeer like a FWD car or rotate like a RWD car, and
+the setup decides which.
+
+The **anti-roll bars are your main balance trim** — stiffen the rear to add rotation, the front to
+calm the car. Keep both soft-ish; compliance keeps all four tyres on the ground, where the traction
+advantage actually lives. The springs sit close front-to-rear because the car is balanced by design.
+
+The **Differential** still locks on loose for traction and opens on grip, but it matters less than
+on a two-wheel-drive car — trim balance with the bars first, then the diff.
+
+Camber is spread evenly front-to-rear, since all four tyres both drive and corner.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is where AWD shines brightest — all four wheels claw for grip where a FWD or RWD car bogs down,
+so you carry drive out of corners that would strand the others. Soften and raise everything to keep
+the tyres planted, and lock the diff up for traction.
+
+The catch is weight: a heavy AWD car can still plough straight on. Lean on the traction and feed the
+power in confidently off the corner where the others cannot.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel suits AWD well and sits close to the hybrid setup. The car is planted and carries more corner
+speed than a FWD or RWD car, because all four tyres share the cornering and driving load.
+
+Trim rotation with the rear anti-roll bar rather than reaching for the diff every time.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+Asphalt gives you grip to push hard, and the car feels fast and stable. The failure mode is
+understeer, so stiffen up, lower the car, and **open the diff** so it does not fight your steering —
+then add rear anti-roll bar if you still need the nose to bite.
+
+Keep the camber budget fairly even front-to-rear, since all four tyres are still working.
+
+</Fragment>
+</SetupTabs>
+
+</div>
+<div class="tune-notes">
+
+<p class="eyebrow">Generic Tuning</p>
+
+<h1>Generic AWD Setup</h1>
+
+<p class="tags"><span class="tag tag-awd">AWD</span></p>
+
+<p class="lead">Balancing an all-wheel-drive car — traction everywhere, so the setup decides whether it understeers or rotates — in the game's own units.</p>
+
+<div class="callout"><p>The current roster has no confirmed AWD car — treat this as the drivetrain theory to apply once one appears, and confirm the split on the in-game tuning screen.</p></div>
+
+All-wheel drive rarely struggles for traction — the question is balance, and the setup answers it.
+The **Hybrid** tab on the left is an all-round setup that does OK on any surface, in the game's real
+sliders and units; each surface tab shows what to change from it. Gamepad players: Steering Ratio
+one notch slower than shown.
+
+## Reading the presets
+
+The filled marker is the setting, the tick is the hybrid value, and the coloured number is the
+change from it (green higher, blue lower). Each tab's own **Why these changes** panel — below its
+settings — explains the reasoning for that surface.
+
+</div>
+</div>

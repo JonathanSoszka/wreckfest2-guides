@@ -1,0 +1,95 @@
+---
+title: "Rammer Setup"
+kind: car
+carId: car07
+drivetrain: RWD
+summary: A heavy full-size sedan and momentum weapon — claw back what turn-in you can and brake early.
+order: 16
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Forward for stability under heavy braking', surfaces: { mud: 53, gravel: 56, asphalt: 60 } },
+  'brake.pressure': { note: 'Very heavy — brake early; less on loose, more on grip', surfaces: { mud: 84, gravel: 98, asphalt: 120 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Locked on loose for traction, opener on grip', surfaces: { mud: 78, gravel: 68, asphalt: 56 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 58, gravel: 52, asphalt: 44 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 28, gravel: 20, asphalt: 12 } },
+  'finalDrive': { note: 'Torque-rich — gear for the track', surfaces: { mud: 3.7, gravel: 3.5, asphalt: 3.2 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Firm — heavy nose', surfaces: { mud: 52, gravel: 66, asphalt: 84 } },
+  'springs.rear': { note: 'Softer than the front for traction', surfaces: { mud: 28, gravel: 36, asphalt: 48 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'Soft front to claw back turn-in', surfaces: { mud: 34, gravel: 46, asphalt: 60 } },
+  'arb.rear': { note: 'Stiff rear to rotate the tank', surfaces: { mud: 46, gravel: 60, asphalt: 74 } },
+  'camber.front': { note: 'More front camber for the reluctant nose', surfaces: { mud: -2.5, gravel: -3.0, asphalt: -4.0 } },
+  'camber.rear': { surfaces: { mud: -1.5, gravel: -2.0, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Rammer is a heavy understeer tank, so the whole setup fights the nose to find bite. The
+**anti-roll bars** are the biggest lever: a soft front bar and a stiff rear bar shift roll stiffness
+rearward, which frees the front to turn in and lets the tail rotate the car for you. Plenty of front
+camber and a soft front spring back that up.
+
+The **Differential** runs opposite to instinct: locked on loose, opener on grip. On mud and gravel a
+tight diff drives both rear wheels and puts the torque down; on asphalt it would snap both wheels
+loose together, so opening it keeps the exit progressive. Brake Pressure's scale runs 50–150%, so
+100% is mid-travel, not the maximum — and this car sits above it, because a 1,633 kg sedan needs a
+lot of stopping.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface and the Rammer's weight works against it — the nose pushes wide and
+the rear digs in. Soften everything, raise the ride height to clear the ruts, and **lock the diff
+up** so both rear wheels drive instead of spinning the inside one away. Back the brakes off; a heavy
+car locks its wheels easily on a loose surface.
+
+Brake early and in a straight line, then let the car coast-rotate into the corner — trying to
+trail-brake this much mass into mud just plows the front.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel sits close to the hybrid setup — the changes are small. The soft-front, stiff-rear bar split
+does its best work here, letting the tank rotate on a surface that still forgives a slide. Steer it
+with the throttle and keep corrections small, which matters on a pad where a big stick input
+overshoots.
+
+Use the car's momentum. Roll the speed through the corner rather than braking hard and trying to
+point it — a heavy sedan carries far more than it accelerates.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the Rammer finally has grip to lean on, so the springs and bars stiffen, brake pressure
+climbs, and the car drops closer to the road. The **diff opens up**: on high grip a locked diff
+breaks both rear wheels loose together, so a looser diff keeps the exit progressive. More front
+camber helps the outside tyre find an edge through the reluctant nose.
+
+Brake early and smooth — this is a momentum rammer, not a late-braker. Set the entry speed before
+you turn and let the mass carry you out.
+
+</Fragment>
+</SetupTabs>

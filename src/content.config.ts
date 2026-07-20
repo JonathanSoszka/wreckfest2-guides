@@ -1,0 +1,84 @@
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+const drivetrain = z.enum(['FWD', 'RWD', 'AWD']);
+const surface = z.enum(['tarmac', 'dirt', 'gravel', 'mixed']);
+
+// Car profiles — one Markdown file per car. Numeric stats are intentionally
+// optional for now (see project notes: headline stats deferred).
+const cars = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/cars' }),
+  schema: z.object({
+    name: z.string(),
+    internalId: z.string(), // e.g. "car01"
+    drivetrain: drivetrain,
+    carClass: z.string().optional(), // A/B/C etc. — best-effort
+    inspiration: z.string().optional(), // real-world lookalike (from car-reference.md)
+    archetype: z.string().optional(), // handling archetype, e.g. "RWD muscle", "FWD hatch"
+    summary: z.string(),
+    heroImage: z.string().optional(),
+    order: z.number().default(999),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// Track profiles — one Markdown file per venue (a location, which may hold
+// several playable layouts). `layouts` captures each route the game ships.
+const tracks = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/tracks' }),
+  schema: z.object({
+    name: z.string(),
+    internalId: z.string(), // base folder id, e.g. "track01"
+    surface: surface, // primary surface for the venue
+    hasReverse: z.boolean().default(false),
+    location: z.string().optional(), // real-world/setting locale
+    // How sure we are of the real name mapping from internal id → community name.
+    confidence: z.enum(['confirmed', 'high', 'medium']).optional(),
+    // Each playable route at this venue.
+    layouts: z
+      .array(
+        z.object({
+          name: z.string(),
+          reverse: z.boolean().default(false),
+          lengthM: z.number().optional(),
+          surfaceMix: z.string().optional(), // e.g. "64% tarmac / 36% gravel"
+        }),
+      )
+      .optional(),
+    summary: z.string(),
+    heroImage: z.string().optional(), // /tracks/<slug>/hero.jpg — in-game screenshot
+    mapImage: z.string().optional(), // /tracks/<slug>/map.png — cropped track-select map
+    order: z.number().default(999),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// Tuning guides — generic per-drivetrain guides and per-car guides.
+// Authored as MDX so they can embed interactive components (e.g. SetupTabs).
+const tuning = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/tuning' }),
+  schema: z.object({
+    title: z.string(),
+    kind: z.enum(['generic', 'car']),
+    drivetrain: drivetrain.optional(), // set for generic guides
+    carId: z.string().optional(), // set for per-car guides (matches car internalId)
+    summary: z.string(),
+    order: z.number().default(999),
+    draft: z.boolean().default(false),
+  }),
+});
+
+// Racing lessons — Wreckfest-specific racecraft.
+const lessons = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/lessons' }),
+  schema: z.object({
+    title: z.string(),
+    topic: z.string(), // e.g. "Braking", "Dirt", "Contact"
+    surface: surface.optional(),
+    summary: z.string(),
+    order: z.number().default(999),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { cars, tracks, tuning, lessons };

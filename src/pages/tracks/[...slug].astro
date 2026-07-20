@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const tracks = (await getCollection('tracks')).filter((t) => !t.data.draft);
+  return tracks.map((track) => ({ params: { slug: track.id }, props: { track } }));
+}
+
+const { track } = Astro.props;
+const { Content } = await render(track);
+const { layouts, confidence, location } = track.data;
+
+const confidenceNote: Record<string, string> = {
+  medium: 'Real name is our best read from the game files — awaiting an in-game confirmation pass.',
+};
+---
+<BaseLayout title={track.data.name} description={track.data.summary}>
+  <a href="/tracks/" class="back">← All tracks</a>
+  <p class="eyebrow">Track Profile</p>
+  <h1>{track.data.name}</h1>
+  {location && <p class="card-meta" style="font-size: 0.9rem;">{location}</p>}
+  <p class="tags" style="margin-bottom: 1rem;">
+    <span class={`tag tag-${track.data.surface}`}>{track.data.surface}</span>
+    {track.data.hasReverse && <span class="tag tag-plain">reverse available</span>}
+  </p>
+  <p class="lead">{track.data.summary}</p>
+
+  {track.data.heroImage && (
+    <img src={track.data.heroImage} alt={`${track.data.name} in Wreckfest 2`} class="track-hero" loading="lazy" />
+  )}
+
+  <article class="prose">
+    <Content />
+  </article>
+
+  {track.data.mapImage && (
+    <section class="prose">
+      <h2>Track map</h2>
+      <img src={track.data.mapImage} alt={`${track.data.name} track map`} class="track-map" loading="lazy" />
+      <p class="card-meta" style="font-size:0.85rem;">In-game track-select map.</p>
+    </section>
+  )}
+
+  {layouts && layouts.length > 0 && (
+    <section class="prose">
+      <h2>Layouts</h2>
+      <table>
+        <thead>
+          <tr><th>Layout</th><th>Length</th><th>Surface</th></tr>
+        </thead>
+        <tbody>
+          {layouts.map((l) => (
+            <tr>
+              <td>{l.name}{l.reverse && <span class="tag tag-plain" style="margin-left:0.5rem;">reverse</span>}</td>
+              <td>{l.lengthM ? `${l.lengthM} m` : '—'}</td>
+              <td>{l.surfaceMix ?? track.data.surface}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {confidence && confidenceNote[confidence] && (
+        <p class="card-meta" style="font-size:0.85rem;">{confidenceNote[confidence]}</p>
+      )}
+    </section>
+  )}
+
+  <div class="callout">
+    <p>
+      New to Wreckfest racing? Start with the <a href="/lessons/">racing lessons</a>,
+      then dial in your car on the <a href="/tuning/">tuning guides</a>.
+    </p>
+  </div>
+</BaseLayout>

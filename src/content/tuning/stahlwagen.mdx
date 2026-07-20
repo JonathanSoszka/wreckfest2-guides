@@ -1,0 +1,93 @@
+---
+title: "Stahlwagen Setup"
+kind: car
+carId: car15
+drivetrain: RWD
+summary: The stable one — a long-wheelbase wagon with controllable balance, where brake bias and diff do the work.
+order: 20
+---
+import SetupTabs from '../../components/SetupTabs.astro';
+import { buildGroups } from '../../data/tuning/schema';
+
+export const caption = 'Hybrid = a do-everything setup; each surface tab shows what to change from it. All recommendations to test against your own feel — the game stock tune (identical for every car) sits mid-range of these.';
+
+export const values = {
+  'brake.balance': { note: 'Near centre, a touch forward', surfaces: { mud: 53, gravel: 56, asphalt: 60 } },
+  'brake.pressure': { note: 'Less on loose, more on grip', surfaces: { mud: 80, gravel: 94, asphalt: 116 } },
+  'frontBalancer': { note: 'Undocumented — test both ways in one braking zone' },
+  'diff.power': { note: 'Rear weight aids traction — moderate lock', surfaces: { mud: 74, gravel: 64, asphalt: 52 } },
+  'diff.coast': { note: 'A little more on loose for braking stability', surfaces: { mud: 58, gravel: 52, asphalt: 44 } },
+  'diff.preload': { note: 'More base lock on loose, less on grip', surfaces: { mud: 26, gravel: 18, asphalt: 12 } },
+  'finalDrive': { note: 'Torque-rich midrange — gear for the track', surfaces: { mud: 3.8, gravel: 3.5, asphalt: 3.2 } },
+  'gear.1': { note: 'Stock ratios — reference' },
+  'springs.front': { note: 'Compliance over the bumps', surfaces: { mud: 46, gravel: 58, asphalt: 76 } },
+  'springs.rear': { note: 'A touch softer than the front for exit traction', surfaces: { mud: 26, gravel: 33, asphalt: 44 } },
+  'rideHeight.front': { note: 'Up for kerbs and ruts, down for grip', surfaces: { mud: 27.5, gravel: 25.5, asphalt: 22.0 } },
+  'rideHeight.rear': { surfaces: { mud: 28.5, gravel: 27.5, asphalt: 24.5 } },
+  'arb.front': { note: 'A touch stiffer than the rear — calms the car', surfaces: { mud: 42, gravel: 54, asphalt: 68 } },
+  'arb.rear': { note: 'Balanced front-to-rear — a stable wagon', surfaces: { mud: 38, gravel: 50, asphalt: 64 } },
+  'camber.front': { note: 'Less negative on loose, more on grip', surfaces: { mud: -2.0, gravel: -2.5, asphalt: -3.5 } },
+  'camber.rear': { surfaces: { mud: -1.5, gravel: -2.0, asphalt: -2.5 } },
+  'toe.front': { note: 'A touch of toe-out sharpens turn-in' },
+  'toe.rear': { note: 'A little toe-in for stability' },
+  'steering.ratio': { note: 'Gamepad: set one notch slower than shown' },
+};
+
+export const groups = buildGroups(values);
+
+
+<SetupTabs groups={groups} caption={caption}>
+<Fragment slot="hybrid">
+
+#### Why these numbers
+
+The Stahlwagen is the stable one. A long wheelbase and wagon mass carried slightly rearward give it
+calm, controllable balance and good rear traction, so nothing here is fighting a nervous car — which
+means the fine controls matter more. **Brake balance** and the **Differential** do most of the work:
+sitting near centre with a touch forward keeps it honest on entry, and moderate power lock lets the
+rear weight put the torque down without snapping.
+
+Everything else follows the surface: locked diff and soft/high on loose, opener diff and stiff/low
+on grip. The anti-roll bars run close front-to-rear — this is a balanced wagon, not a car you tune
+to rotate. The **Final Drive** gears for the torque-rich midrange. Brake Pressure's scale runs
+50–150%, so 100% is mid-travel, not the maximum.
+
+</Fragment>
+<Fragment slot="mud">
+
+#### Why these changes
+
+Mud is the lowest-grip surface, but the Stahlwagen's rearward weight helps it dig in and drive.
+Soften the springs and bars, raise the ride height to clear the ruts, and **lock the diff up**: on
+low grip a tight diff drives both rear wheels instead of spinning the inside one away, and the loose
+surface still lets you steer with the throttle.
+
+Lean on the wagon's stability — it stays composed where a nose-heavy car would flounder. Feed the
+throttle smoothly and let its traction carry you out.
+
+</Fragment>
+<Fragment slot="gravel">
+
+#### Why these changes
+
+Gravel is the middle ground and sits closest to the hybrid setup — the changes are small. The
+Stahlwagen slides predictably and holds its line, so you can commit earlier than in a twitchier car;
+keep corrections small, which matters on a pad where a big stick input overshoots.
+
+Trust the balance and drive it clean. This is a car you place accurately rather than wrestle.
+
+</Fragment>
+<Fragment slot="asphalt">
+
+#### Why these changes
+
+On asphalt the Stahlwagen has real grip and its long wheelbase makes it planted and predictable. The
+springs and bars stiffen, brake pressure climbs, and the car drops closer to the road — and the
+**diff opens up**: on high grip a locked diff breaks both rear wheels loose together, so a looser
+diff keeps the exit progressive.
+
+Here the **brake bias** earns its keep: a touch forward stops the long tail from stepping out under
+hard, late braking. Brake in a straight line and let the stability work for you.
+
+</Fragment>
+</SetupTabs>

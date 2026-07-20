@@ -1,0 +1,111 @@
+{
+  "car": "RoadSlayer",
+  "internalId": "car01",
+  "source": "In-game tuning screen screenshots (default, all-min, all-max), read 2026-07-19.",
+  "status": "complete — default + min/max ranges captured for every slider.",
+  "notes": [
+    "Brake Pressure range is 50–150%; default 100% sits at mid-travel.",
+    "Front Balancer is a toggle (Off/On), default On.",
+    "Springs, Ride Height, Anti-roll Bars, Camber and Toe are split Front/Rear.",
+    "Gears are captured for completeness; per-gear tuning is advanced/reference."
+  ],
+  "groups": [
+    {
+      "category": "Braking Force",
+      "params": [
+        { "label": "Balance", "min": "Rear", "max": "Front", "unit": "%", "rangeMin": 0, "rangeMax": 100, "default": 55 },
+        { "label": "Pressure", "min": "Low", "max": "High", "unit": "%", "rangeMin": 50, "rangeMax": 150, "default": 100 }
+      ]
+    },
+    {
+      "category": "Front Balancer",
+      "params": [
+        { "label": "Enabled", "type": "toggle", "off": "Off", "on": "On", "default": "On" }
+      ]
+    },
+    {
+      "category": "Differential — Rear",
+      "params": [
+        { "label": "Power", "min": "Low", "max": "High", "unit": "%", "rangeMin": 0, "rangeMax": 100, "default": 70 },
+        { "label": "Coast", "min": "Low", "max": "High", "unit": "%", "rangeMin": 0, "rangeMax": 100, "default": 60 },
+        { "label": "Preload", "min": "Low", "max": "High", "unit": "Nm", "rangeMin": 5, "rangeMax": 150, "default": 15 }
+      ]
+    },
+    {
+      "category": "Final Drive",
+      "params": [
+        { "label": "Final", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 2.20, "rangeMax": 6.10, "default": 3.60 }
+      ]
+    },
+    {
+      "category": "Forward Gears",
+      "params": [
+        { "label": "1st", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 0.48, "rangeMax": 6.00, "default": 2.90 },
+        { "label": "2nd", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 0.48, "rangeMax": 6.00, "default": 2.00 },
+        { "label": "3rd", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 0.48, "rangeMax": 6.00, "default": 1.40 },
+        { "label": "4th", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 0.48, "rangeMax": 6.00, "default": 1.10 },
+        { "label": "5th", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 0.48, "rangeMax": 6.00, "default": 0.90 },
+        { "label": "6th", "min": "Top speed", "max": "Acceleration", "unit": "", "rangeMin": 0.48, "rangeMax": 6.00, "default": 0.75 }
+      ]
+    },
+    {
+      "category": "Springs",
+      "params": [
+        { "label": "Front", "min": "Soft", "max": "Stiff", "unit": "N/mm", "rangeMin": 11.2, "rangeMax": 102.4, "default": 61.0 },
+        { "label": "Rear", "min": "Soft", "max": "Stiff", "unit": "N/mm", "rangeMin": 11.2, "rangeMax": 102.4, "default": 31.0 }
+      ]
+    },
+    {
+      "category": "Ride Height",
+      "params": [
+        { "label": "Front", "min": "Low", "max": "High", "unit": "cm", "rangeMin": 17.6, "rangeMax": 28.6, "default": 25.0 },
+        { "label": "Rear", "min": "Low", "max": "High", "unit": "cm", "rangeMin": 17.6, "rangeMax": 28.6, "default": 27.5 }
+      ]
+    },
+    {
+      "category": "Anti-roll Bars",
+      "params": [
+        { "label": "Front", "min": "Soft", "max": "Stiff", "unit": "N/mm", "rangeMin": 0, "rangeMax": 100, "default": 60.0 },
+        { "label": "Rear", "min": "Soft", "max": "Stiff", "unit": "N/mm", "rangeMin": 0, "rangeMax": 100, "default": 60.0 }
+      ]
+    },
+    {
+      "category": "Camber",
+      "params": [
+        { "label": "Front", "min": "Neg", "max": "Pos", "unit": "°", "rangeMin": -5.0, "rangeMax": 2.0, "default": -3.0 },
+        { "label": "Rear", "min": "Neg", "max": "Pos", "unit": "°", "rangeMin": -5.0, "rangeMax": 2.0, "default": -2.0 }
+      ]
+    },
+    {
+      "category": "Toe",
+      "params": [
+        { "label": "Front", "min": "Out", "max": "In", "unit": "°", "rangeMin": -2.0, "rangeMax": 2.0, "default": 0.03 },
+        { "label": "Rear", "min": "Out", "max": "In", "unit": "°", "rangeMin": -2.0, "rangeMax": 2.0, "default": 0.20 }
+      ]
+    },
+    {
+      "category": "Ackermann",
+      "params": [
+        { "label": "Ackermann", "min": "None", "max": "Full", "unit": "%", "rangeMin": 0, "rangeMax": 100, "default": 74 }
+      ]
+    },
+    {
+      "category": "Wedge",
+      "params": [
+        { "label": "Oversteer Bias", "min": "Left", "max": "Right", "unit": "%", "rangeMin": -5, "rangeMax": 5, "default": 0 }
+      ]
+    },
+    {
+      "category": "Lock to Lock",
+      "params": [
+        { "label": "Angle", "min": "Low", "max": "High", "unit": "°", "rangeMin": 675, "rangeMax": 825, "default": 750 }
+      ]
+    },
+    {
+      "category": "Steering Ratio",
+      "params": [
+        { "label": "Ratio", "min": "Low", "max": "High", "unit": "", "rangeMin": 10.8, "rangeMax": 13.2, "default": 12.0 }
+      ]
+    }
+  ]
+}
