@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "deploy": "astro build && npx wrangler pages deploy dist --project-name=wreckfest2-guides --branch=main --commit-dirty=true",
+    "deploy:preview": "astro build && npx wrangler pages deploy dist --project-name=wreckfest2-guides --branch=preview --commit-dirty=true"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.3",

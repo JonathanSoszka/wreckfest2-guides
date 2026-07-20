@@ -194,5 +194,23 @@ So a car's content lives in **two files** — `cars/<slug>.md` (Overview) and `t
 
 ## Deploy
 
-Static build to `dist/`. Cloudflare Pages: build command `npm run build`, output directory `dist`.
-Direct upload: `npx wrangler pages deploy dist`.
+Two ways to publish to Cloudflare Pages:
+
+**Git integration (default).** Cloudflare builds and deploys on every push to `main` — build command
+`npm run build`, output directory `dist`. This is the primary path.
+
+**Manual deploy (Wrangler direct upload).** Build locally and push `dist/` straight to Pages:
+
+```sh
+npm run deploy            # build + deploy to production (main)
+npm run deploy:preview    # build + deploy as a preview deployment
+```
+
+Both target the `wreckfest2-guides` Pages project. Notes:
+
+- Log in once with Pages write access: `npx wrangler login`.
+- The `wreckfest2-guides` project must exist; Git integration creates it, otherwise the first
+  `npm run deploy` offers to create it.
+- **Order matters if you also want Git integration:** set that up first (it creates a git-connected
+  project). Running the manual deploy first creates a *direct-upload* project of the same name, which
+  can't be converted to git-connected later.

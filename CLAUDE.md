@@ -129,5 +129,8 @@ per-car part catalog, but the site no longer surfaces parts/upgrades.)
 
 ## Deploy (Cloudflare Pages)
 
-Static build. Pages config: build command `npm run build`, output directory `dist`.
-Direct upload: `npx wrangler pages deploy dist`.
+Static build. Two paths (details in `CONTRIBUTING.md`):
+- **Git integration** — Pages config: build command `npm run build`, output directory `dist`;
+  auto-deploys on push to `main`.
+- **Manual** — `npm run deploy` (build + `wrangler pages deploy dist` to the `wreckfest2-guides`
+  project); `npm run deploy:preview` for a preview deployment. Needs `npx wrangler login` once.
