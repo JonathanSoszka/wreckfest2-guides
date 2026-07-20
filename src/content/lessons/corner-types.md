@@ -39,7 +39,7 @@ for the whole next section, so a tidy exit beats a fast apex almost every time �
 <figcaption>Four common shapes. The line and apex change with each — but every one rewards winning the exit.</figcaption>
 </figure>
 
-## Hairpins
+## Hairpins
 
 A hairpin is a very tight, slow, almost-180° turn, and it is the most extreme case of slow-in/fast-out.
 Brake early and hard in a straight line, take a patient entry, clip a late apex, get the car rotated,
