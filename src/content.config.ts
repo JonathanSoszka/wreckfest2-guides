@@ -73,7 +73,8 @@ const lessons = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/lessons' }),
   schema: z.object({
     title: z.string(),
-    topic: z.string(), // e.g. "Braking", "Dirt", "Contact"
+    topic: z.string(), // per-lesson tag, e.g. "Braking", "Cornering", "Contact"
+    category: z.string().default('Other'), // section on the lessons index, e.g. "Car control"
     surface: surface.optional(),
     summary: z.string(),
     order: z.number().default(999),

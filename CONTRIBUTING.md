@@ -170,12 +170,20 @@ order: 1
 ```yaml
 ---
 title: Braking on Loose Surfaces
-topic: Braking             # short tag, e.g. "Braking", "Contact"
+topic: Braking             # per-lesson tag, e.g. "Braking", "Contact"
+category: Car control      # section on the lessons index (Car control, Racecraft, Disciplines, Recovery)
 surface: gravel            # optional
 summary: One-liner.
 order: 1
 ---
 ```
+
+Lessons should ground their technique in a cited reference (like the tuning guides do) and end with a
+`## Sources` section linking the major sources. The car-control lessons are checked against
+`src/data/lessons/car-control-reference.md`; `order` sorts lessons within their `category`, and the
+index groups by `category` in a fixed order (`src/pages/lessons/index.astro`). Lesson diagrams are
+produced by `scripts/gen_diagrams.py`, which derives the road and racing line from a shared track
+centerline (Frenet lateral offset) so the line always follows the track — never hand-draw racing lines.
 
 ## How a car page is assembled
 

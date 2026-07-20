@@ -269,6 +269,15 @@ main { padding: 2rem 0 1rem; }
   .ov-chevron { font-size: 1.1rem; line-height: 1; }
 }
 
+/* --- lesson diagrams --- */
+.lesson-figure { margin: 1.75rem 0; }
+.lesson-figure svg { display: block; width: 100%; height: auto; max-width: 560px; margin: 0 auto; }
+.lesson-figure figcaption { color: var(--text-dim); font-size: 0.85rem; text-align: center; max-width: 560px; margin: 0.55rem auto 0; }
+
+/* --- lessons index: category groups --- */
+.lesson-group { margin-top: 2rem; }
+.lesson-group-blurb { font-size: 1rem; margin: -0.25rem 0 1.25rem; max-width: 72ch; }
+
 /* --- track media --- */
 .track-hero {
   width: 100%;

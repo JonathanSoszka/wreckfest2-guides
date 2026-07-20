@@ -1,8 +1,9 @@
 ---
 title: Racing With Contact
 topic: Contact
+category: Racecraft
 summary: Contact is part of the racing line in Wreckfest — how to give it, take it, and not throw away the race.
-order: 2
+order: 10
 ---
 
 In most racing games contact is a mistake. In Wreckfest it is a tool, and cars are built to

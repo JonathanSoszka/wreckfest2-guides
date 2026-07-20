@@ -2,26 +2,53 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-const lessons = (await getCollection('lessons'))
-  .filter((l) => !l.data.draft)
-  .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
+const lessons = (await getCollection('lessons')).filter((l) => !l.data.draft);
+
+// Category display order + a short blurb for each section. Unlisted categories fall to the end.
+const CATEGORY_ORDER = ['Car control', 'Racecraft', 'Disciplines', 'Recovery', 'Other'];
+const CATEGORY_BLURB: Record<string, string> = {
+  'Car control': 'The fundamentals — how the car moves, and how to keep it pointed.',
+  Racecraft: 'Wheel-to-wheel: contact, position, and racing the pack.',
+  Disciplines: "Wreckfest's own formats — ovals, bangers, and the derby arena.",
+  Recovery: 'Salvaging a bad moment and bringing the car home.',
+};
+const rank = (c: string) => {
+  const i = CATEGORY_ORDER.indexOf(c);
+  return i === -1 ? CATEGORY_ORDER.length : i;
+};
+
+const groups = [...new Set(lessons.map((l) => l.data.category))]
+  .sort((a, b) => rank(a) - rank(b) || a.localeCompare(b))
+  .map((category) => ({
+    category,
+    blurb: CATEGORY_BLURB[category],
+    items: lessons
+      .filter((l) => l.data.category === category)
+      .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title)),
+  }));
 ---
 <BaseLayout title="Racing Lessons" description="Wreckfest 2 racecraft for dirt, gravel, and bumpy tarmac.">
   <p class="eyebrow">Racing Lessons</p>
   <h1>Racing Lessons</h1>
   <p class="lead">Racecraft built for how Wreckfest actually races — loose surfaces, big bumps, and constant contact.</p>
 
-  <div class="grid">
-    {lessons.map((lesson) => (
-      <a href={`/lessons/${lesson.id}/`} class="card">
-        <h3>{lesson.data.title}</h3>
-        <p>{lesson.data.summary}</p>
-        <p class="tags">
-          <span class="tag tag-plain">{lesson.data.topic}</span>
-          {lesson.data.surface && <span class={`tag tag-${lesson.data.surface}`}>{lesson.data.surface}</span>}
-        </p>
-      </a>
-    ))}
-    {lessons.length === 0 && <p class="lead">No lessons published yet.</p>}
-  </div>
+  {groups.map((group) => (
+    <section class="lesson-group">
+      <h2>{group.category}</h2>
+      {group.blurb && <p class="lead lesson-group-blurb">{group.blurb}</p>}
+      <div class="grid">
+        {group.items.map((lesson) => (
+          <a href={`/lessons/${lesson.id}/`} class="card">
+            <h3>{lesson.data.title}</h3>
+            <p>{lesson.data.summary}</p>
+            <p class="tags">
+              <span class="tag tag-plain">{lesson.data.topic}</span>
+              {lesson.data.surface && <span class={`tag tag-${lesson.data.surface}`}>{lesson.data.surface}</span>}
+            </p>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+  {lessons.length === 0 && <p class="lead">No lessons published yet.</p>}
 </BaseLayout>
