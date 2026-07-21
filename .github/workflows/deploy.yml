@@ -24,7 +24,9 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        # `npm install`, not `npm ci`: the lockfile is generated on Windows and omits some of
+        # sharp's Linux-only optional binaries, which `npm ci` rejects as out of sync.
+        run: npm install --no-audit --no-fund
 
       - name: Build site
         run: npm run build
