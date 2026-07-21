@@ -75,8 +75,11 @@ def _smooth(t):  # raised cosine 0..1
 
 
 def offset_values(n_pts, ctrl):
-    """Interpolate control points [(frac, n), ...] over the path with smooth
-    (raised-cosine) blends; returns an n-value per centerline point."""
+    """Interpolate control points [(frac, n), ...] *linearly* over the path, so
+    the entry and exit run straight (constant lateral rate = no curvature). The
+    apex/turn-in corners are rounded afterwards by `_smooth_vals`. Linear (not
+    cosine) interpolation is what keeps the line bending one way — no inflection
+    at the apex."""
     ctrl = sorted(ctrl)
     vals = []
     for i in range(n_pts):
@@ -89,7 +92,7 @@ def offset_values(n_pts, ctrl):
             continue
         for (f0, n0), (f1, n1) in zip(ctrl, ctrl[1:]):
             if f0 <= f <= f1:
-                vals.append(n0 + (n1 - n0) * _smooth((f - f0) / (f1 - f0)))
+                vals.append(n0 + (n1 - n0) * (f - f0) / (f1 - f0))
                 break
     return vals
 
