@@ -118,23 +118,36 @@ def offset_line(pts, normals, ctrl):
 
 
 # --------------------------------------------------------------- svg emitters
-def _d(pts):
-    return "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)
-
-
-def _poly(pts):
-    return " ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+def smooth_path(pts):
+    """A smooth cubic-Bezier SVG path through the points (Catmull-Rom -> Bezier).
+    Renders as a true curve in every browser — no faceting from a many-point polyline."""
+    k = max(1, len(pts) // 14)
+    cp = pts[::k]
+    if cp[-1] != pts[-1]:
+        cp.append(pts[-1])
+    n = len(cp)
+    if n < 3:
+        return "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in cp)
+    d = f"M{cp[0][0]:.1f},{cp[0][1]:.1f}"
+    for i in range(n - 1):
+        p0, p1, p2, p3 = cp[max(0, i - 1)], cp[i], cp[i + 1], cp[min(n - 1, i + 2)]
+        c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+        c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+        d += f" C{c1[0]:.1f},{c1[1]:.1f} {c2[0]:.1f},{c2[1]:.1f} {p2[0]:.1f},{p2[1]:.1f}"
+    return d
 
 
 def road(pts, w):
-    return (f'<path d="{_d(pts)}" fill="none" stroke="#2e323d" stroke-width="{w + 6}" '
+    d = smooth_path(pts)
+    return (f'<path d="{d}" fill="none" stroke="#2e323d" stroke-width="{w + 6}" '
             f'stroke-linecap="round" stroke-linejoin="round"/>\n'
-            f'<path d="{_d(pts)}" fill="none" stroke="#23262f" stroke-width="{w}" '
+            f'<path d="{d}" fill="none" stroke="#23262f" stroke-width="{w}" '
             f'stroke-linecap="round" stroke-linejoin="round"/>')
 
 
 def line(pts, color, lw=4):
-    return f'<polyline points="{_poly(pts)}" fill="none" stroke="{color}" stroke-width="{lw}"/>'
+    return (f'<path d="{smooth_path(pts)}" fill="none" stroke="{color}" stroke-width="{lw}" '
+            f'stroke-linecap="round" stroke-linejoin="round"/>')
 
 
 def dot(p, color, r=5):
