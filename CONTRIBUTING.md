@@ -77,7 +77,6 @@ Frontmatter (see `content.config.ts` for the full schema):
 name: RoadSlayer
 internalId: car01          # game id, e.g. "car01"
 drivetrain: RWD            # RWD | FWD | AWD
-carClass: B                # optional, best-effort
 inspiration: 1973 Pontiac Firebird / Trans Am   # optional, from car-reference.md
 archetype: Front-heavy RWD muscle                # optional, from car-reference.md
 summary: One-line hook shown on the card and page lead.

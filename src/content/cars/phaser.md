@@ -2,7 +2,6 @@
 name: Phaser
 internalId: car12
 drivetrain: FWD
-carClass: B
 inspiration: 1991 Honda Prelude
 archetype: Nose-heavy FWD coupe
 summary: A nose-heavy front-drive sports coupe with a peaky, high-revving engine — a corner-carver that snaps its light rear over kerbs.
