@@ -31,6 +31,13 @@ export interface TuningParam {
   note?: string;
   /** Map numeric values to display labels (e.g. two-state toggles: {0:'Off',1:'On'}). */
   valueLabels?: Record<number, string>;
+  /**
+   * Display this slider as a **percentage of its travel** rather than a raw value. Used for the
+   * mass-scaled settings (springs, anti-roll bars, ride height, diff preload) whose real min/max
+   * differ per car — a position along the travel transfers between cars, a raw N/mm value does not.
+   * Values are still authored in real units; only the display changes.
+   */
+  asPercent?: boolean;
 }
 
 export interface TuningGroup {
@@ -75,6 +82,7 @@ function decimalsFor(unit?: string): number {
 /** Format a value for display, e.g. `61.0 N/mm`, `-3.00°`, `12.0`, or a value label. */
 export function formatValue(p: TuningParam, value: number): string {
   if (p.valueLabels && p.valueLabels[value] !== undefined) return p.valueLabels[value];
+  if (p.asPercent) return `${Math.round(positionOf(p, value))}%`;
   const n = value.toFixed(decimalsFor(p.unit));
   if (!p.unit) return n;
   return p.unit === '°' ? `${n}${p.unit}` : `${n} ${p.unit}`;
@@ -84,6 +92,12 @@ export function formatValue(p: TuningParam, value: number): string {
 export function formatDelta(p: TuningParam, delta: number, newValue: number): string {
   if (delta === 0) return '±0';
   if (p.valueLabels) return p.valueLabels[newValue] ?? String(newValue);
+  if (p.asPercent) {
+    // Delta in points of slider travel, matching the percentage display.
+    const pts = Math.round(positionOf(p, newValue)) - Math.round(positionOf(p, newValue - delta));
+    if (pts === 0) return '±0';
+    return `${pts > 0 ? '+' : '−'}${Math.abs(pts)}%`;
+  }
   const sign = delta > 0 ? '+' : '−';
   const n = Math.abs(delta).toFixed(decimalsFor(p.unit));
   if (!p.unit) return `${sign}${n}`;

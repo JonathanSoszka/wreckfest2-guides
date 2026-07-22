@@ -23,8 +23,8 @@ tuning guides (generic FWD/RWD/AWD + per-car), and racing lessons**. Built for J
 **Sources of truth for tuning** (all in `src/data/tuning/`). Author and review every number against
 them — the full workflow is in
 [`CONTRIBUTING.md`](./CONTRIBUTING.md#reference-data--the-sources-of-truth). Never invent tuning numbers.
-- `schema.ts` (`TUNING_SCHEMA`) — the **universal** tuning menu (every category, slider `key`, unit,
-  endpoint label, min/max range, stock default). Details below.
+- `schema.ts` (`TUNING_SCHEMA`) — the tuning menu (every category, slider `key`, unit, endpoint
+  label, min/max range, stock default), captured from one car. Details below.
 - `surface-tuning-reference.md` — cited real-world (rally + sim) reference for which way every
   category moves across Mud → Gravel → Asphalt (incl. the **differential**: locked-on-loose /
   open-on-grip).
@@ -34,13 +34,18 @@ them — the full workflow is in
   each slider; schema = the real ranges/units the value must land in.
 
 
-The Wreckfest 2 tuning menu is **universal**: the slider ranges AND the stock/default tune are
-identical for every car (confirmed in-game). So the whole tuning dataset — categories, sliders,
-units, endpoint descriptors, ranges, and stock defaults — lives **once** in
-`src/data/tuning/schema.ts` (`TUNING_SCHEMA`). It was captured from in-game screenshots of one car
-(default + all-min + all-max passes); the raw reading is archived in
-`src/data/tuning/roadslayer.real.json`. **No car needs tuning screenshots** — a new car reuses the
-schema.
+The tuning dataset — categories, sliders, units, endpoint descriptors, ranges, stock defaults —
+lives **once** in `src/data/tuning/schema.ts` (`TUNING_SCHEMA`), captured from in-game screenshots
+of **one car** (default + all-min + all-max passes); the raw reading is archived in
+`src/data/tuning/roadslayer.real.json`.
+
+**The ranges are NOT universal.** The mass-scaled settings — springs, anti-roll bars, ride height,
+and diff preload — have per-car min/max, so a raw N/mm or cm value does not transfer between cars.
+Those specs carry `asPercent: true` and render as a **percentage of slider travel**, which does
+transfer. Values are still authored in real units; only the display changes. The geometry/ratio
+sliders (camber, toe, final drive, gears, steering) and the already-normalised ones (brake
+balance/pressure, diff power/coast, ackermann, wedge) still render raw — whether *their* ranges are
+universal is unverified, so treat raw values on those as RoadSlayer-relative until checked.
 
 **Every tuning guide — generic and per-car — is built the same way:** `buildGroups(values)` from
 `schema.ts`, in the game's real categories/units/ranges. `values` is keyed by slider `key` and

@@ -33,7 +33,7 @@ files under `src/data/tuning/`. Read them before authoring or reviewing any tuni
 
 | File | What it is | Use it for |
 |---|---|---|
-| `schema.ts` (`TUNING_SCHEMA`) | The **universal** in-game tuning menu — every category, slider `key`, unit, endpoint label, min/max range, and the stock default. Identical for every car (confirmed in-game). | The fixed set of sliders and their real ranges/units. Never hand-edit per car. |
+| `schema.ts` (`TUNING_SCHEMA`) | The in-game tuning menu — every category, slider `key`, unit, endpoint label, min/max range, and the stock default — captured from **one car**. The ranges are *not* universal: mass-scaled sliders (springs, ARBs, ride height, diff preload) differ per car, so they carry `asPercent: true` and display as a percentage of slider travel. | The fixed set of sliders and their ranges/units. Never hand-edit per car. |
 | `surface-tuning-reference.md` | Cited real-world (rally + sim) reference for **which way each category should move** across Mud → Gravel → Asphalt. | Deciding the *direction* of every per-surface change. |
 | `car-reference.md` | Each car's real-world inspiration, drivetrain, weight balance, and **the handling vice to tune around**, grouped by archetype. | The car's *baseline tendency* and how far to bias each slider. |
 

@@ -1,14 +1,19 @@
 import type { TuningGroup, TuningParam, Surface } from '../../components/tuning';
 
 /**
- * The Wreckfest 2 tuning menu — categories, sliders, units, endpoint descriptors, ranges AND the
- * stock/default tune. All of this is the SAME for every car (confirmed in-game): the slider
- * ranges are universal, and so is the default tune. So the whole tuning dataset lives here once.
+ * The Wreckfest 2 tuning menu — categories, sliders, units, endpoint descriptors, ranges and the
+ * stock tune. Captured in-game from ONE car (RoadSlayer; see roadslayer.real.json).
  *
- * A car's guide therefore captures NO tuning data — it only supplies our per-surface
- * recommendations and notes (keyed by slider `key`); the Baseline (stock tune) is inherited from
- * `default` here. See `buildGroups`. Captured from the in-game default / all-min / all-max passes
- * (see roadslayer.real.json).
+ * IMPORTANT: the ranges are NOT universal. The mass-scaled settings (springs, anti-roll bars,
+ * ride height, diff preload) have per-car min/max, so their raw values do not transfer between
+ * cars. Those specs are flagged `asPercent` and render as a **percentage of slider travel**,
+ * which does transfer. The geometry/ratio sliders (camber, toe, final drive, gears, steering) and
+ * the already-normalised ones (brake balance/pressure, diff power/coast, ackermann, wedge) still
+ * render raw — whether their ranges are truly universal is still being verified.
+ *
+ * A car's guide supplies only per-surface recommendations and notes (keyed by slider `key`);
+ * `base` is inherited from `default` here. Values are always authored in real units — only the
+ * display changes. See `buildGroups`.
  */
 export interface TuningSpec {
   key: string;
@@ -19,9 +24,15 @@ export interface TuningSpec {
   unit?: string;
   rangeMin: number;
   rangeMax: number;
-  /** Universal stock/default value (same for every car). */
+  /** Stock/default value, in this slider's units. */
   default: number;
   valueLabels?: Record<number, string>;
+  /**
+   * Show as a percentage of slider travel instead of a raw value. Set on the mass-scaled
+   * settings (springs, anti-roll bars, ride height, diff preload), whose real min/max differ
+   * per car — a travel position transfers between cars, a raw N/mm or cm value does not.
+   */
+  asPercent?: boolean;
 }
 
 export const TUNING_SCHEMA: { category: string; specs: TuningSpec[] }[] = [
@@ -43,7 +54,7 @@ export const TUNING_SCHEMA: { category: string; specs: TuningSpec[] }[] = [
     specs: [
       { key: 'diff.power', category: 'Differential — Rear', label: 'Power', min: 'Open', max: 'Locked', unit: '%', rangeMin: 0, rangeMax: 100, default: 70 },
       { key: 'diff.coast', category: 'Differential — Rear', label: 'Coast', min: 'Open', max: 'Locked', unit: '%', rangeMin: 0, rangeMax: 100, default: 60 },
-      { key: 'diff.preload', category: 'Differential — Rear', label: 'Preload', min: 'Open', max: 'Locked', unit: 'Nm', rangeMin: 5, rangeMax: 150, default: 15 },
+      { key: 'diff.preload', category: 'Differential — Rear', label: 'Preload', min: 'Open', max: 'Locked', unit: 'Nm', rangeMin: 5, rangeMax: 150, default: 15, asPercent: true },
     ],
   },
   {
@@ -66,22 +77,22 @@ export const TUNING_SCHEMA: { category: string; specs: TuningSpec[] }[] = [
   {
     category: 'Springs',
     specs: [
-      { key: 'springs.front', category: 'Springs', label: 'Front', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 11.2, rangeMax: 102.4, default: 61.0 },
-      { key: 'springs.rear', category: 'Springs', label: 'Rear', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 11.2, rangeMax: 102.4, default: 31.0 },
+      { key: 'springs.front', category: 'Springs', label: 'Front', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 11.2, rangeMax: 102.4, default: 61.0, asPercent: true },
+      { key: 'springs.rear', category: 'Springs', label: 'Rear', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 11.2, rangeMax: 102.4, default: 31.0, asPercent: true },
     ],
   },
   {
     category: 'Ride Height',
     specs: [
-      { key: 'rideHeight.front', category: 'Ride Height', label: 'Front', min: 'Low', max: 'High', unit: 'cm', rangeMin: 17.6, rangeMax: 28.6, default: 25.0 },
-      { key: 'rideHeight.rear', category: 'Ride Height', label: 'Rear', min: 'Low', max: 'High', unit: 'cm', rangeMin: 17.6, rangeMax: 28.6, default: 27.5 },
+      { key: 'rideHeight.front', category: 'Ride Height', label: 'Front', min: 'Low', max: 'High', unit: 'cm', rangeMin: 17.6, rangeMax: 28.6, default: 25.0, asPercent: true },
+      { key: 'rideHeight.rear', category: 'Ride Height', label: 'Rear', min: 'Low', max: 'High', unit: 'cm', rangeMin: 17.6, rangeMax: 28.6, default: 27.5, asPercent: true },
     ],
   },
   {
     category: 'Anti-roll Bars',
     specs: [
-      { key: 'arb.front', category: 'Anti-roll Bars', label: 'Front', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 0, rangeMax: 100, default: 60.0 },
-      { key: 'arb.rear', category: 'Anti-roll Bars', label: 'Rear', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 0, rangeMax: 100, default: 60.0 },
+      { key: 'arb.front', category: 'Anti-roll Bars', label: 'Front', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 0, rangeMax: 100, default: 60.0, asPercent: true },
+      { key: 'arb.rear', category: 'Anti-roll Bars', label: 'Rear', min: 'Soft', max: 'Stiff', unit: 'N/mm', rangeMin: 0, rangeMax: 100, default: 60.0, asPercent: true },
     ],
   },
   {
@@ -147,6 +158,7 @@ export function buildGroups(values: Record<string, CarValue> = {}): TuningGroup[
         rangeMin: s.rangeMin,
         rangeMax: s.rangeMax,
         valueLabels: s.valueLabels,
+        asPercent: s.asPercent,
         base: cv.base ?? s.default,
         surfaces: cv.surfaces,
         note: cv.note,
