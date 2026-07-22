@@ -5,6 +5,10 @@ drivetrain: RWD
 inspiration: 1986 Chevrolet Caprice
 archetype: Heavy RWD sedan
 bodyStyle: sedan
+imageSource: "https://commons.wikimedia.org/wiki/File:1986_Caprice_Classic_Sedan.jpg"
+imageLicense: CC BY-SA 4.0
+imageCredit: Urbansuburban86
+heroImage: /cars/rammer.webp
 summary: A heavy, front-biased full-size sedan — a momentum rammer that understeers and changes direction lazily but survives contact.
 order: 7
 ---

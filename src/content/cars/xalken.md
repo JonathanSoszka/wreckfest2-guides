@@ -5,6 +5,10 @@ drivetrain: FWD
 inspiration: 1997 Saab 900
 archetype: Nose-heavy FWD hatch
 bodyStyle: hatch
+imageSource: "https://commons.wikimedia.org/wiki/File:1997_Saab_900_(MY97)_S_2.0_3-door_hatchback_(2015-07-15)_01.jpg"
+imageLicense: Public domain
+imageCredit: OSX
+heroImage: /cars/xalken.webp
 summary: A nose-heavy front-drive hatch with modest power that handles well — a momentum car you drive on line and corner speed, not muscle.
 order: 16
 ---

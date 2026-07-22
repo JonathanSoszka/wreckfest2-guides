@@ -5,6 +5,10 @@ drivetrain: RWD
 inspiration: 1968 Chevrolet Chevelle
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
+imageSource: "https://commons.wikimedia.org/wiki/File:1968_Chevrolet_Chevelle_SS396_Hardtop_(31750917026).jpg"
+imageLicense: CC BY 2.0
+imageCredit: Sicnag
+heroImage: /cars/switchback.webp
 summary: A front-biased V8 brawler built for straight-line speed — strong on fast tracks, but it understeers hard in tight corners.
 order: 11
 ---

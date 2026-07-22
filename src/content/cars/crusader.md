@@ -5,6 +5,10 @@ drivetrain: FWD
 inspiration: 2002 Chevrolet Cavalier
 archetype: Nose-heavy FWD coupe
 bodyStyle: coupe
+imageSource: "https://commons.wikimedia.org/wiki/File:2002_Chevrolet_Cavalier_VL_Sedan_in_Ultra_Silver_Metallic,_Front_Right,_10-18-2022.jpg"
+imageLicense: CC BY-SA 4.0
+imageCredit: Elise240SX
+heroImage: /cars/crusader.webp
 summary: A front-heavy front-drive economy coupe — a textbook FWD car that understeers on power unless you rotate it on entry.
 order: 5
 ---

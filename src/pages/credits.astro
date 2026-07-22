@@ -1,0 +1,109 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPublished } from '../lib/content';
+
+/**
+ * Attribution for the car photography. CC BY and CC BY-SA both require credit;
+ * this page is where that lives, linked from every page the photos appear on.
+ * Public-domain images are listed too — not legally required, but the
+ * photographers gave the work away and the roster is more useful complete.
+ */
+const cars = (await getPublished('cars'))
+  .filter((c) => c.data.heroImage && c.data.imageCredit)
+  .sort((a, b) => a.data.name.localeCompare(b.data.name));
+
+/** Licence deed links, so "CC BY-SA 4.0" is a claim a reader can check. */
+const LICENSE_URL: Record<string, string> = {
+  'CC BY 2.0': 'https://creativecommons.org/licenses/by/2.0/',
+  'CC BY-SA 3.0': 'https://creativecommons.org/licenses/by-sa/3.0/',
+  'CC BY-SA 4.0': 'https://creativecommons.org/licenses/by-sa/4.0/',
+};
+const shareAlike = cars.filter((c) => (c.data.imageLicense ?? '').includes('SA')).length;
+---
+<BaseLayout title="Image credits" description="Photographers and licences for the car photography used on Wreckfest 2 Guides.">
+  <p class="eyebrow">Credits</p>
+  <h1>Image credits</h1>
+  <p class="lead">
+    The car index shows photographs of the real-world vehicles each Wreckfest car is modelled on.
+    All of them come from Wikimedia Commons under licences that permit reuse. They are resized and
+    converted, which counts as a derivative work — so where a licence is share-alike, the resized
+    image here carries that same licence.
+  </p>
+
+  <table class="credits-table">
+    <thead>
+      <tr><th>Car</th><th>Photograph</th><th>Photographer</th><th>Licence</th></tr>
+    </thead>
+    <tbody>
+      {cars.map((car) => (
+        <tr>
+          <td class="cr-car"><a href={`/cars/${car.id}/`}>{car.data.name}</a></td>
+          <td class="cr-shot">
+            {car.data.imageSource ? (
+              <a href={car.data.imageSource} rel="noopener noreferrer">{car.data.inspiration ?? 'Commons file'}</a>
+            ) : (
+              car.data.inspiration
+            )}
+          </td>
+          <td>{car.data.imageCredit}</td>
+          <td class="cr-lic">
+            {LICENSE_URL[car.data.imageLicense ?? ''] ? (
+              <a href={LICENSE_URL[car.data.imageLicense!]} rel="noopener noreferrer license">{car.data.imageLicense}</a>
+            ) : (
+              car.data.imageLicense
+            )}
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <p>
+      {cars.length} photographs in total{shareAlike > 0 && `, ${shareAlike} of them share-alike`}.
+      Every image was checked on its own Commons file page before use; the links above go to those
+      pages, where the full licence terms and the photographer's own description live. If you are one
+      of these photographers and something here is wrong, the file page has the correct wording and
+      this page should match it.
+    </p>
+  </div>
+
+  <p class="lead">
+    Wreckfest and its car designs belong to Bugbear Entertainment / THQ Nordic. This is an unofficial
+    fan guide; the photographs above are of the real vehicles that inspired the in-game cars, not of
+    the game itself.
+  </p>
+</BaseLayout>
+
+<style>
+  .credits-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.92rem;
+  }
+  .credits-table thead th {
+    text-align: left;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+    font-weight: 600;
+    padding: 0 0.7rem 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .credits-table td {
+    padding: 0.55rem 0.7rem;
+    border-bottom: 1px solid var(--bg-panel-2);
+    vertical-align: top;
+  }
+  .credits-table tbody tr:hover { background: var(--bg-panel); }
+  .cr-car { white-space: nowrap; font-weight: 600; }
+  .cr-shot { color: var(--text-dim); }
+  .cr-lic { white-space: nowrap; color: var(--text-dim); }
+
+  @media (max-width: 620px) {
+    .credits-table { font-size: 0.85rem; }
+    .credits-table td, .credits-table thead th { padding: 0.45rem 0.4rem; }
+  }
+</style>

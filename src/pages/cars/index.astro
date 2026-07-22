@@ -33,6 +33,7 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
             drivetrain={car.data.drivetrain}
             bodyStyle={car.data.bodyStyle}
             heroImage={car.data.heroImage}
+            inspiration={car.data.inspiration}
           />
         </span>
         <span class="car-row-main">
@@ -48,6 +49,10 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
     ))}
   </div>
   <p class="lead car-empty" style="display:none;">No cars match that filter.</p>
+  <p class="photo-note">
+    Car photography from Wikimedia Commons, showing the real-world cars each Wreckfest
+    vehicle is based on — <a href="/credits/">photographers and licences</a>.
+  </p>
   {cars.length === 0 && <p class="lead">No car profiles published yet.</p>}
 </BaseLayout>
 

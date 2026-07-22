@@ -19,8 +19,14 @@ interface Props {
   drivetrain: string;
   bodyStyle?: BodyStyle;
   heroImage?: string;
+  /** Real-world car the photo shows — the photos are of those, not the game cars. */
+  inspiration?: string;
 }
-const { name, drivetrain, bodyStyle = 'sedan', heroImage } = Astro.props;
+const { name, drivetrain, bodyStyle = 'sedan', heroImage, inspiration } = Astro.props;
+
+const alt = inspiration
+  ? `${inspiration} — the real-world car the ${name} is based on`
+  : `${name} (illustration)`;
 
 /** Side profiles on a 200x76 canvas: outer body, then the glasshouse. */
 const BODIES: Record<BodyStyle, { body: string; glass: string }> = {
@@ -66,7 +72,7 @@ const shape = BODIES[bodyStyle] ?? BODIES.sedan;
 const dt = drivetrain.toLowerCase();
 ---
 {heroImage ? (
-  <img class="car-art-img" src={heroImage} alt={`${name}`} loading="lazy" decoding="async" width="200" height="76" />
+  <img class="car-art-img" src={heroImage} alt={alt} loading="lazy" decoding="async" />
 ) : (
   <svg
     class:list={['car-art', `car-art--${dt}`]}

@@ -88,6 +88,36 @@ Body: a short intro paragraph, then a `## How it drives` section. Keep it to han
 there is **no parts/upgrades section** (that feature was removed; don't reintroduce "where to spend
 upgrades" prose or a `partsData` field).
 
+### Car photography and attribution
+
+The car index shows a photo of the **real-world car** each Wreckfest vehicle is based on. Those
+photos come from Wikimedia Commons and are managed by `scripts/fetch-car-images.mjs`, whose manifest
+is the provenance record — car, Commons file page, licence, and photographer:
+
+```sh
+node scripts/fetch-car-images.mjs           # download, resize, tag frontmatter
+node scripts/fetch-car-images.mjs --check   # list what's declared, download nothing
+node scripts/fetch-car-images.mjs --force   # refetch images that already exist
+```
+
+Rules, none of which are optional:
+
+- **Only freely-licensed images.** Public domain, CC0, CC BY, or CC BY-SA. Never a manufacturer press
+  photo, a stock-library image, or anything found by image search without a licence.
+- **Verify on the file page itself.** Commons licences are per file — a category page or a search
+  result does not tell you the licence. Open the `File:` page and read the licensing box.
+- **Credit is mandatory and lives in frontmatter** (`imageCredit`, `imageLicense`, `imageSource`),
+  which feeds `/credits/`. An image whose photographer and licence we can't state doesn't ship.
+- **Share-alike propagates.** Resizing makes a derivative, so a CC BY-SA source stays CC BY-SA and
+  `/credits/` says so. That binds the image, not the site.
+- Fetch Commons **thumbnails**, not originals, and only at their cached widths (20, 40, 60, 120, 250,
+  330, 500, 960, 1280, 1920, 3840 px). Other widths are refused and bulk originals get you
+  rate-limited. The script already does this — 960px in, 760px WebP out, EXIF stripped.
+
+A car with no `heroImage` falls back to a generic silhouette picked by its `bodyStyle`, so the index
+degrades per car rather than all-or-nothing. In-game screenshots can replace any photo later by
+pointing `heroImage` at a different file.
+
 ### A car's tuning setup — `src/content/tuning/<slug>.mdx`
 
 Each car's setup is an **embeddable fragment**: just the `SetupTabs` widget, no page chrome. It is

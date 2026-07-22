@@ -5,6 +5,10 @@ drivetrain: RWD
 inspiration: 1973 Pontiac Firebird / Trans Am
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
+imageSource: "https://commons.wikimedia.org/wiki/File:1973_Pontiac_Firebird_Trans_Am_in_Buccaneer_Red,_Front_Left,_09-11-2023.jpg"
+imageLicense: CC BY-SA 4.0
+imageCredit: Elise240SX
+heroImage: /cars/roadslayer.webp
 summary: The front-heavy V8 muscle car most players start with — stable and forgiving, but the torque will step the rear out if you ask too much.
 order: 1
 ---

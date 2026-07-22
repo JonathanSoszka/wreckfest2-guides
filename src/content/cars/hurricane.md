@@ -5,6 +5,10 @@ drivetrain: RWD
 inspiration: 1969 Chevrolet Camaro
 archetype: Torque-forward RWD muscle
 bodyStyle: muscle
+imageSource: "https://commons.wikimedia.org/wiki/File:1969_Chevrolet_Camaro_Z28.jpg"
+imageLicense: CC BY 2.0
+imageCredit: Sicnag
+heroImage: /cars/hurricane.webp
 summary: The torque-forward muscle cousin — lighter and nimbler than the RoadSlayer, but eager to oversteer on power and short on revs.
 order: 2
 ---

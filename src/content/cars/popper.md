@@ -5,6 +5,10 @@ drivetrain: RWD
 inspiration: Fiat 500 / 600
 archetype: Rear-engine RWD
 bodyStyle: bubble
+imageSource: "https://commons.wikimedia.org/wiki/File:1970_Fiat_500_L_--_2011_DC_1.jpg"
+imageLicense: Public domain
+imageCredit: IFCAR
+heroImage: /cars/popper.webp
 summary: A tiny rear-engine city car — a nimble technical-track toy that swings its tail wide the moment you lift off.
 order: 10
 ---
