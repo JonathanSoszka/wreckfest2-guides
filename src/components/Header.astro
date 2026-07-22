@@ -1,13 +1,12 @@
 ---
+import { enabledSections } from '../config/flags';
+
 const path = Astro.url.pathname;
 const isActive = (base: string) =>
   base === '/' ? path === '/' : path.startsWith(base);
-const links = [
-  { href: '/cars/', label: 'Cars' },
-  { href: '/tracks/', label: 'Tracks' },
-  { href: '/tuning/', label: 'Tuning' },
-  { href: '/lessons/', label: 'Racing Lessons' },
-];
+// Nav order and gating both come from SECTIONS — a flagged-off section drops out here
+// and its routes are removed from the build entirely (see astro.config.mjs).
+const links = enabledSections().map((s) => ({ href: s.href, label: s.nav }));
 ---
 <header class="site-header">
   <div class="wrap">

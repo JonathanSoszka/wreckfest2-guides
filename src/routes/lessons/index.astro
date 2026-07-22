@@ -1,8 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getPublished } from '../../lib/content';
 
-const lessons = (await getCollection('lessons')).filter((l) => !l.data.draft);
+const lessons = await getPublished('lessons');
 
 // Category display order + a short blurb for each section. Unlisted categories fall to the end.
 const CATEGORY_ORDER = ['Car control', 'Racecraft', 'Disciplines', 'Recovery', 'Other'];

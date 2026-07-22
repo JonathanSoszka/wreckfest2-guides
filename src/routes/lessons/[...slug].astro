@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getPublished } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const lessons = (await getCollection('lessons')).filter((l) => !l.data.draft);
+  const lessons = await getPublished('lessons');
   return lessons.map((lesson) => ({ params: { slug: lesson.id }, props: { lesson } }));
 }
 

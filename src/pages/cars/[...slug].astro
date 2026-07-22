@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getPublished } from '../../lib/content';
+import { FEATURE_LESSONS } from '../../config/flags';
 
 export async function getStaticPaths() {
-  const cars = (await getCollection('cars')).filter((c) => !c.data.draft);
+  const cars = await getPublished('cars');
   return cars.map((car) => ({ params: { slug: car.id }, props: { car } }));
 }
 
@@ -11,8 +13,8 @@ const { car } = Astro.props;
 const { Content } = await render(car);
 
 // This car's setup sheet (its per-car tuning guide), rendered inline as the Setup section.
-const setup = (await getCollection('tuning')).find(
-  (t) => !t.data.draft && t.data.kind === 'car' && t.data.carId === car.data.internalId,
+const setup = (await getPublished('tuning')).find(
+  (t) => t.data.kind === 'car' && t.data.carId === car.data.internalId,
 );
 const SetupContent = setup ? (await render(setup)).Content : null;
 
@@ -20,7 +22,7 @@ const dt = car.data.drivetrain.toLowerCase();
 const dtClass = `tag tag-${dt}`;
 
 // All cars, grouped by drivetrain, for the quick-switch dropdown.
-const allCars = (await getCollection('cars')).filter((c) => !c.data.draft);
+const allCars = await getPublished('cars');
 const switchGroups = ['RWD', 'FWD', 'AWD']
   .map((d) => ({
     dt: d,
@@ -75,8 +77,10 @@ const switchGroups = ['RWD', 'FWD', 'AWD']
       <div class="callout">
         <p>
           Want the full theory behind every slider? See the
-          <a href={`/tuning/generic-${dt}/`}>generic {car.data.drivetrain} guide</a>. New to
-          Wreckfest racing? Read the <a href="/lessons/">racing lessons</a>.
+          <a href={`/tuning/generic-${dt}/`}>generic {car.data.drivetrain} guide</a>.
+          {FEATURE_LESSONS && (
+            <> New to Wreckfest racing? Read the <a href="/lessons/">racing lessons</a>.</>
+          )}
         </p>
       </div>
     </section>

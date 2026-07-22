@@ -218,6 +218,51 @@ So a car's content lives in **two files** — `cars/<slug>.md` (Overview) and `t
   (mud ≥ gravel ≥ asphalt for `diff.*`).
 - Prose follows the [content conventions](#content-conventions-do-not-silently-change).
 
+## Feature flags
+
+Flags are **build-time only**: flipping one requires a rebuild, and a flagged-off feature is
+absent from the output rather than hidden inside it. That is the point — an unfinished section
+can't be found by URL or by a search engine, which a CSS-hidden one can.
+
+Flags are declared in `astro.config.mjs` under `env.schema` (typed and validated by `astro:env`),
+and app code reads them from **`src/config/flags.ts`** — import from there, never from
+`astro:env/server` directly, so every flag stays greppable in one file.
+
+| Flag | Default | Effect |
+|---|---|---|
+| `FEATURE_LESSONS` | `false` | The Racing Lessons section: nav entry, home-page card, and all `/lessons/` routes. |
+| `SHOW_DRAFTS` | `false` | Include `draft: true` content in the build. Local authoring only. |
+
+Both `=true` and `=1` work. Local dev turns them on via `.env.development` (committed — it's
+authoring convenience, not config), so `npm run dev` shows lessons and drafts while a production
+build hides them. To check a production-shaped build locally, just `npm run build`; to preview a
+flagged-on build, `FEATURE_LESSONS=1 npm run build`.
+
+### Gating a whole section
+
+Three things have to happen, and the first is the one people forget:
+
+1. **Routes.** Astro builds everything in `src/pages/` unconditionally, so a gated section's pages
+   live in **`src/routes/<section>/`** instead and are injected by the `feature-routes` integration
+   only when the flag is on. (Mutating the route list in `astro:routes:resolved` does *not* work —
+   the routes are reported there but still get built.)
+2. **Nav and cards.** Add the section to `SECTIONS` in `src/config/flags.ts` with its `enabled` flag;
+   the header and home page render from `enabledSections()`, so both follow automatically.
+3. **Links into it.** Templates gate their own links with `{FEATURE_X && ...}`. Content prose can't —
+   markdown can't read flags — so the integration unwraps any anchor pointing into a disabled
+   section on `astro:build:done`, keeping the words and dropping the link. It logs what it rewrote.
+
+That last step post-processes the built HTML instead of using a rehype plugin **on purpose**:
+rendered markdown is cached (in `node_modules/.astro`) with a key that doesn't include our flags, so
+a rehype plugin leaves stale links in the output when you flip a flag — which `npm run deploy` would
+then ship. Post-processing runs every build regardless of cache state.
+
+### Content gating
+
+Don't call `getCollection()` in a page. Use **`getPublished()`** from `src/lib/content.ts`, which
+applies the `draft` filter (and `SHOW_DRAFTS`) in one place. That filter used to be copy-pasted
+across ten call sites — ten chances to leak an unfinished guide.
+
 ## Deploy
 
 Two ways to publish to Cloudflare Pages:

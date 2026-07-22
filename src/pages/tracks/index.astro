@@ -1,9 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getPublished } from '../../lib/content';
 
-const tracks = (await getCollection('tracks'))
-  .filter((t) => !t.data.draft)
+const tracks = (await getPublished('tracks'))
   .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
 
 const surfaces = [...new Set(tracks.map((t) => t.data.surface))].sort();

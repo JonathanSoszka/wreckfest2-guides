@@ -1,16 +1,15 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection } from 'astro:content';
+import { getPublished } from '../../lib/content';
 
-const guides = (await getCollection('tuning'))
-  .filter((t) => !t.data.draft)
+const guides = (await getPublished('tuning'))
   .sort((a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title));
 
 const generic = guides.filter((g) => g.data.kind === 'generic');
 const perCar = guides.filter((g) => g.data.kind === 'car');
 
 // Per-car setups live on the car profile now — map each to its car slug for linking.
-const cars = await getCollection('cars');
+const cars = await getPublished('cars');
 const carHref = (carId?: string) => {
   const c = cars.find((x) => x.data.internalId === carId);
   return c ? `/cars/${c.id}/#setup` : '/cars/';

@@ -1,11 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getPublished } from '../../lib/content';
 
 export async function getStaticPaths() {
   // Only the generic drivetrain guides get their own page now. Per-car setups are rendered
   // inline on each car's profile (/cars/<slug>/#setup).
-  const guides = (await getCollection('tuning')).filter((t) => !t.data.draft && t.data.kind === 'generic');
+  const guides = (await getPublished('tuning')).filter((t) => t.data.kind === 'generic');
   return guides.map((guide) => ({ params: { slug: guide.id }, props: { guide } }));
 }
 

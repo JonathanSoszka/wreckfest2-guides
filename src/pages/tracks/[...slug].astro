@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
+import { getPublished } from '../../lib/content';
+import { FEATURE_LESSONS } from '../../config/flags';
 
 export async function getStaticPaths() {
-  const tracks = (await getCollection('tracks')).filter((t) => !t.data.draft);
+  const tracks = await getPublished('tracks');
   return tracks.map((track) => ({ params: { slug: track.id }, props: { track } }));
 }
 
@@ -67,8 +69,14 @@ const confidenceNote: Record<string, string> = {
 
   <div class="callout">
     <p>
-      New to Wreckfest racing? Start with the <a href="/lessons/">racing lessons</a>,
-      then dial in your car on the <a href="/tuning/">tuning guides</a>.
+      {FEATURE_LESSONS ? (
+        <>
+          New to Wreckfest racing? Start with the <a href="/lessons/">racing lessons</a>,
+          then dial in your car on the <a href="/tuning/">tuning guides</a>.
+        </>
+      ) : (
+        <>New to Wreckfest racing? Dial in your car on the <a href="/tuning/">tuning guides</a>.</>
+      )}
     </p>
   </div>
 </BaseLayout>
