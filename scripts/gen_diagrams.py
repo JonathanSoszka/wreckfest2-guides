@@ -14,11 +14,18 @@ so the line physically cannot leave the track. Line "types" are just different
 n(s) profiles (geometric / late-apex / hug-inside), given per diagram as control
 points (fraction_along_path, offset).
 
+The jump diagram is the one exception to the model above: a jump is a side
+elevation, not a plan view, so it is drawn from a ground profile plus a ballistic
+arc. The point it makes is that the arc is the same either way — only the car's
+pitch attitude changes — so both panels share one trajectory.
+
 Run:  python scripts/gen_diagrams.py <out_dir>
-Writes racing-line.svg and corner-types.svg (pure stdlib; no dependencies).
+Writes racing-line.svg, corner-types.svg, pendulum.svg, swept-line.svg and
+jump.svg (pure stdlib; no dependencies).
 """
 import math
 import os
+import random
 import sys
 
 FONT = "system-ui, 'Segoe UI', Roboto, sans-serif"
@@ -112,11 +119,17 @@ def _smooth_vals(vals, passes=3):
     return v
 
 
-def offset_line(pts, normals, ctrl):
+def offset_line(pts, normals, ctrl, apex_after=0.0):
+    """Offset the centerline by the (smoothed) profile. Returns the line and its apex.
+
+    `apex_after` restricts the apex search to the last part of the path. A line that
+    starts as far inside as it apexes — the flick, which approaches from the inside —
+    would otherwise report its entry point as the apex."""
     vals = _smooth_vals(offset_values(len(pts), ctrl))
     line = [(x + vals[i] * normals[i][0], y + vals[i] * normals[i][1])
             for i, (x, y) in enumerate(pts)]
-    apex_i = min(range(len(vals)), key=lambda i: vals[i])  # most-inside point
+    lo = int(len(vals) * apex_after)
+    apex_i = min(range(lo, len(vals)), key=lambda i: vals[i])  # most-inside point
     return line, line[apex_i]
 
 
@@ -226,12 +239,136 @@ def corner_types_svg():
     return svg(460, 234, body)
 
 
+def pendulum_svg():
+    """The Scandinavian flick: approach from the inside, feint away from the corner,
+    then snap back in so the car arrives already rotated. Compared against a normal
+    late-apex turn-in on the same corner."""
+    pts = build_centerline((235, 300), -90, [('s', 170), ('a', 62, 90), ('s', 130)])
+    nrm = left_normals(pts)
+    m = 21
+    normal, an = offset_line(pts, nrm, [(0, m), (0.44, m), (0.61, -m), (0.80, m), (1, m)])
+    # Hold the inside approach for a stretch before the feint — a single control
+    # point gets averaged away by _smooth_vals and the swing stops reading.
+    flick, af = offset_line(pts, nrm, [(0, -m * 0.85), (0.12, -m * 0.85), (0.26, m),
+                                       (0.42, m), (0.61, -m), (0.80, m), (1, m)],
+                            apex_after=0.45)
+    body = "\n".join([
+        road(pts, 58),
+        line(normal, BLUE), line(flick, ORANGE),
+        dot(an, BLUE), dot(af, ORANGE),
+        text(258, 268, "1 approach inside", "#a3a7b3", 12),
+        text(258, 232, "2 feint away", "#a3a7b3", 12),
+        text(258, 196, "3 snap back in", "#a3a7b3", 12),
+        f'<rect x="30" y="250" width="26" height="4" fill="{BLUE}"/>',
+        text(64, 258, "Normal turn-in"),
+        f'<rect x="30" y="276" width="26" height="4" fill="{ORANGE}"/>',
+        text(64, 284, "The flick — swing away, then in"),
+    ])
+    return svg(460, 320, body)
+
+
+def swept_line_svg():
+    """Where the grip actually is on a loose road: cars fling the loose top layer
+    aside, exposing a grippier swept base along the used line. Loose material piles
+    up off that line, thickest toward the edges."""
+    pts = build_centerline((235, 296), -90, [('s', 170), ('a', 62, 90), ('s', 130)])
+    nrm = left_normals(pts)
+    m = 20
+    swept, apex = offset_line(pts, nrm, [(0, m * 0.5), (0.44, m * 0.5), (0.61, -m),
+                                         (0.80, m * 0.4), (1, m * 0.4)])
+    # Loose material: scattered off the swept band, denser toward the road edges.
+    rnd = random.Random(11)
+    stones = []
+    for _ in range(125):
+        i = rnd.randrange(len(pts))
+        # offset band chosen to sit outside the swept stripe but inside the road edge
+        off = rnd.uniform(14, 27) * (1 if rnd.random() < 0.5 else -1)
+        x = pts[i][0] + off * nrm[i][0]
+        y = pts[i][1] + off * nrm[i][1]
+        stones.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{rnd.uniform(1.1, 2.2):.1f}" fill="#6b7280"/>')
+    body = "\n".join([
+        road(pts, 58),
+        f'<path d="{smooth_path(swept)}" fill="none" stroke="#3c4250" stroke-width="22" '
+        f'stroke-linecap="round" stroke-linejoin="round"/>',
+        "\n".join(stones),
+        line(swept, ORANGE, 3),
+        f'<rect x="30" y="250" width="26" height="10" rx="2" fill="#3c4250"/>',
+        text(64, 258, "Swept base — the grip is here"),
+        f'<circle cx="36" cy="280" r="2.2" fill="#6b7280"/><circle cx="44" cy="276" r="1.6" fill="#6b7280"/>'
+        f'<circle cx="50" cy="282" r="2" fill="#6b7280"/>',
+        text(64, 284, "Loose material — piles up off the line"),
+    ])
+    return svg(460, 320, body)
+
+
+def car_side(x, y, ang, color="#e6e7ea"):
+    """Side-elevation car glyph. Origin sits at the tyre contact patch so it can be
+    placed straight onto a ground line; `ang` pitches it nose-up (negative) or
+    nose-down (positive), matching SVG's y-down rotation."""
+    return (f'<g transform="translate({x:.1f},{y:.1f}) rotate({ang:.1f})">'
+            f'<rect x="-14" y="-10" width="28" height="8" rx="3" fill="{color}"/>'
+            f'<rect x="-6" y="-16" width="12" height="7" rx="2.5" fill="{color}"/>'
+            f'<circle cx="-8" cy="-1" r="4" fill="#1c1e26" stroke="{color}" stroke-width="2"/>'
+            f'<circle cx="8" cy="-1" r="4" fill="#1c1e26" stroke="{color}" stroke-width="2"/>'
+            f'</g>')
+
+
+def _arc_pts(p0, p1, h, n=44):
+    """Ballistic arc from p0 to p1 peaking `h` above the straight line between them."""
+    (x0, y0), (x1, y1) = p0, p1
+    return [(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t - h * 4 * t * (1 - t))
+            for t in (i / n for i in range(n + 1))]
+
+
+def _jump_panel(y0, pitch, label, label_color, note):
+    """One side-elevation panel: ramp, shared ballistic arc, and the car at takeoff,
+    mid-air and landing at a given pitch attitude."""
+    ground_y = y0 + 86
+    lip = (168, y0 + 40)
+    land = (372, ground_y)
+    arc = _arc_pts(lip, land, 34)
+    mid = arc[len(arc) // 2]
+    return "\n".join([
+        # ground + ramp
+        f'<path d="M24,{ground_y} L104,{ground_y} L{lip[0]},{lip[1]} L{lip[0] + 8},{ground_y} '
+        f'L436,{ground_y}" fill="none" stroke="#2e323d" stroke-width="7" '
+        f'stroke-linecap="round" stroke-linejoin="round"/>',
+        f'<path d="{smooth_path(arc)}" fill="none" stroke="#4a5060" stroke-width="2" '
+        f'stroke-dasharray="6 6"/>',
+        car_side(96, ground_y, -14, "#8b909c"),
+        car_side(mid[0], mid[1], pitch, label_color),
+        car_side(land[0] + 26, ground_y, pitch, label_color),
+        text(30, y0 + 20, label, label_color),
+        text(30, y0 + 36, note, "#a3a7b3", 12),
+    ])
+
+
+def jump_svg():
+    """Jumps: the trajectory is the same either way — what you control is the car's
+    pitch. Staying on throttle over the lip keeps it flat; lifting drops the nose."""
+    body = "\n".join([
+        _jump_panel(18, -8, "Stay on throttle over the lip", ORANGE,
+                    "Weight stays back — flat attitude, lands on all four"),
+        f'<line x1="24" y1="140" x2="436" y2="140" stroke="#2e323d" stroke-width="1"/>',
+        _jump_panel(158, 22, "Lift on the lip", BLUE,
+                    "Weight pitches forward — nose dives, lands front-first"),
+    ])
+    return svg(460, 300, body)
+
+
 def main():
     out = sys.argv[1] if len(sys.argv) > 1 else "."
     os.makedirs(out, exist_ok=True)
-    open(os.path.join(out, "racing-line.svg"), "w", encoding="utf-8").write(racing_line_svg())
-    open(os.path.join(out, "corner-types.svg"), "w", encoding="utf-8").write(corner_types_svg())
-    print("wrote racing-line.svg, corner-types.svg to", out)
+    files = {
+        "racing-line.svg": racing_line_svg(),
+        "corner-types.svg": corner_types_svg(),
+        "pendulum.svg": pendulum_svg(),
+        "swept-line.svg": swept_line_svg(),
+        "jump.svg": jump_svg(),
+    }
+    for name, content in files.items():
+        open(os.path.join(out, name), "w", encoding="utf-8").write(content)
+    print("wrote", ", ".join(files), "to", out)
 
 
 if __name__ == "__main__":

@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # local Claude Code settings (machine-specific)
 .claude/settings.local.json
+
+# python bytecode from scripts/
+__pycache__/

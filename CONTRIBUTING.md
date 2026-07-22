@@ -184,6 +184,24 @@ Lessons should ground their technique in a cited reference (like the tuning guid
 index groups by `category` in a fixed order (`src/pages/lessons/index.astro`). Lesson diagrams are
 produced by `scripts/gen_diagrams.py`, which derives the road and racing line from a shared track
 centerline (Frenet lateral offset) so the line always follows the track — never hand-draw racing lines.
+Jumps are the one exception to that model: a side elevation drawn from a ground profile plus a
+ballistic arc.
+
+Diagrams are embedded as inline SVG (lessons are plain Markdown, so there's no component to import).
+Don't paste them by hand — after changing `gen_diagrams.py`, run:
+
+```sh
+python scripts/embed_diagrams.py
+```
+
+It regenerates each mapped diagram and swaps it into that lesson's `<figure>`, preserving the
+hand-written `<figcaption>`. Figures are tagged `data-diagram="<name>"` so the script is re-runnable.
+To add a diagram to a new lesson, put an empty `<figure class="lesson-figure">` with a `<figcaption>`
+in the markdown and add the lesson → builder entry to `DIAGRAMS` in the script.
+
+The rally lessons are checked against `src/data/lessons/rally-reference.md`, which carries a
+"Contested / unverified" section — claims flagged there (how much pros left-foot brake, whether the
+Scandinavian flick is still fast, ruts as a grippy rail) must stay hedged in lesson prose.
 
 ## How a car page is assembled
 
