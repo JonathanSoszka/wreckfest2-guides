@@ -30,9 +30,9 @@ const WIDTH = 760;
 const UA = 'wreckfest2-guides/1.0 (static site build; contact via github.com/JonathanSoszka/wreckfest2-guides)';
 
 const CARS = [
-  { slug: 'bravion', shows: 'BMW 318i (E46) sedan, 2001–2005', license: 'Public domain', credit: 'OSX',
-    source: 'https://commons.wikimedia.org/wiki/File:2001-2005_BMW_318i_(E46)_sedan_01.jpg',
-    file: 'https://upload.wikimedia.org/wikipedia/commons/b/b0/2001-2005_BMW_318i_%28E46%29_sedan_01.jpg' },
+  { slug: 'bravion', shows: '2004 BMW 330xi (E46) sedan', license: 'CC0 1.0', credit: 'Cutlass',
+    source: 'https://commons.wikimedia.org/wiki/File:2004_BMW_330xi_in_Titanium_Silver_Metallic,_front_right,_07-04-2026.jpg',
+    file: 'https://upload.wikimedia.org/wikipedia/commons/1/13/2004_BMW_330xi_in_Titanium_Silver_Metallic%2C_front_right%2C_07-04-2026.jpg' },
   { slug: 'buggy', shows: '1971 Volkswagen Beetle', license: 'CC BY 2.0', credit: 'Greg Gjerdingen',
     source: 'https://commons.wikimedia.org/wiki/File:71_Volkswagen_Beetle_(7766302818).jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/71_Volkswagen_Beetle_%287766302818%29.jpg' },
@@ -48,18 +48,18 @@ const CARS = [
   { slug: 'gizmo', shows: 'Volkswagen Golf Mk1 (facelift)', license: 'Attribution (free use with credit)', credit: 'Rudolf Stricker',
     source: 'https://commons.wikimedia.org/wiki/File:VW_Golf_I_front_20090416.jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/5/54/VW_Golf_I_front_20090416.jpg' },
-  { slug: 'grandstar', shows: '2001–2004 Dodge Grand Caravan', license: 'Public domain', credit: 'IFCAR',
-    source: 'https://commons.wikimedia.org/wiki/File:2001-2004_Dodge_Grand_Caravan.jpg',
-    file: 'https://upload.wikimedia.org/wikipedia/commons/9/9f/2001-2004_Dodge_Grand_Caravan.jpg' },
-  { slug: 'hurricane', shows: '1969 Chevrolet Camaro Z/28', license: 'CC BY 2.0', credit: 'Sicnag',
-    source: 'https://commons.wikimedia.org/wiki/File:1969_Chevrolet_Camaro_Z28.jpg',
-    file: 'https://upload.wikimedia.org/wikipedia/commons/0/06/1969_Chevrolet_Camaro_Z28.jpg' },
+  { slug: 'grandstar', shows: '2003 Dodge Caravan SE', license: 'CC BY-SA 4.0', credit: 'Elise240SX',
+    source: 'https://commons.wikimedia.org/wiki/File:2003_Dodge_Caravan_SE_in_Deep_Molten_Red_Pearl,_Front_Left,_11-12-2022.jpg',
+    file: 'https://upload.wikimedia.org/wikipedia/commons/8/83/2003_Dodge_Caravan_SE_in_Deep_Molten_Red_Pearl%2C_Front_Left%2C_11-12-2022.jpg' },
+  { slug: 'hurricane', shows: '1969 Chevrolet Camaro Z/28 Rally Sport', license: 'CC BY-SA 4.0', credit: 'MercurySable99',
+    source: 'https://commons.wikimedia.org/wiki/File:1969_Chevrolet_Camaro_Z28_Rally_Sport,_front_right,_09-09-2023.jpg',
+    file: 'https://upload.wikimedia.org/wikipedia/commons/a/ab/1969_Chevrolet_Camaro_Z28_Rally_Sport%2C_front_right%2C_09-09-2023.jpg' },
   { slug: 'jackal', shows: '1990 Ford Mustang GT 5.0 hatchback (Fox body)', license: 'CC BY-SA 3.0', credit: 'Mr.choppers',
     source: 'https://commons.wikimedia.org/wiki/File:1990_Ford_Mustang_GT_5.0_Hatchback_in_Ultra_Blue,_front_right.jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/6/62/1990_Ford_Mustang_GT_5.0_Hatchback_in_Ultra_Blue%2C_front_right.jpg' },
-  { slug: 'nami', shows: 'Mazda MX-5 Miata (NA)', license: 'CC BY 2.0', credit: 'Spanish Coches',
-    source: 'https://commons.wikimedia.org/wiki/File:Mazda_MX-5_Miata_(NA)_(5901573766).jpg',
-    file: 'https://upload.wikimedia.org/wikipedia/commons/e/e1/Mazda_MX-5_Miata_%28NA%29_%285901573766%29.jpg' },
+  { slug: 'nami', shows: '1991 Mazda MX-5 Miata (NA)', license: 'CC BY-SA 4.0', credit: 'Elise240SX',
+    source: 'https://commons.wikimedia.org/wiki/File:1991_Mazda_MX-5_Miata_in_Classic_Red,_Front_Right,_05-29-2022.jpg',
+    file: 'https://upload.wikimedia.org/wikipedia/commons/f/f6/1991_Mazda_MX-5_Miata_in_Classic_Red%2C_Front_Right%2C_05-29-2022.jpg' },
   { slug: 'phaser', shows: '1991 Honda Prelude Si 4WS coupe', license: 'Public domain', credit: 'OSX',
     source: 'https://commons.wikimedia.org/wiki/File:1991_Honda_Prelude_Si_4WS_coupe_(2015-07-24)_02.jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/a/ad/1991_Honda_Prelude_Si_4WS_coupe_%282015-07-24%29_02.jpg' },
@@ -72,16 +72,16 @@ const CARS = [
   { slug: 'roadslayer', shows: '1973 Pontiac Firebird Trans Am', license: 'CC BY-SA 4.0', credit: 'Elise240SX',
     source: 'https://commons.wikimedia.org/wiki/File:1973_Pontiac_Firebird_Trans_Am_in_Buccaneer_Red,_Front_Left,_09-11-2023.jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/6/63/1973_Pontiac_Firebird_Trans_Am_in_Buccaneer_Red%2C_Front_Left%2C_09-11-2023.jpg' },
-  { slug: 'rocket', shows: '1968 Ford Mustang GT fastback', license: 'CC BY 2.0', credit: 'sv1ambo',
-    source: 'https://commons.wikimedia.org/wiki/File:1968_Ford_Mustang_GT_fastback_(7708126054).jpg',
-    file: 'https://upload.wikimedia.org/wikipedia/commons/2/20/1968_Ford_Mustang_GT_fastback_%287708126054%29.jpg' },
-  { slug: 'stahlwagen', shows: '2002–2004 Mercedes-Benz C320 estate (S203)', license: 'Public domain', credit: 'IFCAR',
-    source: 'https://commons.wikimedia.org/wiki/File:02-04_Mercedes-Benz_C320_wagon.jpg',
-    file: 'https://upload.wikimedia.org/wikipedia/commons/6/6c/02-04_Mercedes-Benz_C320_wagon.jpg' },
+  { slug: 'rocket', shows: '1968 Ford Mustang GT hardtop', license: 'CC BY-SA 4.0', credit: 'MercurySable99',
+    source: 'https://commons.wikimedia.org/wiki/File:1968_Ford_Mustang_GT_hardtop,_front_left,_09-07-2024.jpg',
+    file: 'https://upload.wikimedia.org/wikipedia/commons/7/75/1968_Ford_Mustang_GT_hardtop%2C_front_left%2C_09-07-2024.jpg' },
+  { slug: 'stahlwagen', shows: '2004 Mercedes-Benz C270 CDI estate (S203)', license: 'CC0 1.0', credit: 'MoCars',
+    source: 'https://commons.wikimedia.org/wiki/File:2004_Mercedes-Benz_C270_CDI_Elegance_SE_Wagon_(Front).png',
+    file: 'https://upload.wikimedia.org/wikipedia/commons/c/cb/2004_Mercedes-Benz_C270_CDI_Elegance_SE_Wagon_%28Front%29.png' },
   { slug: 'switchback', shows: '1968 Chevrolet Chevelle SS396 hardtop', license: 'CC BY 2.0', credit: 'Sicnag',
     source: 'https://commons.wikimedia.org/wiki/File:1968_Chevrolet_Chevelle_SS396_Hardtop_(31750917026).jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/8/8c/1968_Chevrolet_Chevelle_SS396_Hardtop_%2831750917026%29.jpg' },
-  { slug: 'xalken', shows: '1997 Saab 900 (NG900) 3-door hatchback', license: 'Public domain', credit: 'OSX',
+  { slug: 'valken', shows: '1997 Saab 900 (NG900) 3-door hatchback', license: 'Public domain', credit: 'OSX',
     source: 'https://commons.wikimedia.org/wiki/File:1997_Saab_900_(MY97)_S_2.0_3-door_hatchback_(2015-07-15)_01.jpg',
     file: 'https://upload.wikimedia.org/wikipedia/commons/c/ce/1997_Saab_900_%28MY97%29_S_2.0_3-door_hatchback_%282015-07-15%29_01.jpg' },
 ];
@@ -133,6 +133,7 @@ async function tagFrontmatter(car) {
   let text = await readFile(file, 'utf-8');
   const fields = {
     heroImage: `/cars/${car.slug}.webp`,
+    imageShows: car.shows,
     imageCredit: car.credit,
     imageLicense: car.license,
     imageSource: car.source,
@@ -166,7 +167,10 @@ async function main() {
     }
     const out0 = path.join(OUT_DIR, `${car.slug}.webp`);
     if (existsSync(out0) && !process.argv.includes('--force')) {
-      console.log(`${car.slug.padEnd(11)} already present — skipping (use --force to refetch)`);
+      // Still re-tag: the manifest is the source of truth for credits, and skipping
+      // the download shouldn't leave frontmatter stale.
+      const status = await tagFrontmatter(car);
+      console.log(`${car.slug.padEnd(11)} image present — skipped download, ${status}`);
       ok++;
       continue;
     }

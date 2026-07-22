@@ -5,9 +5,10 @@ drivetrain: RWD
 inspiration: 1989 Mazda MX-5 Miata (NA)
 archetype: Balanced RWD roadster
 bodyStyle: roadster
-imageSource: "https://commons.wikimedia.org/wiki/File:Mazda_MX-5_Miata_(NA)_(5901573766).jpg"
-imageLicense: CC BY 2.0
-imageCredit: Spanish Coches
+imageShows: 1991 Mazda MX-5 Miata (NA)
+imageSource: "https://commons.wikimedia.org/wiki/File:1991_Mazda_MX-5_Miata_in_Classic_Red,_Front_Right,_05-29-2022.jpg"
+imageLicense: CC BY-SA 4.0
+imageCredit: Elise240SX
 heroImage: /cars/nami.webp
 summary: A tiny, balanced NA Miata roadster that rotates beautifully and bites just as fast — a momentum car you drive on line, not power.
 order: 14

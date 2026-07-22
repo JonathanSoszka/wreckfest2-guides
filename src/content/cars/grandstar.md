@@ -5,9 +5,10 @@ drivetrain: FWD
 inspiration: 2001 Dodge Caravan (minivan)
 archetype: FWD minivan
 bodyStyle: van
-imageSource: "https://commons.wikimedia.org/wiki/File:2001-2004_Dodge_Grand_Caravan.jpg"
-imageLicense: Public domain
-imageCredit: IFCAR
+imageShows: 2003 Dodge Caravan SE
+imageSource: "https://commons.wikimedia.org/wiki/File:2003_Dodge_Caravan_SE_in_Deep_Molten_Red_Pearl,_Front_Left,_11-12-2022.jpg"
+imageLicense: CC BY-SA 4.0
+imageCredit: Elise240SX
 heroImage: /cars/grandstar.webp
 summary: A heavy, tall front-drive minivan — strong understeer and a high centre of gravity make it roll-prone, but its mass is a ramming asset.
 order: 13

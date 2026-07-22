@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: 1986 Chevrolet Caprice
 archetype: Heavy RWD sedan
 bodyStyle: sedan
+imageShows: 1986 Chevrolet Caprice Classic sedan
 imageSource: "https://commons.wikimedia.org/wiki/File:1986_Caprice_Classic_Sedan.jpg"
 imageLicense: CC BY-SA 4.0
 imageCredit: Urbansuburban86

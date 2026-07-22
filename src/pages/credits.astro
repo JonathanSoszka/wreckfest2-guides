@@ -40,9 +40,9 @@ const shareAlike = cars.filter((c) => (c.data.imageLicense ?? '').includes('SA')
           <td class="cr-car"><a href={`/cars/${car.id}/`}>{car.data.name}</a></td>
           <td class="cr-shot">
             {car.data.imageSource ? (
-              <a href={car.data.imageSource} rel="noopener noreferrer">{car.data.inspiration ?? 'Commons file'}</a>
+              <a href={car.data.imageSource} rel="noopener noreferrer">{car.data.imageShows ?? car.data.inspiration ?? 'Commons file'}</a>
             ) : (
-              car.data.inspiration
+              car.data.imageShows ?? car.data.inspiration
             )}
           </td>
           <td>{car.data.imageCredit}</td>

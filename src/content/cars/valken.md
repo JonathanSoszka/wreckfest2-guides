@@ -1,19 +1,20 @@
 ---
-name: Xalken
+name: Valken
 internalId: car16
 drivetrain: FWD
 inspiration: 1997 Saab 900
 archetype: Nose-heavy FWD hatch
 bodyStyle: hatch
+imageShows: 1997 Saab 900 (NG900) 3-door hatchback
 imageSource: "https://commons.wikimedia.org/wiki/File:1997_Saab_900_(MY97)_S_2.0_3-door_hatchback_(2015-07-15)_01.jpg"
 imageLicense: Public domain
 imageCredit: OSX
-heroImage: /cars/xalken.webp
+heroImage: /cars/valken.webp
 summary: A nose-heavy front-drive hatch with modest power that handles well — a momentum car you drive on line and corner speed, not muscle.
 order: 16
 ---
 
-The Xalken is a front-wheel-drive hatch in the mould of a late-90s Saab 900. Its weight sits
+The Valken is a front-wheel-drive hatch in the mould of a late-90s Saab 900. Its weight sits
 forward (roughly 62/38) and it makes only modest power, but it earns its keep with balance — a
 snappy, all-round handler you drive on momentum and line rather than brute force.
 
@@ -30,6 +31,6 @@ come round quickly on a lift, which is exactly the rotation you want when you're
 handful when you're not. Off the line, watch for wheelspin — a nose-heavy front-driver can light up
 the fronts on a hard launch and bog its start.
 
-In a pack the Xalken is a nimble mid-weight. It won't out-muscle the big cars, so it wins by being
+In a pack the Valken is a nimble mid-weight. It won't out-muscle the big cars, so it wins by being
 tidy and quick through the corners where they struggle, using its handling to stay clean rather than
 trading hits.

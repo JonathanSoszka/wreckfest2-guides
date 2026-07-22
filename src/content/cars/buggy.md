@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: 1971 VW Beetle
 archetype: Rear-engine RWD
 bodyStyle: bubble
+imageShows: 1971 Volkswagen Beetle
 imageSource: "https://commons.wikimedia.org/wiki/File:71_Volkswagen_Beetle_(7766302818).jpg"
 imageLicense: CC BY 2.0
 imageCredit: Greg Gjerdingen

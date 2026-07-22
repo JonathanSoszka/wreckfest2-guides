@@ -5,9 +5,10 @@ drivetrain: RWD
 inspiration: 2001 Mercedes C-Class Estate (W203)
 archetype: Stable RWD wagon
 bodyStyle: wagon
-imageSource: "https://commons.wikimedia.org/wiki/File:02-04_Mercedes-Benz_C320_wagon.jpg"
-imageLicense: Public domain
-imageCredit: IFCAR
+imageShows: 2004 Mercedes-Benz C270 CDI estate (S203)
+imageSource: "https://commons.wikimedia.org/wiki/File:2004_Mercedes-Benz_C270_CDI_Elegance_SE_Wagon_(Front).png"
+imageLicense: CC0 1.0
+imageCredit: MoCars
 heroImage: /cars/stahlwagen.webp
 summary: A long-wheelbase rear-drive estate — the stable, predictable one, with a slightly rearward balance that aids traction and controllable oversteer.
 order: 15

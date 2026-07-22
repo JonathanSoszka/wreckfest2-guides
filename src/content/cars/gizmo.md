@@ -5,6 +5,7 @@ drivetrain: FWD
 inspiration: 1980 VW Golf Mk1
 archetype: Nimble FWD hatch
 bodyStyle: hatch
+imageShows: Volkswagen Golf Mk1 (facelift)
 imageSource: "https://commons.wikimedia.org/wiki/File:VW_Golf_I_front_20090416.jpg"
 imageLicense: Attribution (free use with credit)
 imageCredit: Rudolf Stricker

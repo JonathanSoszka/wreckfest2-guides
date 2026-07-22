@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: Fox Body Ford Mustang
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
+imageShows: 1990 Ford Mustang GT 5.0 hatchback (Fox body)
 imageSource: "https://commons.wikimedia.org/wiki/File:1990_Ford_Mustang_GT_5.0_Hatchback_in_Ultra_Blue,_front_right.jpg"
 imageLicense: CC BY-SA 3.0
 imageCredit: Mr.choppers

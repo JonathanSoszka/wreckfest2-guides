@@ -5,9 +5,10 @@ drivetrain: RWD
 inspiration: BMW 3 Series (E46)
 archetype: Balanced RWD sports
 bodyStyle: sports
-imageSource: "https://commons.wikimedia.org/wiki/File:2001-2005_BMW_318i_(E46)_sedan_01.jpg"
-imageLicense: Public domain
-imageCredit: OSX
+imageShows: 2004 BMW 330xi (E46) sedan
+imageSource: "https://commons.wikimedia.org/wiki/File:2004_BMW_330xi_in_Titanium_Silver_Metallic,_front_right,_07-04-2026.jpg"
+imageLicense: CC0 1.0
+imageCredit: Cutlass
 heroImage: /cars/bravion.webp
 summary: A near-50/50 rear-drive sports saloon that rotates willingly — quick and rewarding, but happy to swing the tail on both power and lift.
 order: 4

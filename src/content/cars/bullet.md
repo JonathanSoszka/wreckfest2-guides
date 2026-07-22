@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: 1970 Dodge Charger
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
+imageShows: 1970 Dodge Charger
 imageSource: "https://commons.wikimedia.org/wiki/File:1970_Dodge_Charger_6.3_V8_(15262649127).jpg"
 imageLicense: CC BY 2.0
 imageCredit: Kieran White

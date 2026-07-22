@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: 2010 Ford Crown Victoria
 archetype: Heavy RWD sedan
 bodyStyle: sedan
+imageShows: 2007 Ford Crown Victoria LX
 imageSource: "https://commons.wikimedia.org/wiki/File:2007_Ford_Crown_Victoria_LX.jpg"
 imageLicense: Public domain
 imageCredit: IFCAR

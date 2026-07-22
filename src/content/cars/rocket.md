@@ -5,9 +5,10 @@ drivetrain: RWD
 inspiration: 1968 Ford Mustang
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
-imageSource: "https://commons.wikimedia.org/wiki/File:1968_Ford_Mustang_GT_fastback_(7708126054).jpg"
-imageLicense: CC BY 2.0
-imageCredit: sv1ambo
+imageShows: 1968 Ford Mustang GT hardtop
+imageSource: "https://commons.wikimedia.org/wiki/File:1968_Ford_Mustang_GT_hardtop,_front_left,_09-07-2024.jpg"
+imageLicense: CC BY-SA 4.0
+imageCredit: MercurySable99
 heroImage: /cars/rocket.webp
 summary: A lighter, well-balanced V8 pony car — the neutral all-rounder of the muscle group with only mild power oversteer.
 order: 3

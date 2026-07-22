@@ -16,7 +16,7 @@ July 2026.
 | Drivetrain | Cars |
 |---|---|
 | **RWD — front-engine (FR)** | RoadSlayer, Hurricane, Rocket, Bravion, Rammer, Cardinal, Switchback, Nami, Stahlwagen, Bullet, Jackal |
-| **FWD (FF)** | Crusader, Gizmo, Phaser, Grandstar, Xalken |
+| **FWD (FF)** | Crusader, Gizmo, Phaser, Grandstar, Valken |
 | **RWD — rear-engine (RR)** | Buggy, Popper |
 | **AWD** | *(none identified in the current roster)* |
 
@@ -39,11 +39,14 @@ July 2026.
 | Grandstar (car13) | '01 Dodge Caravan (minivan) | FF | very nose-heavy ~58–60% | understeer + roll-prone/tippy, high CG |
 | Nami (car14) | '89 Mazda MX-5 Miata (NA) | FR | ~50/50 | rotates fast & bites fast; lift-off *and* power oversteer |
 | Stahlwagen (car15) | '01 Mercedes C-Class Estate (W203) | FR | ~53/47 | stable wagon; controllable oversteer |
-| Xalken (car16)¹ | '97 Saab 900 (NG900) | FF | nose-heavy ~62/38 | understeer-prone "snappy all-rounder," low power |
+| Valken (car16)¹ | '97 Saab 900 (NG900) | FF | nose-heavy ~62/38 | understeer-prone "snappy all-rounder," low power |
 | Bullet (car21) | '70 Dodge Charger / Satellite | FR | front-heavy ~56/44 | stable but slow to rotate; slides build momentum (~1,795 kg) |
 | Jackal (car26) | Fox Body Mustang (3rd-gen) | FR | front-heavy ~57/43 | snap oversteer on lift, live-axle hop, easy wheelspin |
 
-¹ In-game name is **Xalken** (from the game files); the Fandom wiki lists the same car as **Valken**.
+¹ The site calls this car **Valken**, following THQ Nordic's own press asset
+(`Wreckfest_2_Upadate_7_Valken.jpg`) and the published car lists. The string extracted from the
+game files reads **Xalken** — treat that as an internal or stale literal, and be wary of other
+extracted display names for the same reason.
 
 ---
 
@@ -123,7 +126,7 @@ tiny, light, and fragile — nimble momentum cars, not contact winners.
   drivetrain is the one soft spot — real basis is unambiguously RR; verify the axle model in-game.)*
 
 ### 5. FWD (front-drive) — power-on understeer cars
-**Crusader, Gizmo, Phaser, Grandstar, Xalken**
+**Crusader, Gizmo, Phaser, Grandstar, Valken**
 
 Core story: the front tyres steer, brake, **and** drive, so the enemy is **understeer — especially
 power-on understeer out of corners**. Everything inverts vs. RWD: the light rear is a *tool*. Run a
@@ -142,7 +145,7 @@ unwind and drive out straighter. Protect front traction on exit.
 - **Grandstar (car13)** — *'01 Dodge Caravan minivan*, heavy and **very nose-heavy with a high CG**
   → strong understeer and roll/rollover risk. Stiffen anti-roll and lower ride height where allowed;
   use the mass as a ramming asset; stability over agility.
-- **Xalken (car16)** — *'97 Saab 900*, nose-heavy, low power but "handles well." A momentum-driven,
+- **Valken (car16)** — *'97 Saab 900*, nose-heavy, low power but "handles well." A momentum-driven,
   snappy all-rounder; tune for agility/cornering, not straight-line speed; watch launch wheelspin.
 
 ---
@@ -173,4 +176,4 @@ unwind and drive out straighter. Protect front traction on exit.
 
 _Confidence: all inspirations High. Exceptions noted inline — Switchback's exact muscle model is a
 composite (Medium), and Popper's in-game drivetrain wants an in-game check (real basis RR is
-certain). The Xalken/Valken name mismatch is flagged above._
+certain). The Valken name is discussed above._

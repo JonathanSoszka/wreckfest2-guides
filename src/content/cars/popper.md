@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: Fiat 500 / 600
 archetype: Rear-engine RWD
 bodyStyle: bubble
+imageShows: 1970 Fiat 500 L
 imageSource: "https://commons.wikimedia.org/wiki/File:1970_Fiat_500_L_--_2011_DC_1.jpg"
 imageLicense: Public domain
 imageCredit: IFCAR

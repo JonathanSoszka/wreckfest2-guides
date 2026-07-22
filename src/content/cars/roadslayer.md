@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: 1973 Pontiac Firebird / Trans Am
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
+imageShows: 1973 Pontiac Firebird Trans Am
 imageSource: "https://commons.wikimedia.org/wiki/File:1973_Pontiac_Firebird_Trans_Am_in_Buccaneer_Red,_Front_Left,_09-11-2023.jpg"
 imageLicense: CC BY-SA 4.0
 imageCredit: Elise240SX

@@ -24,6 +24,7 @@ const cars = defineCollection({
     heroImage: z.string().optional(),
     // Photo attribution. Required together — a photo we can't credit doesn't ship.
     // Populated by scripts/fetch-car-images.mjs; surfaced on /credits/.
+    imageShows: z.string().optional(), // the car actually photographed, which may differ from `inspiration`
     imageCredit: z.string().optional(), // photographer, as Commons names them
     imageLicense: z.string().optional(), // e.g. "CC BY 2.0", "Public domain"
     imageSource: z.string().url().optional(), // the Commons file page

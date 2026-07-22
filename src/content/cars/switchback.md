@@ -5,6 +5,7 @@ drivetrain: RWD
 inspiration: 1968 Chevrolet Chevelle
 archetype: Front-heavy RWD muscle
 bodyStyle: muscle
+imageShows: 1968 Chevrolet Chevelle SS396 hardtop
 imageSource: "https://commons.wikimedia.org/wiki/File:1968_Chevrolet_Chevelle_SS396_Hardtop_(31750917026).jpg"
 imageLicense: CC BY 2.0
 imageCredit: Sicnag

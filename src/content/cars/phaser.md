@@ -5,6 +5,7 @@ drivetrain: FWD
 inspiration: 1991 Honda Prelude
 archetype: Nose-heavy FWD coupe
 bodyStyle: coupe
+imageShows: 1991 Honda Prelude Si 4WS coupe
 imageSource: "https://commons.wikimedia.org/wiki/File:1991_Honda_Prelude_Si_4WS_coupe_(2015-07-24)_02.jpg"
 imageLicense: Public domain
 imageCredit: OSX
