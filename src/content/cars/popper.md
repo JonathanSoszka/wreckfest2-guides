@@ -2,7 +2,6 @@
 name: Popper
 internalId: car10
 drivetrain: RWD
-carClass: B
 inspiration: Fiat 500 / 600
 archetype: Rear-engine RWD
 summary: A tiny rear-engine city car — a nimble technical-track toy that swings its tail wide the moment you lift off.

@@ -2,7 +2,6 @@
 name: Stahlwagen
 internalId: car15
 drivetrain: RWD
-carClass: B
 inspiration: 2001 Mercedes C-Class Estate (W203)
 archetype: Stable RWD wagon
 summary: A long-wheelbase rear-drive estate — the stable, predictable one, with a slightly rearward balance that aids traction and controllable oversteer.

@@ -2,7 +2,6 @@
 name: Hurricane
 internalId: car02
 drivetrain: RWD
-carClass: B
 inspiration: 1969 Chevrolet Camaro
 archetype: Torque-forward RWD muscle
 summary: The torque-forward muscle cousin — lighter and nimbler than the RoadSlayer, but eager to oversteer on power and short on revs.

@@ -12,7 +12,6 @@ const cars = defineCollection({
     name: z.string(),
     internalId: z.string(), // e.g. "car01"
     drivetrain: drivetrain,
-    carClass: z.string().optional(), // A/B/C etc. — best-effort
     inspiration: z.string().optional(), // real-world lookalike (from car-reference.md)
     archetype: z.string().optional(), // handling archetype, e.g. "RWD muscle", "FWD hatch"
     summary: z.string(),
