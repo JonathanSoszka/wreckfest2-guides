@@ -4,6 +4,7 @@ internalId: car01
 drivetrain: RWD
 inspiration: 1973 Pontiac Firebird / Trans Am
 archetype: Front-heavy RWD muscle
+bodyStyle: muscle
 summary: The front-heavy V8 muscle car most players start with — stable and forgiving, but the torque will step the rear out if you ask too much.
 order: 1
 ---

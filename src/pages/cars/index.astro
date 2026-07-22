@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CarArt from '../../components/CarArt.astro';
 import { getPublished } from '../../lib/content';
 
 const cars = (await getPublished('cars'))
@@ -23,18 +24,26 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
     </div>
   </div>
 
-  <div class="grid car-grid">
+  <div class="car-rows">
     {cars.map((car) => (
-      <a href={`/cars/${car.id}/`} class="card car-card" data-dt={car.data.drivetrain}>
-        {car.data.inspiration && <p class="card-eyebrow">{car.data.inspiration}</p>}
-        <h3>{car.data.name}</h3>
-        <p>{car.data.summary}</p>
-        <div class="card-foot">
+      <a href={`/cars/${car.id}/`} class="car-row" data-dt={car.data.drivetrain}>
+        <span class="car-stage">
+          <CarArt
+            name={car.data.name}
+            drivetrain={car.data.drivetrain}
+            bodyStyle={car.data.bodyStyle}
+            heroImage={car.data.heroImage}
+          />
+        </span>
+        <span class="car-row-main">
+          {car.data.inspiration && <span class="card-eyebrow">{car.data.inspiration}</span>}
+          <h3>{car.data.name}</h3>
+          <span class="car-row-sum">{car.data.summary}</span>
+        </span>
+        <span class="car-row-side">
+          <span class={dtClass(car.data.drivetrain)}>{car.data.drivetrain}</span>
           {car.data.archetype && <span class="card-arch">{car.data.archetype}</span>}
-          <span class="tags">
-            <span class={dtClass(car.data.drivetrain)}>{car.data.drivetrain}</span>
-          </span>
-        </div>
+        </span>
       </a>
     ))}
   </div>
@@ -45,7 +54,7 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
 <script>
   const bar = document.querySelector<HTMLElement>('.car-filters');
   if (bar) {
-    const cards = Array.from(document.querySelectorAll<HTMLElement>('.car-grid .card'));
+    const rows = Array.from(document.querySelectorAll<HTMLElement>('.car-rows .car-row'));
     const empty = document.querySelector<HTMLElement>('.car-empty');
     const state: Record<string, string> = { dt: 'all' };
     bar.addEventListener('click', (e) => {
@@ -55,9 +64,9 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
       state[kind] = val;
       bar.querySelectorAll(`[data-filter^="${kind}:"]`).forEach((c) => c.classList.toggle('active', c === chip));
       let shown = 0;
-      for (const card of cards) {
-        const ok = state.dt === 'all' || card.dataset.dt === state.dt;
-        card.style.display = ok ? '' : 'none';
+      for (const row of rows) {
+        const ok = state.dt === 'all' || row.dataset.dt === state.dt;
+        row.style.display = ok ? '' : 'none';
         if (ok) shown++;
       }
       if (empty) empty.style.display = shown ? 'none' : '';

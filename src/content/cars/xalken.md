@@ -4,6 +4,7 @@ internalId: car16
 drivetrain: FWD
 inspiration: 1997 Saab 900
 archetype: Nose-heavy FWD hatch
+bodyStyle: hatch
 summary: A nose-heavy front-drive hatch with modest power that handles well — a momentum car you drive on line and corner speed, not muscle.
 order: 16
 ---

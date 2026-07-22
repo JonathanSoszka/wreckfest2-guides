@@ -4,6 +4,7 @@ internalId: car10
 drivetrain: RWD
 inspiration: Fiat 500 / 600
 archetype: Rear-engine RWD
+bodyStyle: bubble
 summary: A tiny rear-engine city car — a nimble technical-track toy that swings its tail wide the moment you lift off.
 order: 10
 ---

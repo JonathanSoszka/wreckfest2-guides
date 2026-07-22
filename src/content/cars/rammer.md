@@ -4,6 +4,7 @@ internalId: car07
 drivetrain: RWD
 inspiration: 1986 Chevrolet Caprice
 archetype: Heavy RWD sedan
+bodyStyle: sedan
 summary: A heavy, front-biased full-size sedan — a momentum rammer that understeers and changes direction lazily but survives contact.
 order: 7
 ---

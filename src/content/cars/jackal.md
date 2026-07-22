@@ -4,6 +4,7 @@ internalId: car26
 drivetrain: RWD
 inspiration: Fox Body Ford Mustang
 archetype: Front-heavy RWD muscle
+bodyStyle: muscle
 summary: The lightest, twitchiest muscle car — a short-wheelbase live-axle coupe that snaps into oversteer on lift and hops over bumps.
 order: 26
 ---

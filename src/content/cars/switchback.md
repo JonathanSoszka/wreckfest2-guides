@@ -4,6 +4,7 @@ internalId: car11
 drivetrain: RWD
 inspiration: 1968 Chevrolet Chevelle
 archetype: Front-heavy RWD muscle
+bodyStyle: muscle
 summary: A front-biased V8 brawler built for straight-line speed — strong on fast tracks, but it understeers hard in tight corners.
 order: 11
 ---

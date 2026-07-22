@@ -4,6 +4,7 @@ internalId: car13
 drivetrain: FWD
 inspiration: 2001 Dodge Caravan (minivan)
 archetype: FWD minivan
+bodyStyle: van
 summary: A heavy, tall front-drive minivan — strong understeer and a high centre of gravity make it roll-prone, but its mass is a ramming asset.
 order: 13
 ---

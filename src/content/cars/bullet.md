@@ -4,6 +4,7 @@ internalId: car21
 drivetrain: RWD
 inspiration: 1970 Dodge Charger
 archetype: Front-heavy RWD muscle
+bodyStyle: muscle
 summary: A long, heavy long-wheelbase muscle car — the most stable at speed and the least agile, with slides that build momentum.
 order: 21
 ---

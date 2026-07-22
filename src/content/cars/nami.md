@@ -4,6 +4,7 @@ internalId: car14
 drivetrain: RWD
 inspiration: 1989 Mazda MX-5 Miata (NA)
 archetype: Balanced RWD roadster
+bodyStyle: roadster
 summary: A tiny, balanced NA Miata roadster that rotates beautifully and bites just as fast — a momentum car you drive on line, not power.
 order: 14
 ---

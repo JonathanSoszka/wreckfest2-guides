@@ -4,6 +4,7 @@ internalId: car03
 drivetrain: RWD
 inspiration: 1968 Ford Mustang
 archetype: Front-heavy RWD muscle
+bodyStyle: muscle
 summary: A lighter, well-balanced V8 pony car — the neutral all-rounder of the muscle group with only mild power oversteer.
 order: 3
 ---

@@ -4,6 +4,7 @@ internalId: car02
 drivetrain: RWD
 inspiration: 1969 Chevrolet Camaro
 archetype: Torque-forward RWD muscle
+bodyStyle: muscle
 summary: The torque-forward muscle cousin — lighter and nimbler than the RoadSlayer, but eager to oversteer on power and short on revs.
 order: 2
 ---

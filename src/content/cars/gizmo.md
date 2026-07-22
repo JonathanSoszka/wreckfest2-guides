@@ -4,6 +4,7 @@ internalId: car06
 drivetrain: FWD
 inspiration: 1980 VW Golf Mk1
 archetype: Nimble FWD hatch
+bodyStyle: hatch
 summary: A light front-drive hatchback — nimble and quick to change direction, but it fights you under power.
 order: 6
 ---

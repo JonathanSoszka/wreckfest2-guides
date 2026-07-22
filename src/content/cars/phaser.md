@@ -4,6 +4,7 @@ internalId: car12
 drivetrain: FWD
 inspiration: 1991 Honda Prelude
 archetype: Nose-heavy FWD coupe
+bodyStyle: coupe
 summary: A nose-heavy front-drive sports coupe with a peaky, high-revving engine — a corner-carver that snaps its light rear over kerbs.
 order: 12
 ---

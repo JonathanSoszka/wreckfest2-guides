@@ -4,6 +4,7 @@ internalId: car09
 drivetrain: RWD
 inspiration: 1971 VW Beetle
 archetype: Rear-engine RWD
+bodyStyle: bubble
 summary: A light rear-engined Beetle with its weight over the back axle — darty and quick to rotate, with a pendulum tail that swings wide off-throttle.
 order: 9
 ---

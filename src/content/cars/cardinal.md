@@ -4,6 +4,7 @@ internalId: car08
 drivetrain: RWD
 inspiration: 2010 Ford Crown Victoria
 archetype: Heavy RWD sedan
+bodyStyle: sedan
 summary: The heaviest car in the roster — a front-biased full-size sedan that understeers hard but survives contact and runs a huge top speed.
 order: 8
 ---

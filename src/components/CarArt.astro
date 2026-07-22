@@ -1,0 +1,108 @@
+---
+/**
+ * Car artwork for the index rows.
+ *
+ * Renders the car's `heroImage` when it has one; otherwise a generic side-profile
+ * silhouette chosen by `bodyStyle`. The silhouettes are deliberately stylised
+ * placeholders — the game's own car art isn't extractable yet (see CLAUDE.md), so
+ * these stand in and get replaced per car simply by setting `heroImage`.
+ *
+ * Bodies are tinted by drivetrain from the site's --dt-* tokens, so a row reads as
+ * rear- or front-drive before you get to the tag.
+ */
+export type BodyStyle =
+  | 'muscle' | 'sedan' | 'sports' | 'roadster' | 'hatch'
+  | 'coupe' | 'wagon' | 'van' | 'bubble';
+
+interface Props {
+  name: string;
+  drivetrain: string;
+  bodyStyle?: BodyStyle;
+  heroImage?: string;
+}
+const { name, drivetrain, bodyStyle = 'sedan', heroImage } = Astro.props;
+
+/** Side profiles on a 200x76 canvas: outer body, then the glasshouse. */
+const BODIES: Record<BodyStyle, { body: string; glass: string }> = {
+  muscle: {
+    body: 'M6,60 L6,46 Q6,42 12,41 L58,36 Q72,25 96,23 L124,23 Q140,25 152,32 L186,40 Q194,42 194,48 L194,60 Z',
+    glass: 'M64,36 Q76,28 96,27 L120,27 Q132,29 140,36 Z',
+  },
+  sedan: {
+    body: 'M6,60 L6,44 Q6,40 12,39 L52,35 Q64,22 88,20 L124,20 Q142,22 152,34 L188,39 Q194,41 194,47 L194,60 Z',
+    glass: 'M58,35 Q68,25 88,24 L122,24 Q138,26 146,35 Z',
+  },
+  sports: {
+    body: 'M6,60 L6,48 Q6,44 12,43 L54,39 Q70,28 98,26 L126,27 Q144,30 156,36 L188,43 Q194,45 194,50 L194,60 Z',
+    glass: 'M62,39 Q76,31 98,30 L122,31 Q136,33 144,39 Z',
+  },
+  roadster: {
+    body: 'M6,60 L6,49 Q6,45 12,44 L58,41 Q74,34 100,33 L130,34 Q148,36 158,40 L188,45 Q194,47 194,51 L194,60 Z',
+    glass: 'M96,33 L108,25 L114,25 L110,33 Z',
+  },
+  hatch: {
+    body: 'M14,60 L14,46 Q14,42 20,41 L48,37 Q58,24 80,22 L118,22 Q134,24 142,36 L176,41 Q182,43 182,48 L182,60 Z',
+    glass: 'M54,37 Q62,27 80,26 L116,26 Q128,28 134,37 Z',
+  },
+  coupe: {
+    body: 'M10,60 L10,46 Q10,42 16,41 L50,37 Q62,25 86,23 L114,23 Q132,26 142,34 L180,41 Q188,43 188,48 L188,60 Z',
+    glass: 'M56,37 Q66,28 86,27 L112,27 Q126,29 134,37 Z',
+  },
+  wagon: {
+    body: 'M6,60 L6,44 Q6,40 12,39 L50,35 Q62,22 86,20 L146,20 Q158,21 162,28 L164,36 L188,40 Q194,42 194,47 L194,60 Z',
+    glass: 'M56,35 Q66,25 86,24 L144,24 L152,35 Z',
+  },
+  van: {
+    body: 'M10,60 L10,40 Q10,32 20,28 L44,20 Q52,16 66,16 L150,16 Q166,17 172,26 L184,38 Q190,42 190,48 L190,60 Z',
+    glass: 'M46,28 Q52,21 66,21 L146,21 Q156,22 160,28 L162,34 L46,34 Z',
+  },
+  bubble: {
+    body: 'M16,60 L16,46 Q16,36 26,30 Q44,18 74,16 L112,16 Q142,18 158,30 Q168,36 168,46 L168,60 Z',
+    glass: 'M46,32 Q58,23 78,22 L110,22 Q130,23 142,32 Z',
+  },
+};
+
+const shape = BODIES[bodyStyle] ?? BODIES.sedan;
+const dt = drivetrain.toLowerCase();
+---
+{heroImage ? (
+  <img class="car-art-img" src={heroImage} alt={`${name}`} loading="lazy" decoding="async" width="200" height="76" />
+) : (
+  <svg
+    class:list={['car-art', `car-art--${dt}`]}
+    viewBox="0 0 200 76"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path class="ca-paint" d={shape.body} />
+    <path class="ca-glass" d={shape.glass} />
+    <circle class="ca-tyre" cx="54" cy="60" r="13" />
+    <circle class="ca-hub" cx="54" cy="60" r="4.5" />
+    <circle class="ca-tyre" cx="148" cy="60" r="13" />
+    <circle class="ca-hub" cx="148" cy="60" r="4.5" />
+    <line class="ca-ground" x1="4" y1="74" x2="196" y2="74" />
+  </svg>
+)}
+
+<style>
+  .car-art,
+  .car-art-img { display: block; width: 100%; height: auto; }
+  .car-art-img { border-radius: 6px; object-fit: cover; }
+
+  .ca-paint { fill: #3a3f4b; }
+  .car-art--rwd .ca-paint { fill: color-mix(in srgb, var(--dt-rwd) 48%, #14161c); }
+  .car-art--fwd .ca-paint { fill: color-mix(in srgb, var(--dt-fwd) 42%, #14161c); }
+  .car-art--awd .ca-paint { fill: color-mix(in srgb, var(--dt-awd) 45%, #14161c); }
+
+  .ca-glass { fill: var(--bg-panel-2); }
+  .ca-tyre { fill: #101116; stroke: #4b5160; stroke-width: 2.5; }
+  .ca-hub { fill: #5b6270; }
+  .ca-ground { stroke: #22252d; stroke-width: 3; stroke-linecap: round; }
+
+  /* On narrow screens the stage goes full-width; cap the art so a row that is
+     mostly text doesn't get a disproportionately tall picture. */
+  @media (max-width: 520px) {
+    .car-art,
+    .car-art-img { height: 62px; width: auto; margin: 0 auto; }
+  }
+</style>

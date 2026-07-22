@@ -4,6 +4,7 @@ internalId: car04
 drivetrain: RWD
 inspiration: BMW 3 Series (E46)
 archetype: Balanced RWD sports
+bodyStyle: sports
 summary: A near-50/50 rear-drive sports saloon that rotates willingly — quick and rewarding, but happy to swing the tail on both power and lift.
 order: 4
 ---

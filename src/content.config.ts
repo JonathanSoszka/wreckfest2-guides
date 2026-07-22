@@ -2,6 +2,11 @@ import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
 const drivetrain = z.enum(['FWD', 'RWD', 'AWD']);
+// Silhouette used by the car index art (see components/CarArt.astro). Placeholder
+// shapes until real car imagery exists — set `heroImage` to override per car.
+const bodyStyle = z.enum([
+  'muscle', 'sedan', 'sports', 'roadster', 'hatch', 'coupe', 'wagon', 'van', 'bubble',
+]);
 const surface = z.enum(['tarmac', 'dirt', 'gravel', 'mixed']);
 
 // Car profiles — one Markdown file per car. Numeric stats are intentionally
@@ -14,6 +19,7 @@ const cars = defineCollection({
     drivetrain: drivetrain,
     inspiration: z.string().optional(), // real-world lookalike (from car-reference.md)
     archetype: z.string().optional(), // handling archetype, e.g. "RWD muscle", "FWD hatch"
+    bodyStyle: bodyStyle.optional(), // silhouette for the index art
     summary: z.string(),
     heroImage: z.string().optional(),
     order: z.number().default(999),

@@ -4,6 +4,7 @@ internalId: car05
 drivetrain: FWD
 inspiration: 2002 Chevrolet Cavalier
 archetype: Nose-heavy FWD coupe
+bodyStyle: coupe
 summary: A front-heavy front-drive economy coupe — a textbook FWD car that understeers on power unless you rotate it on entry.
 order: 5
 ---

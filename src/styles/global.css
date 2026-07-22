@@ -130,28 +130,77 @@ main { padding: 2rem 0 1rem; }
   letter-spacing: 0;
 }
 
-/* --- car index card (editorial) --- */
-.car-card h3 { font-size: 1.28rem; margin: 0 0 0.4rem; }
+/* --- car index rows: art on a lit stage, summary beside it --- */
+.car-rows { display: flex; flex-direction: column; gap: 0.7rem; }
+
+.car-row {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr) auto;
+  gap: 1.3rem;
+  align-items: center;
+  padding: 0.9rem 1.1rem;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.14s, background 0.14s;
+}
+.car-row:hover { border-color: var(--accent); background: var(--bg-panel-2); }
+.car-row:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* the lit stage the car sits on — glow rises from under the wheels */
+.car-stage {
+  display: block;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background:
+    radial-gradient(120% 80% at 50% 120%, color-mix(in srgb, var(--accent) 14%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--bg-panel-2), var(--bg));
+}
+
+.car-row-main { display: block; min-width: 0; }
+.car-row-main h3 { font-size: 1.24rem; margin: 0 0 0.3rem; }
+.car-row-sum { display: block; color: var(--text-dim); font-size: 0.93rem; }
+
 .card-eyebrow {
+  display: block;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--link);
   margin: 0 0 0.35rem;
 }
-.car-card > p { color: var(--text-dim); font-size: 0.93rem; margin: 0; }
-.card-foot {
+
+.car-row-side {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  margin-top: 0.9rem;
-  padding-top: 0.7rem;
-  border-top: 1px solid var(--border);
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  text-align: right;
 }
 .card-arch { font-size: 0.8rem; color: var(--text-dim); }
-.card-foot .tags { margin: 0; }
+
+@media (max-width: 760px) {
+  .car-row { grid-template-columns: 128px minmax(0, 1fr); gap: 0.5rem 0.9rem; }
+  .car-row-side {
+    grid-column: 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.6rem;
+    text-align: left;
+  }
+}
+
+/* Below ~520px a side-by-side split leaves the summary too narrow to read, so the
+   car gets its own full-width row and the text spans the card. */
+@media (max-width: 520px) {
+  .car-row { grid-template-columns: minmax(0, 1fr); gap: 0.7rem; }
+  .car-stage { padding: 0.45rem 1rem; }
+  .car-row-side { grid-column: 1; }
+}
 
 /* --- filter bar --- */
 .car-filters {
