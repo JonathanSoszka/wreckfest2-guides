@@ -229,28 +229,47 @@ const FIXES: Fix[] = [
 /**
  * How settings interact — cross-setting relationships, since sliders don't act
  * alone. Grounded in surface-tuning-reference.md ("How settings interact").
- * `flag` marks the honesty caveat colour: 'warn' for the rake/aero and wedge
- * cases that barely apply in an arcade game.
+ *
+ * Rule-first: the one-line `rule` and the two settings it links (`pair`) are the
+ * headline; the fuller `body` sits behind a native <details> so the section reads
+ * as nine short rules instead of 400+ words of prose. <details> keeps it working
+ * without JS and keyboard-accessible for free.
+ *
+ * `flag: 'warn'` marks the rake/aero and wedge cases that barely apply here.
  */
-interface Interaction { title: string; body: string; flag?: 'warn'; }
+interface Interaction {
+  pair: [string, string]; // the two settings the rule links
+  rule: string; // the one-line takeaway (always visible)
+  body: string; // the reasoning (revealed on open)
+  flag?: 'warn';
+}
 const INTERACTIONS: Interaction[] = [
-  { title: 'Balance is the front-vs-rear difference',
+  { pair: ['Springs', 'Anti-roll bars'],
+    rule: 'Stiffen the rear or soften the front — same result.',
     body: 'Understeer/oversteer is set by the ratio of front-to-rear stiffness, not how stiff the car is overall — and springs and bars pool into one number per axle. Same result two ways: stiffen the rear or soften the front both add oversteer.' },
-  { title: 'Bars for balance, springs for bumps',
+  { pair: ['Anti-roll bars', 'Springs'],
+    rule: 'On loose ground, bars carry the balance and springs stay soft.',
     body: 'Both add roll stiffness, but a spring reacts to every bump while a bar reacts only in roll. On loose ground, carry cornering balance on the anti-roll bars and keep springs softer for compliance — but a very stiff bar ties the two wheels, so a one-wheel rut upsets the whole axle.' },
-  { title: 'Ride height pairs with spring rate',
+  { pair: ['Ride height', 'Springs'],
+    rule: 'Lower needs stiffer, or it bottoms out.',
     body: 'Lower drops the centre of gravity and shrinks all weight transfer — a bigger grip win than limiting roll — but it costs travel, so it needs stiffer springs to avoid bottoming. On rough tracks don’t slam it: keep travel for the ruts and match springs to the height.' },
-  { title: 'Brake balance shifts with weight',
+  { pair: ['Brake balance', 'Springs / Ride height'],
+    rule: 'A softer rear or a higher car dives more — and wants more front brake.',
     body: 'Braking throws weight forward, so a front-biased split is normal (50/50 locks the rears first). A softer rear or a higher car dives more and effectively wants a touch more front brake. Rear steps out on entry → move balance forward; nose ploughs → move it back.' },
-  { title: 'Camber and toe are splits too',
+  { pair: ['Camber', 'Toe'],
+    rule: 'Set balance with the camber split, then trim with toe.',
     body: 'More negative front camber than rear frees the nose; more rear than front plants the tail. Rear toe-in calms a loose rear (exit understeer), rear toe-out frees it. Set balance with the camber split first, then fine-tune with toe — toe scrubs speed, so keep it small.' },
-  { title: 'Preload is the floor under power & coast',
+  { pair: ['Preload', 'Power / Coast'],
+    rule: 'Set preload first — it’s the floor the two ramps build on.',
     body: 'Preload is the always-on baseline lock; the power and coast ramps build beyond it. More preload means the diff is calmer, more locked and slower to react everywhere; less frees rotation but is twitchier. Set preload first, then the two ramps.' },
-  { title: 'Final drive is the master, gears are the gaps',
+  { pair: ['Final drive', 'Gears'],
+    rule: 'Final drive sets top speed; the gears close the gaps.',
     body: 'Final drive scales every gear at once — set it so you just hit redline in top at the end of the longest straight — then space the individual gears so the ones you use most sit in the engine’s strong rev band. It’s the product (final × gear) that counts.' },
-  { title: 'Rake barely applies here', flag: 'warn',
+  { pair: ['Ride height F', 'Ride height R'], flag: 'warn',
+    rule: 'No aero in Wreckfest — rake isn’t a balance knob.',
     body: 'Rear-higher-than-front is an aero tool in the games it’s famous for, and Wreckfest has no aero. Strip that away and only a subtle forward weight nudge remains, which an arcade engine may not model. Don’t chase rake for balance — treat front/rear ride height as a small weight-bias tweak and use springs and bars instead.' },
-  { title: 'Keep wedge near 50%', flag: 'warn',
+  { pair: ['Wedge', 'Left / right'], flag: 'warn',
+    rule: 'Leave wedge neutral unless you’re on a one-way oval.',
     body: 'Cross-weight is a diagonal adjustment (raising one corner loads it and its diagonal opposite), so off-centre wedge just makes the car handle differently left vs right. Only worth moving on a dedicated one-way oval; on tracks that turn both ways, leave it neutral.' },
 ];
 ---
@@ -399,12 +418,21 @@ const INTERACTIONS: Interaction[] = [
       <h2>How settings work together</h2>
       <p class="cs-legend">Sliders don't act alone — the useful stuff is in the relationships.</p>
     </div>
-    <div class="cs-inter-grid">
+    <div class="cs-inter-list">
       {INTERACTIONS.map((it) => (
-        <div class:list={['inter-card', it.flag === 'warn' && 'is-warn']}>
-          <h3>{it.title}</h3>
-          <p>{it.body}</p>
-        </div>
+        <details class:list={['inter-row', it.flag === 'warn' && 'is-warn']}>
+          <summary>
+            <span class="ir-tw" aria-hidden="true">▸</span>
+            <span class="ir-rule">{it.rule}</span>
+            <span class="ir-pair">
+              <span class="ir-chip">{it.pair[0]}</span>
+              <span class="ir-x" aria-hidden="true">⟷</span>
+              <span class="ir-chip">{it.pair[1]}</span>
+            </span>
+            {it.flag === 'warn' && <span class="ir-warn">barely applies</span>}
+          </summary>
+          <p class="ir-why">{it.body}</p>
+        </details>
       ))}
     </div>
   </section>
@@ -646,22 +674,76 @@ const INTERACTIONS: Interaction[] = [
   .cs-dt-scope[data-dt='fwd'] .fix-card.dt-only[data-dt='rwd'] { display: none; }
 
   /* ---- how settings work together ---- */
-  .cs-inter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.7rem; }
-  .inter-card {
+  /* Rule-first rows: the one-line rule + the pair of settings it links are the
+     headline; the reasoning sits behind a native <details>, so the section reads
+     as nine short rules and still works with JS disabled. */
+  .cs-inter-list { display: flex; flex-direction: column; gap: 0.4rem; }
+
+  .inter-row {
     background: var(--bg-panel);
     border: 1px solid var(--border);
     border-left: 3px solid var(--surf-gravel, #9a8452);
     border-radius: 8px;
-    padding: 0.8rem 1rem;
   }
-  .inter-card h3 { margin: 0 0 0.35rem; font-size: 0.95rem; }
-  .inter-card p { margin: 0; font-size: 0.87rem; color: var(--text-dim); }
-  /* honesty flag — rake / wedge that barely apply in an arcade game */
-  .inter-card.is-warn { border-left-color: var(--text-faint); }
-  .inter-card.is-warn h3::after {
-    content: ' · barely applies';
-    font-weight: 400;
-    font-size: 0.68rem;
+  .inter-row > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.4rem 0.6rem;
+  }
+  .inter-row > summary::-webkit-details-marker { display: none; }
+  .inter-row > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  .ir-tw {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    flex: 0 0 auto;
+    transition: transform 0.15s;
+  }
+  .inter-row[open] .ir-tw { transform: rotate(90deg); }
+
+  .ir-rule { font-size: 0.93rem; color: var(--text); flex: 1 1 22ch; }
+
+  /* the pair of settings the rule links — scan these to find a relationship */
+  .ir-pair { display: inline-flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
+  .ir-chip {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    background: var(--bg-panel-2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.1rem 0.4rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .ir-x { color: var(--accent); font-family: var(--mono); font-size: 0.72rem; }
+
+  .ir-warn {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--text-faint);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.05rem 0.45rem;
+    white-space: nowrap;
   }
+  .inter-row.is-warn { border-left-color: var(--text-faint); }
+
+  .ir-why {
+    margin: 0;
+    padding: 0.6rem 0.9rem 0.8rem 2rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.86rem;
+    color: var(--text-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ir-tw { transition: none; }
+  }
+
 </style>
