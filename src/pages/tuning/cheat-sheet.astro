@@ -23,18 +23,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const CONDITIONS = ['loose', 'grippy', 'bumpy', 'straights', 'tight'] as const;
 type Condition = (typeof CONDITIONS)[number];
 
+/**
+ * Drivetrain. The game shows one universal menu label ("Differential — Rear")
+ * for every car, but the slider controls whichever axle drives — so locking it
+ * adds oversteer on RWD and understeer on FWD (surface-tuning-reference.md,
+ * "diff by axle"). Copy that flips between drivetrains is a `Variant`; both are
+ * rendered and the toggle shows one. Plain strings are drivetrain-neutral.
+ */
+type Drivetrain = 'rwd' | 'fwd';
+type Variant = string | Record<Drivetrain, string>;
+
 interface Setting {
   name: string;
   qualifier?: string; // small note under the name, e.g. "accel lock"
   ends: [string, string]; // [left, right]
-  left: string; // effect of the left/min end (short)
-  right: string; // effect of the right/max end (short)
-  note?: string; // caveat spanning the row
+  left: Variant; // effect of the left/min end (short)
+  right: Variant; // effect of the right/max end (short)
+  note?: Variant; // caveat spanning the row
   favor?: Partial<Record<Condition, 'l' | 'r'>>;
 }
 interface Group {
   category: string;
-  blurb?: string;
+  blurb?: Variant;
   settings: Setting[];
 }
 
@@ -59,17 +69,42 @@ const GROUPS: Group[] = [
   },
   {
     category: 'Drivetrain',
-    blurb: 'Differential: more locked on the loose (traction), more open on grip (turn-in). Gearing ends are outcomes, not numbers.',
+    blurb: {
+      rwd: 'The diff acts on the rear axle: more locked on the loose (traction), more open on grip (turn-in). Locking it adds oversteer. Gearing ends are outcomes, not numbers.',
+      fwd: 'The diff acts on the front axle: more locked on the loose (traction), more open on grip (turn-in). Locking it adds understeer — the opposite of RWD. Gearing ends are outcomes, not numbers.',
+    },
     settings: [
-      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Power', qualifier: 'accel lock', ends: ['Open', 'Locked'],
-        left: 'Frees turn-in on grip; on the loose it just spins the unloaded wheel.',
-        right: 'Both wheels drive together for traction out of corners; understeers and can snap on tarmac.' },
-      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Coast', qualifier: 'decel lock', ends: ['Open', 'Locked'],
-        left: 'Less understeer while slowing on tarmac; a livelier rear when you lift.',
-        right: 'Steadies the rear under braking and lift on the loose.' },
-      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Preload', ends: ['Open', 'Locked'],
-        left: 'Less mid-corner understeer on grip.',
-        right: 'Mid-corner traction and stability on the loose.' },
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Power', qualifier: 'accel lock · driven axle', ends: ['Open', 'Locked'],
+        left: {
+          rwd: 'Frees turn-in on grip; on the loose it just spins the unloaded wheel.',
+          fwd: 'Lets the front wheels turn at their own speeds, so it fights your steering less; on the loose it just spins the unloaded wheel.',
+        },
+        right: {
+          rwd: 'Both rear wheels drive together for traction out of corners; understeers on entry and can snap on exit on tarmac.',
+          fwd: 'Both front wheels pull together for traction, but it pushes the nose wide under power and tugs at the steering.',
+        },
+        note: {
+          rwd: 'The game labels this "Differential — Rear" for every car; on a rear-driver that is literally the rear axle.',
+          fwd: 'The game still labels this "Differential — Rear", but on a front-driver it controls the front axle — so locking it pushes the nose rather than stepping the tail out.',
+        } },
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Coast', qualifier: 'decel lock · driven axle', ends: ['Open', 'Locked'],
+        left: {
+          rwd: 'Less understeer while slowing on tarmac; a livelier rear when you lift.',
+          fwd: 'Frees the rear to swing on a lift — the rotation you actually want on entry.',
+        },
+        right: {
+          rwd: 'Steadies the rear under braking and lift on the loose.',
+          fwd: 'Calms the car under braking, but blunts the lift-off rotation a front-driver leans on to turn in.',
+        } },
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Preload', qualifier: 'driven axle', ends: ['Open', 'Locked'],
+        left: {
+          rwd: 'Less mid-corner understeer on grip.',
+          fwd: 'Less power-on push; lets the front wheels differentiate mid-corner.',
+        },
+        right: {
+          rwd: 'Mid-corner traction and stability on the loose.',
+          fwd: 'Mid-corner traction on the loose, at the cost of more nose-push.',
+        } },
       { favor: { loose: 'r', grippy: 'l', straights: 'l', tight: 'r' }, name: 'Final Drive', ends: ['Top speed', 'Acceleration'],
         left: 'Taller gearing — higher top end, lazier pull. Suits fast, open tarmac.',
         right: 'Quicker off the line and out of corners, lower top speed. Suits tight, technical, loose tracks.' },
@@ -136,6 +171,8 @@ const GROUPS: Group[] = [
 interface Fix {
   problem: string;
   items: { dir: '+' | '-' | '~'; text: string }[];
+  /** Shown only for this drivetrain — some failure modes are drivetrain-specific. */
+  only?: Drivetrain;
 }
 const FIXES: Fix[] = [
   { problem: 'Understeers on entry', items: [
@@ -154,10 +191,24 @@ const FIXES: Fix[] = [
     { dir: '-', text: 'Open the power diff a touch (grip)' },
     { dir: '-', text: 'Lower the preload' },
   ]},
-  { problem: 'Spins under power on the loose', items: [
+  { problem: 'Spins under power on the loose', only: 'rwd', items: [
     { dir: '+', text: 'Lock the power diff more' },
     { dir: '+', text: 'More preload' },
     { dir: '~', text: 'Ease the throttle — technique' },
+  ]},
+  // The FWD signature problem (car-reference.md): the front tyres steer, brake and
+  // drive, so the enemy is power-on understeer. The fix is to rotate before power,
+  // not to lock the diff harder.
+  { problem: 'Pushes wide on power (FWD)', only: 'fwd', items: [
+    { dir: '+', text: 'Stiffen the rear ARB or springs to rotate earlier' },
+    { dir: '-', text: 'A little rear toe-out' },
+    { dir: '-', text: 'Open the power diff a touch' },
+    { dir: '~', text: 'Get it turned before you get on the throttle' },
+  ]},
+  { problem: 'Won’t turn in (FWD)', only: 'fwd', items: [
+    { dir: '-', text: 'Open the coast diff — keep the lift-off rotation' },
+    { dir: '+', text: 'Stiffen the rear' },
+    { dir: '~', text: 'Lift or trail-brake to bring the tail round' },
   ]},
   { problem: 'Locks the wheels braking on loose', items: [
     { dir: '-', text: 'Lower the brake pressure' },
@@ -214,11 +265,26 @@ const INTERACTIONS: Interaction[] = [
     have a specific problem; drop into the table to look up a single setting.
   </p>
 
+  <div class="cs-dt-scope" data-dt="rwd" id="dt-scope">
+  <div class="cs-dt-bar" role="group" aria-label="Drivetrain">
+    <span class="cs-flabel">Drivetrain</span>
+    <button type="button" class="cs-chip is-on" data-dt-set="rwd" aria-pressed="true">RWD</button>
+    <button type="button" class="cs-chip" data-dt-set="fwd" aria-pressed="false">FWD</button>
+    <span class="cs-dt-hint">
+      <span class="dt-only" data-dt="rwd">13 of the 18 cars</span>
+      <span class="dt-only" data-dt="fwd">5 of the 18 cars — the diff and the fixes below invert</span>
+    </span>
+  </div>
+
   <div class="callout cs-rule">
     <p>
       <strong>The one rule that covers half of this:</strong> stiffen an end and it loses grip.
       A stiffer front (spring or bar) adds understeer; a stiffer rear adds oversteer. Soften the end
       you want to calm down, or stiffen the end you want to free up.
+      <span class="dt-only" data-dt="fwd">
+        On a front-driver that rule reads inverted in practice: the front tyres steer, brake
+        <em>and</em> drive, so you stiffen the <strong>rear</strong> to make the nose turn.
+      </span>
     </p>
   </div>
 
@@ -233,7 +299,7 @@ const INTERACTIONS: Interaction[] = [
     </div>
     <div class="cs-fixes">
       {FIXES.map((f) => (
-        <div class="fix-card">
+        <div class:list={['fix-card', f.only && 'dt-only']} data-dt={f.only}>
           <h3>{f.problem}</h3>
           <ul>
             {f.items.map((i) => (
@@ -272,7 +338,12 @@ const INTERACTIONS: Interaction[] = [
       <div class="cs-group">
         <div class="cs-grouphead">
           <h3>{group.category}</h3>
-          {group.blurb && <span class="cs-blurb">{group.blurb}</span>}
+          {group.blurb && (typeof group.blurb === 'string'
+            ? <span class="cs-blurb">{group.blurb}</span>
+            : <>
+                <span class="cs-blurb dt-only" data-dt="rwd">{group.blurb.rwd}</span>
+                <span class="cs-blurb dt-only" data-dt="fwd">{group.blurb.fwd}</span>
+              </>)}
         </div>
         <div class="cs-scroll">
           <table class="cs-tbl">
@@ -291,11 +362,28 @@ const INTERACTIONS: Interaction[] = [
                       {s.name}
                       {s.qualifier && <small>{s.qualifier}</small>}
                     </td>
-                    <td class="td-eff" data-end="l"><span class="end end-l">{s.ends[0]}</span> {s.left}</td>
-                    <td class="td-eff" data-end="r"><span class="end end-r">{s.ends[1]}</span> {s.right}</td>
+                    <td class="td-eff" data-end="l">
+                      <span class="end end-l">{s.ends[0]}</span>{' '}
+                      {typeof s.left === 'string' ? s.left : <>
+                        <span class="dt-only" data-dt="rwd">{s.left.rwd}</span>
+                        <span class="dt-only" data-dt="fwd">{s.left.fwd}</span>
+                      </>}
+                    </td>
+                    <td class="td-eff" data-end="r">
+                      <span class="end end-r">{s.ends[1]}</span>{' '}
+                      {typeof s.right === 'string' ? s.right : <>
+                        <span class="dt-only" data-dt="rwd">{s.right.rwd}</span>
+                        <span class="dt-only" data-dt="fwd">{s.right.fwd}</span>
+                      </>}
+                    </td>
                   </tr>
                   {s.note && (
-                    <tr class="tr-note"><td colspan="3">{s.note}</td></tr>
+                    <tr class="tr-note"><td colspan="3">
+                      {typeof s.note === 'string' ? s.note : <>
+                        <span class="dt-only" data-dt="rwd">{s.note.rwd}</span>
+                        <span class="dt-only" data-dt="fwd">{s.note.fwd}</span>
+                      </>}
+                    </td></tr>
                   )}
                 </>
               ))}
@@ -321,6 +409,8 @@ const INTERACTIONS: Interaction[] = [
     </div>
   </section>
 
+  </div>
+
   <p class="lead cs-foot">
     Grounded in the site's <a href="/tuning/">tuning reference</a>. Percentages elsewhere describe
     position along a slider's travel, since Wreckfest's readouts can exceed 100%.
@@ -328,6 +418,34 @@ const INTERACTIONS: Interaction[] = [
 </BaseLayout>
 
 <script>
+  // Drivetrain toggle: both RWD and FWD copy is in the HTML; this flips which one
+  // the scope shows. The differential is the reason it exists — the game uses one
+  // "Differential — Rear" label for every car, but it drives whichever axle powers
+  // the car, so locking it adds oversteer on RWD and understeer on FWD.
+  const dtScope = document.getElementById('dt-scope');
+  const dtBar = dtScope?.querySelector<HTMLElement>('.cs-dt-bar');
+
+  dtBar?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-dt-set]');
+    if (!btn || !dtScope) return;
+    const dt = btn.dataset.dtSet!;
+    dtScope.setAttribute('data-dt', dt);
+    dtBar.querySelectorAll<HTMLButtonElement>('[data-dt-set]').forEach((b) => {
+      const on = b === btn;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    try { localStorage.setItem('wf2:cheat-drivetrain', dt); } catch {}
+  });
+
+  // Restore the last choice so a front-drive player isn't re-picking every visit.
+  try {
+    const saved = localStorage.getItem('wf2:cheat-drivetrain');
+    if (saved === 'fwd' || saved === 'rwd') {
+      dtBar?.querySelector<HTMLButtonElement>(`[data-dt-set="${saved}"]`)?.click();
+    }
+  } catch {}
+
   // Condition filter: highlight the slider end that suits the picked track condition
   // and dim the rest. Single-select; "All" clears. Rows carry a data-favor map
   // (condition -> 'l' | 'r'); a condition absent from a row = no honest lean, so
@@ -513,6 +631,19 @@ const INTERACTIONS: Interaction[] = [
   @media (prefers-reduced-motion: reduce) {
     .cs-table-wrap.is-filtering .td-eff { transition: none; }
   }
+
+  /* ---- drivetrain toggle ---- */
+  .cs-dt-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 1.5rem 0 0; }
+  .cs-dt-hint { font-size: 0.78rem; color: var(--text-faint); margin-left: 0.3rem; }
+
+  /* Both drivetrain variants ship in the HTML; the scope shows one. Without JS the
+     RWD copy stands (the majority of the roster), so the page still reads correctly. */
+  .cs-dt-scope[data-dt='rwd'] .dt-only[data-dt='fwd'] { display: none; }
+  .cs-dt-scope[data-dt='fwd'] .dt-only[data-dt='rwd'] { display: none; }
+  /* fix cards are grid items — restore their display when shown */
+  .cs-dt-scope .fix-card.dt-only { display: block; }
+  .cs-dt-scope[data-dt='rwd'] .fix-card.dt-only[data-dt='fwd'] { display: none; }
+  .cs-dt-scope[data-dt='fwd'] .fix-card.dt-only[data-dt='rwd'] { display: none; }
 
   /* ---- how settings work together ---- */
   .cs-inter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.7rem; }
