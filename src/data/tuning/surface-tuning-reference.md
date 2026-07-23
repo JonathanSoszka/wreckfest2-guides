@@ -44,6 +44,55 @@ demands compliance, ride height, and traction aids, and rewards technique over a
 - **Traction on loose comes from technique, not an open diff** — weight transfer, trail/left-foot
   braking, the loose surface itself. Keep the diff locked for drive and steer it with your feet.
 
+### How settings interact (cross-setting relationships)
+
+Individual sliders don't act alone; several settings only make sense as a *relationship* between
+two ends or two components. Directions below are real vehicle-dynamics and should hold if WF2 models
+suspension load transfer at all — treat the **directions as reliable, magnitudes as untested** in an
+arcade engine. Cited below (interaction sources).
+
+- **Balance is the front-vs-rear difference, not absolute stiffness.** Understeer/oversteer is set
+  by the *ratio* of front-to-rear roll stiffness, and springs + anti-roll bars pool into one number
+  per axle. So you get the same balance shift two ways: **stiffen the rear _or_ soften the front**
+  both add oversteer. Change one end at a time and think "front vs rear," not "stiffer overall."
+- **Springs vs anti-roll bars — bars for balance, springs for bumps.** Both add roll stiffness to an
+  axle, but a spring reacts to *every* wheel motion (bumps, dive, squat) while a bar reacts only when
+  the two wheels on an axle move *differently* (pure roll). On loose/bumpy ground, carry cornering
+  balance on the **bars** and keep **springs softer** so the car soaks ruts. Caveat: a very stiff bar
+  ties the two wheels together, so a one-wheel bump upsets the whole axle — bars aren't a free lunch
+  on rough surfaces.
+- **Ride height pairs with spring rate.** Lower drops the centre of gravity, shrinking *all* weight
+  transfer (a bigger grip win than limiting roll) — but it costs suspension travel, so it needs
+  stiffer springs to avoid bottoming. On rough WF2 surfaces don't slam it: pick a moderate height
+  that keeps travel for the ruts and match spring stiffness to it.
+- **Brake balance shifts with weight transfer.** Braking throws weight forward, so a front-biased
+  split is normal (50/50 locks the rears first). Anything that moves more load forward — a softer
+  rear, a higher/raked car — dives more and effectively wants a touch **more front brake**. Rear
+  steps out on the brakes → move balance forward; nose ploughs and fronts lock → move it rearward.
+- **Camber and toe are front/rear splits too.** Balance comes from the relationship: more negative
+  front camber than rear frees the nose (oversteer); more rear than front plants the tail. Rear
+  toe-in stabilises the tail (exit understeer, calms a loose rear); rear toe-out frees it. Set
+  balance with the **camber split first**, fine-tune with toe (toe scrubs speed, so keep it small).
+- **Diff preload is the floor the ramps build on.** Preload is the always-on baseline lock; power
+  (accel/exit) and coast (off-throttle/entry) ramp *beyond* it. They stack: more preload means more
+  torque is needed to reach the ramp locks, so the diff is calmer, more locked, and slower to react
+  everywhere (more understeer-y); less frees rotation but is twitchier. Set preload first, then the
+  two ramps.
+- **Gearing: final drive is the master multiplier, gears are the gaps.** Final drive scales every
+  gear at once — set it so you just hit redline in top at the end of the longest straight — then
+  space the individual gears so the ones you use most sit in the engine's strong rev band with tight
+  gaps. It's the *product* (final × gear) that matters.
+- **Rake (rear ride height higher than front) is an aero tool, and WF2 has no aero.** In the games
+  rake is famous for, it works by tilting the floor and moving downforce balance — none of which
+  exists here. Strip the aero away and only a **subtle** mechanical residue remains (a slight forward
+  weight/CoG shift, a hair more front bite), which an arcade engine may barely model. **Don't chase
+  rake as a balance knob in WF2** — treat front/rear ride height as a small CoG/weight-bias nudge and
+  set balance with springs and bars instead.
+- **Wedge (cross-weight) is a one-direction/oval tool — keep it ~50% otherwise.** It's a *diagonal*
+  adjustment (raising one corner loads it and its diagonal opposite), so off-centre wedge just makes
+  the car handle differently left vs right. Only worth moving on a dedicated one-way oval; on WF2's
+  mostly bi-directional circuits, leave it neutral.
+
 ## How this maps to the Wreckfest 2 guides
 
 Our surface tabs (Mud / Gravel / Asphalt) should move each slider in the direction above. As of
@@ -83,6 +132,29 @@ Ordered roughly most-authoritative first.
   "Understanding Brake Bias"** — brake-bias fundamentals and diagnosis.
   <https://simracingcockpit.gg/using-brake-bias-in-the-sim-for-faster-laptimes/> ·
   <https://boxthislap.org/understanding-brake-bias/>
+
+Cross-setting interactions (the "How settings interact" rules):
+
+- **Olsen Motorsport — "Soft Does Not Equal Grip, Pt.3: Anti-Roll Bars"** — race-engineer blog; roll
+  stiffness = springs + bars added, the spring/bar trade is really roll-vs-pitch, and a stiff bar
+  ties the two wheels (the one-wheel-bump downside). <https://olsenmotorsport.com/blog/soft-does-not-equal-grip-part-3-anti-roll-bars/>
+- **Suspension Secrets — "Roll Centre and Roll Moment"** — front/rear roll-stiffness distribution
+  sets understeer/oversteer. <https://suspensionsecrets.co.uk/roll-centre-and-roll-moment/>
+- **Suspension Setup — "Selecting Springs and Anti-Roll Bars, Pt.1"** — springs act on all motions,
+  bars only in roll; the ride-height/spring pairing. <https://www.suspensionsetup.info/blog/selecting-springs-and-anti-roll-bars-part-1>
+- **Engineer Fix — "What is Rake…"** — labels the mechanical CoG effect "subtle" and aero "the most
+  pronounced"; the basis for the WF2 no-aero rake framing. <https://engineerfix.com/what-is-rake-on-a-car-and-how-does-it-affect-performance/>
+- **You Suck At Racing — "Weight Transfer and Brake Bias"** — forward transfer under braking and how
+  rear bias locks the rears first. <https://yousuckatracing.wordpress.com/2017/04/30/oversteer-overanalyzed-weight-transfer-brake-bias/>
+- **Race & Track Driving — "Track Alignment"** and **Virtual Racing School — "Camber and Toe"** —
+  front-vs-rear camber/toe split → balance. <https://racetrackdriving.com/car-setup/track-alignment/> ·
+  <https://virtualracingschool.com/academy/iracing-career-guide/setups/camber-toe/>
+- **Arnout Hoekstra — "The Real Meaning of Power, Coast and Preload"** — preload as the transition
+  layer under the power/coast ramps. <https://arnouthoekstra.substack.com/p/the-real-meaning-of-power-coast-and>
+- **Your Data Driven — "Choosing the Best Gear Ratios"** — final drive as universal multiplier vs
+  individual ratios as spacing. <https://www.yourdatadriven.com/guide-to-choosing-the-best-gear-ratios-for-racing-cars/>
+- **Speedway Motors — "Race Car Weight Distribution and Corner Balance"** — cross-weight is a
+  diagonal adjustment, distinct from left/right, a circle-track variable. <https://www.speedwaymotors.com/the-toolbox/race-car-weight-distribution-and-how-to-corner-balance/134049>
 
 _Last researched: July 2026. Real rally is defined for gravel/tarmac; Mud is our extrapolated
 extreme-loose end (even softer/higher/more traction-biased than gravel — but avoid locking a diff

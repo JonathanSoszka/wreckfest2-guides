@@ -174,6 +174,34 @@ const FIXES: Fix[] = [
     { dir: '-', text: 'Lengthen the final drive (toward Top speed)' },
   ]},
 ];
+
+/**
+ * How settings interact — cross-setting relationships, since sliders don't act
+ * alone. Grounded in surface-tuning-reference.md ("How settings interact").
+ * `flag` marks the honesty caveat colour: 'warn' for the rake/aero and wedge
+ * cases that barely apply in an arcade game.
+ */
+interface Interaction { title: string; body: string; flag?: 'warn'; }
+const INTERACTIONS: Interaction[] = [
+  { title: 'Balance is the front-vs-rear difference',
+    body: 'Understeer/oversteer is set by the ratio of front-to-rear stiffness, not how stiff the car is overall — and springs and bars pool into one number per axle. Same result two ways: stiffen the rear or soften the front both add oversteer.' },
+  { title: 'Bars for balance, springs for bumps',
+    body: 'Both add roll stiffness, but a spring reacts to every bump while a bar reacts only in roll. On loose ground, carry cornering balance on the anti-roll bars and keep springs softer for compliance — but a very stiff bar ties the two wheels, so a one-wheel rut upsets the whole axle.' },
+  { title: 'Ride height pairs with spring rate',
+    body: 'Lower drops the centre of gravity and shrinks all weight transfer — a bigger grip win than limiting roll — but it costs travel, so it needs stiffer springs to avoid bottoming. On rough tracks don’t slam it: keep travel for the ruts and match springs to the height.' },
+  { title: 'Brake balance shifts with weight',
+    body: 'Braking throws weight forward, so a front-biased split is normal (50/50 locks the rears first). A softer rear or a higher car dives more and effectively wants a touch more front brake. Rear steps out on entry → move balance forward; nose ploughs → move it back.' },
+  { title: 'Camber and toe are splits too',
+    body: 'More negative front camber than rear frees the nose; more rear than front plants the tail. Rear toe-in calms a loose rear (exit understeer), rear toe-out frees it. Set balance with the camber split first, then fine-tune with toe — toe scrubs speed, so keep it small.' },
+  { title: 'Preload is the floor under power & coast',
+    body: 'Preload is the always-on baseline lock; the power and coast ramps build beyond it. More preload means the diff is calmer, more locked and slower to react everywhere; less frees rotation but is twitchier. Set preload first, then the two ramps.' },
+  { title: 'Final drive is the master, gears are the gaps',
+    body: 'Final drive scales every gear at once — set it so you just hit redline in top at the end of the longest straight — then space the individual gears so the ones you use most sit in the engine’s strong rev band. It’s the product (final × gear) that counts.' },
+  { title: 'Rake barely applies here', flag: 'warn',
+    body: 'Rear-higher-than-front is an aero tool in the games it’s famous for, and Wreckfest has no aero. Strip that away and only a subtle forward weight nudge remains, which an arcade engine may not model. Don’t chase rake for balance — treat front/rear ride height as a small weight-bias tweak and use springs and bars instead.' },
+  { title: 'Keep wedge near 50%', flag: 'warn',
+    body: 'Cross-weight is a diagonal adjustment (raising one corner loads it and its diagonal opposite), so off-centre wedge just makes the car handle differently left vs right. Only worth moving on a dedicated one-way oval; on tracks that turn both ways, leave it neutral.' },
+];
 ---
 <BaseLayout
   title="Tuning Cheat Sheet"
@@ -276,6 +304,21 @@ const FIXES: Fix[] = [
         </div>
       </div>
     ))}
+  </section>
+
+  <section class="cs-interactions">
+    <div class="cs-sechead">
+      <h2>How settings work together</h2>
+      <p class="cs-legend">Sliders don't act alone — the useful stuff is in the relationships.</p>
+    </div>
+    <div class="cs-inter-grid">
+      {INTERACTIONS.map((it) => (
+        <div class:list={['inter-card', it.flag === 'warn' && 'is-warn']}>
+          <h3>{it.title}</h3>
+          <p>{it.body}</p>
+        </div>
+      ))}
+    </div>
   </section>
 
   <p class="lead cs-foot">
@@ -469,5 +512,25 @@ const FIXES: Fix[] = [
 
   @media (prefers-reduced-motion: reduce) {
     .cs-table-wrap.is-filtering .td-eff { transition: none; }
+  }
+
+  /* ---- how settings work together ---- */
+  .cs-inter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.7rem; }
+  .inter-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--surf-gravel, #9a8452);
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+  }
+  .inter-card h3 { margin: 0 0 0.35rem; font-size: 0.95rem; }
+  .inter-card p { margin: 0; font-size: 0.87rem; color: var(--text-dim); }
+  /* honesty flag — rake / wedge that barely apply in an arcade game */
+  .inter-card.is-warn { border-left-color: var(--text-faint); }
+  .inter-card.is-warn h3::after {
+    content: ' · barely applies';
+    font-weight: 400;
+    font-size: 0.68rem;
+    color: var(--text-faint);
   }
 </style>
