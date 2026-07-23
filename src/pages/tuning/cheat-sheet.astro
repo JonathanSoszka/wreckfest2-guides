@@ -15,7 +15,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
  * (higher/grippier/locked/stiff) ends — kept short so the row stays scannable;
  * the fuller reasoning lives in the reference. Where the reference doesn't cover
  * a slider (Front Balancer, Ackermann, Wedge) the row says so via `note`.
+ *
+ * `favor` maps a track condition to the end that suits it ('l' or 'r'), from the
+ * reference's category directions. A condition absent from a setting's `favor` =
+ * no honest lean: that row dims and is tagged when the condition is selected.
  */
+const CONDITIONS = ['loose', 'grippy', 'bumpy', 'straights', 'tight'] as const;
+type Condition = (typeof CONDITIONS)[number];
+
 interface Setting {
   name: string;
   qualifier?: string; // small note under the name, e.g. "accel lock"
@@ -23,6 +30,7 @@ interface Setting {
   left: string; // effect of the left/min end (short)
   right: string; // effect of the right/max end (short)
   note?: string; // caveat spanning the row
+  favor?: Partial<Record<Condition, 'l' | 'r'>>;
 }
 interface Group {
   category: string;
@@ -30,138 +38,96 @@ interface Group {
   settings: Setting[];
 }
 
+// Grouped into a handful of functional areas rather than the game's 13 menu
+// categories, so the reference is easier to scan. Each row keeps its in-game
+// menu name (e.g. "Differential · Power") so it still maps back to the tuning
+// screen. `qualifier` is the small text under the name.
 const GROUPS: Group[] = [
   {
-    category: 'Braking Force',
+    category: 'Braking',
     settings: [
-      { name: 'Balance', ends: ['Rear', 'Front'],
+      { favor: { grippy: 'r' }, name: 'Brake Balance', ends: ['Rear', 'Front'],
         left: 'Rotates the car on the brakes; too far and the rear locks and spins.',
         right: 'Stabler stops — the front locks first, which is safe and easy to feel; too far and it washes wide.' },
-      { name: 'Pressure', ends: ['Low', 'High'],
+      { favor: { loose: 'l', grippy: 'r', bumpy: 'l' }, name: 'Brake Pressure', ends: ['Low', 'High'],
         left: 'Harder to lock up — the safety net for dirt and gravel.',
         right: 'Shorter stops where there is grip.' },
-    ],
-  },
-  {
-    category: 'Front Balancer',
-    blurb: 'Undocumented — framed empirically, not from the reference.',
-    settings: [
-      { name: 'Enabled', ends: ['Off', 'On'],
+      { name: 'Front Balancer', ends: ['Off', 'On'],
         left: 'Test it off.', right: 'Test it on.',
         note: 'An unlabelled front assist with no documented rule. Try both ways in one braking zone and keep whichever feels better.' },
     ],
   },
   {
-    category: 'Differential — Rear',
-    blurb: 'Site convention: more locked on the loose (traction), more open on grip (turn-in).',
+    category: 'Drivetrain',
+    blurb: 'Differential: more locked on the loose (traction), more open on grip (turn-in). Gearing ends are outcomes, not numbers.',
     settings: [
-      { name: 'Power', qualifier: 'accel lock', ends: ['Open', 'Locked'],
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Power', qualifier: 'accel lock', ends: ['Open', 'Locked'],
         left: 'Frees turn-in on grip; on the loose it just spins the unloaded wheel.',
         right: 'Both wheels drive together for traction out of corners; understeers and can snap on tarmac.' },
-      { name: 'Coast', qualifier: 'decel lock', ends: ['Open', 'Locked'],
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Coast', qualifier: 'decel lock', ends: ['Open', 'Locked'],
         left: 'Less understeer while slowing on tarmac; a livelier rear when you lift.',
         right: 'Steadies the rear under braking and lift on the loose.' },
-      { name: 'Preload', ends: ['Open', 'Locked'],
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Differential · Preload', ends: ['Open', 'Locked'],
         left: 'Less mid-corner understeer on grip.',
         right: 'Mid-corner traction and stability on the loose.' },
-    ],
-  },
-  {
-    category: 'Final Drive',
-    blurb: 'The ends are outcomes, not numbers.',
-    settings: [
-      { name: 'Final', ends: ['Top speed', 'Acceleration'],
+      { favor: { loose: 'r', grippy: 'l', straights: 'l', tight: 'r' }, name: 'Final Drive', ends: ['Top speed', 'Acceleration'],
         left: 'Taller gearing — higher top end, lazier pull. Suits fast, open tarmac.',
         right: 'Quicker off the line and out of corners, lower top speed. Suits tight, technical, loose tracks.' },
-    ],
-  },
-  {
-    category: 'Forward Gears',
-    blurb: 'Each gear fine-tunes the spacing the final drive sets.',
-    settings: [
-      { name: '1st – 6th', qualifier: 'each gear', ends: ['Top speed', 'Acceleration'],
+      { favor: { loose: 'r', grippy: 'l', straights: 'l', tight: 'r' }, name: 'Forward Gears', qualifier: 'each gear', ends: ['Top speed', 'Acceleration'],
         left: 'A longer gear carrying more speed, with fewer shifts.',
         right: 'A shorter gear with more pull that revs out sooner.' },
     ],
   },
   {
-    category: 'Springs',
-    blurb: 'Stiffen an axle and it loses grip — that is the lever for balance.',
+    category: 'Suspension',
+    blurb: 'Stiffen an end and it loses grip — that is the lever for balance.',
     settings: [
-      { name: 'Front', ends: ['Soft', 'Stiff'],
+      { favor: { loose: 'l', grippy: 'r', bumpy: 'l' }, name: 'Springs · Front', ends: ['Soft', 'Stiff'],
         left: 'More front grip and compliance over rough or loose ground.',
         right: 'Sharper on smooth tarmac, but less front grip (understeer) and it skips over bumps.' },
-      { name: 'Rear', ends: ['Soft', 'Stiff'],
+      { favor: { loose: 'l', grippy: 'r', bumpy: 'l' }, name: 'Springs · Rear', ends: ['Soft', 'Stiff'],
         left: 'More rear traction and a calmer tail.',
         right: 'Rotates the car — less rear grip means oversteer.' },
-    ],
-  },
-  {
-    category: 'Ride Height',
-    settings: [
-      { name: 'Front / Rear', ends: ['Low', 'High'],
+      { favor: { loose: 'r', grippy: 'l', bumpy: 'r' }, name: 'Ride Height', qualifier: 'front / rear', ends: ['Low', 'High'],
         left: 'Lower centre of gravity — tarmac stability and response; bottoms out on rough ground.',
         right: 'Clears ruts and crests and pushes the tyre to the hard base; more roll, less tarmac stability.' },
-    ],
-  },
-  {
-    category: 'Anti-roll Bars',
-    blurb: 'Same rule as springs: the stiffer end loses grip.',
-    settings: [
-      { name: 'Front', ends: ['Soft', 'Stiff'],
+      { favor: { loose: 'l', grippy: 'r', bumpy: 'l' }, name: 'Anti-roll Bar · Front', ends: ['Soft', 'Stiff'],
         left: 'More front mechanical grip over bumps.',
         right: 'Less roll and sharper on grip, but reduces front grip (understeer) and transmits bumps.' },
-      { name: 'Rear', ends: ['Soft', 'Stiff'],
+      { favor: { loose: 'l', grippy: 'r', bumpy: 'l' }, name: 'Anti-roll Bar · Rear', ends: ['Soft', 'Stiff'],
         left: 'More rear grip and stability.',
         right: 'Rotates the car — reduces rear grip for oversteer.' },
     ],
   },
   {
-    category: 'Camber',
+    category: 'Alignment',
     settings: [
-      { name: 'Front / Rear', ends: ['Neg', 'Pos'],
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Camber', qualifier: 'front / rear', ends: ['Neg', 'Pos'],
         left: 'More negative — grip in sustained high-load cornering, which tarmac rewards.',
         right: 'Less negative — a flatter contact patch for braking and acceleration, which the loose wants.' },
-    ],
-  },
-  {
-    category: 'Toe',
-    settings: [
-      { name: 'Front / Rear', ends: ['Out', 'In'],
+      { favor: { loose: 'r', grippy: 'l' }, name: 'Toe', qualifier: 'front / rear', ends: ['Out', 'In'],
         left: 'Toe-out — sharper, more eager turn-in, but twitchier and it scrubs speed.',
         right: 'Toe-in — straight-line stability; a little on the rear settles the car on the loose.' },
-    ],
-  },
-  {
-    category: 'Ackermann',
-    blurb: 'Not covered by the surface reference — trial and error.',
-    settings: [
-      { name: 'Ackermann', ends: ['None', 'Full'],
+      { favor: { straights: 'l', tight: 'r' }, name: 'Ackermann', ends: ['None', 'Full'],
         left: 'Biased toward faster, more open corners.',
         right: 'Biased toward tight, low-speed corners.',
-        note: 'How much more the inside front wheel steers than the outside. The ideal depends on the track, not the surface.' },
+        note: 'How much more the inside front wheel steers than the outside. Not covered by the surface reference — the ideal depends on the track, not the surface.' },
     ],
   },
   {
-    category: 'Wedge',
-    blurb: 'Undocumented in this game — test, don’t trust.',
-    settings: [
-      { name: 'Oversteer Bias', ends: ['Left', 'Right'],
-        left: 'Left cross-weight bias.', right: 'Right cross-weight bias.',
-        note: 'Cross-weight shifts static load diagonally. Named "Oversteer Bias" in-game, but its exact effect here is untested.' },
-    ],
-  },
-  {
-    category: 'Steering',
+    category: 'Steering & balance',
     blurb: 'Mostly preference, not lap-time-critical.',
     settings: [
-      { name: 'Lock to Lock', ends: ['Low', 'High'],
+      { favor: { loose: 'r', tight: 'r' }, name: 'Steering · Lock to Lock', ends: ['Low', 'High'],
         left: 'Less steering lock.',
         right: 'More lock — bigger counter-steer angles for holding slides on the loose.',
         note: 'On a gamepad, Lock to Lock behaves as the readout shows.' },
-      { name: 'Steering Ratio', ends: ['Low', 'High'],
+      { favor: { tight: 'r' }, name: 'Steering · Ratio', ends: ['Low', 'High'],
         left: 'Slower steering response.', right: 'Quicker steering response.',
         note: 'On a gamepad, set this one notch slower than shown.' },
+      { name: 'Wedge', qualifier: 'oversteer bias', ends: ['Left', 'Right'],
+        left: 'Left cross-weight bias.', right: 'Right cross-weight bias.',
+        note: 'Cross-weight shifts static load diagonally. Undocumented in this game — named "Oversteer Bias" in-game, but its exact effect here is untested.' },
     ],
   },
 ];
@@ -255,13 +221,24 @@ const FIXES: Fix[] = [
     </div>
   </section>
 
-  <section class="cs-table-wrap">
+  <section class="cs-table-wrap" id="settings">
     <div class="cs-sechead">
       <h2>Every setting</h2>
       <p class="cs-legend">
         <span class="dn">←</span> lower / looser end &nbsp;·&nbsp; higher / grippier end <span class="up">→</span>
       </p>
     </div>
+
+    <div class="cs-filters" aria-label="Bias the sheet for a track condition">
+      <span class="cs-flabel">Bias for</span>
+      <button type="button" class="cs-chip is-on" data-cond="all" aria-pressed="true">All</button>
+      <button type="button" class="cs-chip" data-cond="loose" aria-pressed="false">Loose</button>
+      <button type="button" class="cs-chip" data-cond="grippy" aria-pressed="false">Grippy</button>
+      <button type="button" class="cs-chip" data-cond="bumpy" aria-pressed="false">Bumpy</button>
+      <button type="button" class="cs-chip" data-cond="straights" aria-pressed="false">Long Straights</button>
+      <button type="button" class="cs-chip" data-cond="tight" aria-pressed="false">Tight Turns</button>
+    </div>
+    <p class="cs-fcap" id="cs-fcap" role="status" aria-live="polite"></p>
 
     {GROUPS.map((group) => (
       <div class="cs-group">
@@ -281,13 +258,13 @@ const FIXES: Fix[] = [
             <tbody>
               {group.settings.map((s) => (
                 <>
-                  <tr>
+                  <tr class="cs-row" data-favor={JSON.stringify(s.favor ?? {})}>
                     <td class="td-name">
                       {s.name}
                       {s.qualifier && <small>{s.qualifier}</small>}
                     </td>
-                    <td class="td-eff"><span class="end end-l">{s.ends[0]}</span> {s.left}</td>
-                    <td class="td-eff"><span class="end end-r">{s.ends[1]}</span> {s.right}</td>
+                    <td class="td-eff" data-end="l"><span class="end end-l">{s.ends[0]}</span> {s.left}</td>
+                    <td class="td-eff" data-end="r"><span class="end end-r">{s.ends[1]}</span> {s.right}</td>
                   </tr>
                   {s.note && (
                     <tr class="tr-note"><td colspan="3">{s.note}</td></tr>
@@ -306,6 +283,55 @@ const FIXES: Fix[] = [
     position along a slider's travel, since Wreckfest's readouts can exceed 100%.
   </p>
 </BaseLayout>
+
+<script>
+  // Condition filter: highlight the slider end that suits the picked track condition
+  // and dim the rest. Single-select; "All" clears. Rows carry a data-favor map
+  // (condition -> 'l' | 'r'); a condition absent from a row = no honest lean, so
+  // that row dims and gets a "no lean" tag. Only the settings table reacts.
+  const CAPTIONS: Record<string, string> = {
+    all: '',
+    loose: 'Loose — soft springs and bars, higher ride height, a locked diff, gentler brakes.',
+    grippy: 'Grippy — the mirror: stiff, low, an open diff, harder brakes, more negative camber.',
+    bumpy: 'Bumpy — compliance only: soften springs and bars, raise the car, brake a touch easier.',
+    straights: 'Long Straights — gear for top speed and drop Ackermann. Little else cares about a straight.',
+    tight: 'Tight Turns — gear for acceleration, more steering lock, full Ackermann.',
+  };
+
+  const wrap = document.getElementById('settings');
+  const bar = wrap?.querySelector<HTMLElement>('.cs-filters');
+  const cap = document.getElementById('cs-fcap');
+  const rows = Array.from(wrap?.querySelectorAll<HTMLElement>('.cs-row') ?? []);
+
+  bar?.addEventListener('click', (e) => {
+    const chip = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-cond]');
+    if (!chip) return;
+    const cond = chip.dataset.cond!;
+
+    bar.querySelectorAll<HTMLButtonElement>('.cs-chip').forEach((c) => {
+      const on = c === chip;
+      c.classList.toggle('is-on', on);
+      c.setAttribute('aria-pressed', String(on));
+    });
+    if (cap) cap.textContent = CAPTIONS[cond] ?? '';
+    wrap?.classList.toggle('is-filtering', cond !== 'all');
+
+    for (const row of rows) {
+      const eff = row.querySelectorAll<HTMLElement>('.td-eff');
+      eff.forEach((td) => td.classList.remove('is-hl'));
+      row.classList.remove('is-dim');
+      if (cond === 'all') continue;
+      let favor: Record<string, string> = {};
+      try { favor = JSON.parse(row.dataset.favor || '{}'); } catch {}
+      const end = favor[cond];
+      if (end === 'l' || end === 'r') {
+        row.querySelector<HTMLElement>(`.td-eff[data-end="${end}"]`)?.classList.add('is-hl');
+      } else {
+        row.classList.add('is-dim');
+      }
+    }
+  });
+</script>
 
 <style>
   .cs-rule { margin: 1.5rem 0 2rem; }
@@ -397,4 +423,51 @@ const FIXES: Fix[] = [
   }
 
   .cs-foot { font-size: 0.95rem; margin-top: 2.5rem; }
+
+  /* ---- condition filter ---- */
+  .cs-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; margin: 0 0 0.6rem; }
+  .cs-flabel {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-faint);
+    margin-right: 0.25rem;
+  }
+  .cs-chip {
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.26rem 0.8rem;
+    cursor: pointer;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+  }
+  .cs-chip:hover { color: var(--text); border-color: var(--accent); }
+  .cs-chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .cs-chip.is-on { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+  .cs-fcap { min-height: 1.2rem; margin: 0 0 1.1rem; font-size: 0.84rem; color: var(--text-dim); }
+
+  /* When a condition is active, fade effects and light the favoured end. */
+  .cs-table-wrap.is-filtering .td-eff { opacity: 0.34; transition: opacity 0.15s; }
+  .cs-table-wrap.is-filtering .td-eff.is-hl { opacity: 1; }
+  .td-eff.is-hl {
+    background: color-mix(in srgb, var(--accent) 15%, transparent);
+    box-shadow: inset 3px 0 0 var(--accent);
+    border-radius: 4px;
+  }
+  .td-eff.is-hl .end { color: var(--text); }
+  .cs-table-wrap.is-filtering .cs-row.is-dim .td-name { opacity: 0.5; }
+  .cs-table-wrap.is-filtering .cs-row.is-dim .td-name::after {
+    content: ' · no lean';
+    font-weight: 400;
+    font-size: 0.68rem;
+    color: var(--text-faint);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cs-table-wrap.is-filtering .td-eff { transition: none; }
+  }
 </style>
