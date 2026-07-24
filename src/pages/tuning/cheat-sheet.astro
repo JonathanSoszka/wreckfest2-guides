@@ -230,47 +230,94 @@ const FIXES: Fix[] = [
  * How settings interact — cross-setting relationships, since sliders don't act
  * alone. Grounded in surface-tuning-reference.md ("How settings interact").
  *
- * Rule-first: the one-line `rule` and the two settings it links (`pair`) are the
- * headline; the fuller `body` sits behind a native <details> so the section reads
- * as nine short rules instead of 400+ words of prose. <details> keeps it working
- * without JS and keyboard-accessible for free.
+ * Written as comparison notation: `<a> > <b> = outcome`. Balance is a difference
+ * between two ends, so stating it as a comparison shows both directions at once —
+ * the inversion becomes visible instead of implied. The researched reasoning sits
+ * behind a native <details>, which keeps it working without JS and keyboard-
+ * accessible for free.
  *
+ * Only relations that genuinely *are* comparisons go in COMPARISONS. Three are
+ * not — preload is a floor under the ramps, final drive is a multiplier over the
+ * gears, bars-vs-springs is a trade — so they live in SCOPE rather than being bent
+ * into a fake `>`, which would invent precision the reference doesn't support.
+ *
+ * `tone` colours the outcome: 'over' = rotation, 'under' = push, 'neu' = neither.
  * `flag: 'warn'` marks the rake/aero and wedge cases that barely apply here.
  */
-interface Interaction {
-  pair: [string, string]; // the two settings the rule links
-  rule: string; // the one-line takeaway (always visible)
-  body: string; // the reasoning (revealed on open)
+type Tone = 'over' | 'under' | 'neu';
+interface Comparison {
+  setting: string;
+  /** [left, operator, right, outcome, tone] — both directions where they exist. */
+  lines: [string, string, string, string, Tone][];
+  why: string;
   flag?: 'warn';
 }
-const INTERACTIONS: Interaction[] = [
-  { pair: ['Springs', 'Anti-roll bars'],
-    rule: 'Stiffen the rear or soften the front — same result.',
-    body: 'Understeer/oversteer is set by the ratio of front-to-rear stiffness, not how stiff the car is overall — and springs and bars pool into one number per axle. Same result two ways: stiffen the rear or soften the front both add oversteer.' },
-  { pair: ['Anti-roll bars', 'Springs'],
-    rule: 'On loose ground, bars carry the balance and springs stay soft.',
-    body: 'Both add roll stiffness, but a spring reacts to every bump while a bar reacts only in roll. On loose ground, carry cornering balance on the anti-roll bars and keep springs softer for compliance — but a very stiff bar ties the two wheels, so a one-wheel rut upsets the whole axle.' },
-  { pair: ['Ride height', 'Springs'],
-    rule: 'Lower needs stiffer, or it bottoms out.',
-    body: 'Lower drops the centre of gravity and shrinks all weight transfer — a bigger grip win than limiting roll — but it costs travel, so it needs stiffer springs to avoid bottoming. On rough tracks don’t slam it: keep travel for the ruts and match springs to the height.' },
-  { pair: ['Brake balance', 'Springs / Ride height'],
-    rule: 'A softer rear or a higher car dives more — and wants more front brake.',
-    body: 'Braking throws weight forward, so a front-biased split is normal (50/50 locks the rears first). A softer rear or a higher car dives more and effectively wants a touch more front brake. Rear steps out on entry → move balance forward; nose ploughs → move it back.' },
-  { pair: ['Camber', 'Toe'],
-    rule: 'Set balance with the camber split, then trim with toe.',
-    body: 'More negative front camber than rear frees the nose; more rear than front plants the tail. Rear toe-in calms a loose rear (exit understeer), rear toe-out frees it. Set balance with the camber split first, then fine-tune with toe — toe scrubs speed, so keep it small.' },
-  { pair: ['Preload', 'Power / Coast'],
-    rule: 'Set preload first — it’s the floor the two ramps build on.',
-    body: 'Preload is the always-on baseline lock; the power and coast ramps build beyond it. More preload means the diff is calmer, more locked and slower to react everywhere; less frees rotation but is twitchier. Set preload first, then the two ramps.' },
-  { pair: ['Final drive', 'Gears'],
-    rule: 'Final drive sets top speed; the gears close the gaps.',
-    body: 'Final drive scales every gear at once — set it so you just hit redline in top at the end of the longest straight — then space the individual gears so the ones you use most sit in the engine’s strong rev band. It’s the product (final × gear) that counts.' },
-  { pair: ['Ride height F', 'Ride height R'], flag: 'warn',
-    rule: 'No aero in Wreckfest — rake isn’t a balance knob.',
-    body: 'Rear-higher-than-front is an aero tool in the games it’s famous for, and Wreckfest has no aero. Strip that away and only a subtle forward weight nudge remains, which an arcade engine may not model. Don’t chase rake for balance — treat front/rear ride height as a small weight-bias tweak and use springs and bars instead.' },
-  { pair: ['Wedge', 'Left / right'], flag: 'warn',
-    rule: 'Leave wedge neutral unless you’re on a one-way oval.',
-    body: 'Cross-weight is a diagonal adjustment (raising one corner loads it and its diagonal opposite), so off-centre wedge just makes the car handle differently left vs right. Only worth moving on a dedicated one-way oval; on tracks that turn both ways, leave it neutral.' },
+const COMPARISONS: Comparison[] = [
+  { setting: 'Spring stiffness',
+    lines: [
+      ['Rear', '>', 'Front', 'rotates the car', 'over'],
+      ['Front', '>', 'Rear', 'pushes the nose', 'under'],
+    ],
+    why: 'Understeer/oversteer is set by the ratio of front-to-rear stiffness, not how stiff the car is overall — and springs and bars pool into one number per axle. Same result two ways: stiffen the rear or soften the front both add oversteer.' },
+  { setting: 'Anti-roll bar',
+    lines: [
+      ['Rear', '>', 'Front', 'rotates the car', 'over'],
+      ['Front', '>', 'Rear', 'pushes the nose', 'under'],
+    ],
+    why: 'A bar adds roll stiffness to its axle exactly like a spring does, so the same front-vs-rear rule applies. The difference is when it acts: only in roll, never on a bump that hits both wheels together.' },
+  { setting: 'Camber (negative)',
+    lines: [
+      ['Front', '>', 'Rear', 'frees the nose', 'over'],
+      ['Rear', '>', 'Front', 'plants the tail', 'under'],
+    ],
+    why: 'More negative front camber than rear frees the nose; more rear than front plants the tail. Set balance with the camber split first, then fine-tune with toe — toe scrubs speed, so keep it small.' },
+  { setting: 'Rear toe',
+    lines: [
+      ['In', '>', 'Out', 'calms the rear, stable exit', 'under'],
+      ['Out', '>', 'In', 'frees the rear, rotates', 'over'],
+    ],
+    why: 'Rear toe-in stabilises the tail and adds corner-exit understeer — useful to calm a loose rear; rear toe-out frees it toward oversteer. Any toe is drag, so keep the numbers small.' },
+  { setting: 'Brake balance',
+    lines: [
+      ['Front', '>', 'Rear', 'stable stops, fronts lock first', 'under'],
+      ['Rear', '>', 'Front', 'rotates on the brakes, risks a spin', 'over'],
+    ],
+    why: 'Braking throws weight forward, so a front-biased split is normal (50/50 locks the rears first). A softer rear or a higher car dives more and effectively wants a touch more front brake. Rear steps out on entry → move balance forward; nose ploughs → move it back.' },
+  { setting: 'Ride height',
+    lines: [
+      ['Low', '>', 'High', 'less weight transfer — needs stiffer springs', 'neu'],
+      ['High', '>', 'Low', 'clears ruts, more roll', 'neu'],
+    ],
+    why: 'Lower drops the centre of gravity and shrinks all weight transfer — a bigger grip win than limiting roll — but it costs travel, so it needs stiffer springs to avoid bottoming. On rough tracks don’t slam it: keep travel for the ruts and match springs to the height.' },
+  { setting: 'Ride height (rake)', flag: 'warn',
+    lines: [
+      ['Rear', '>', 'Front', 'almost nothing — there is no aero here', 'neu'],
+    ],
+    why: 'Rear-higher-than-front is an aero tool in the games it’s famous for, and Wreckfest has no aero. Strip that away and only a subtle forward weight nudge remains, which an arcade engine may not model. Don’t chase rake for balance — use springs and bars instead.' },
+  { setting: 'Wedge (cross-weight)', flag: 'warn',
+    lines: [
+      ['LF+RR', '>', '50%', 'hooks one-way turns', 'neu'],
+      ['LF+RR', '=', '50%', 'neutral — what you want on normal tracks', 'neu'],
+    ],
+    why: 'Cross-weight is a diagonal adjustment (raising one corner loads it and its diagonal opposite), so off-centre wedge just makes the car handle differently left vs right. Only worth moving on a dedicated one-way oval; on tracks that turn both ways, leave it neutral.' },
+];
+
+/** Relations that set order or scope rather than comparing two ends. */
+interface Scope {
+  setting: string;
+  note: string;
+  why: string;
+}
+const SCOPE: Scope[] = [
+  { setting: 'Preload → power / coast',
+    note: 'preload is the floor both ramps build on — set it first',
+    why: 'Preload is the always-on baseline lock; the power and coast ramps build beyond it. More preload means the diff is calmer, more locked and slower to react everywhere; less frees rotation but is twitchier. Set preload first, then the two ramps.' },
+  { setting: 'Final drive → gears',
+    note: 'final drive moves every gear; the ratios set the gaps',
+    why: 'Final drive scales every gear at once — set it so you just hit redline in top at the end of the longest straight — then space the individual gears so the ones you use most sit in the engine’s strong rev band. It’s the product (final × gear) that counts.' },
+  { setting: 'Bars ↔ springs',
+    note: 'same roll stiffness, different job — bars act only in roll',
+    why: 'Both add roll stiffness, but a spring reacts to every bump while a bar reacts only in roll. On loose ground, carry cornering balance on the anti-roll bars and keep springs softer for compliance — but a very stiff bar ties the two wheels, so a one-wheel rut upsets the whole axle.' },
 ];
 ---
 <BaseLayout
@@ -416,22 +463,38 @@ const INTERACTIONS: Interaction[] = [
   <section class="cs-interactions">
     <div class="cs-sechead">
       <h2>How settings work together</h2>
-      <p class="cs-legend">Sliders don't act alone — the useful stuff is in the relationships.</p>
+      <p class="cs-legend">Balance is the difference between two ends — read it as a comparison.</p>
     </div>
     <div class="cs-inter-list">
-      {INTERACTIONS.map((it) => (
-        <details class:list={['inter-row', it.flag === 'warn' && 'is-warn']}>
+      {COMPARISONS.map((c) => (
+        <details class:list={['inter-row', c.flag === 'warn' && 'is-warn']}>
           <summary>
             <span class="ir-tw" aria-hidden="true">▸</span>
-            <span class="ir-rule">{it.rule}</span>
-            <span class="ir-pair">
-              <span class="ir-chip">{it.pair[0]}</span>
-              <span class="ir-x" aria-hidden="true">⟷</span>
-              <span class="ir-chip">{it.pair[1]}</span>
+            <span class="ir-name">{c.setting}{c.flag === 'warn' && <span class="ir-warn">barely applies</span>}</span>
+            <span class="ir-lines">
+              {c.lines.map(([l, op, r, out, tone]) => (
+                <span class="ir-line">
+                  <span class="ir-n">
+                    <span class="ir-lhs">{l}</span><span class="ir-op">{op}</span><span class="ir-lhs">{r}</span><span class="ir-eq">=</span>
+                  </span>
+                  <span class:list={['ir-out', tone]}>{out}</span>
+                </span>
+              ))}
             </span>
-            {it.flag === 'warn' && <span class="ir-warn">barely applies</span>}
           </summary>
-          <p class="ir-why">{it.body}</p>
+          <p class="ir-why">{c.why}</p>
+        </details>
+      ))}
+
+      <p class="ir-grouplabel">Order and scope — not comparisons</p>
+      {SCOPE.map((s) => (
+        <details class="inter-row">
+          <summary>
+            <span class="ir-tw" aria-hidden="true">▸</span>
+            <span class="ir-name">{s.setting}</span>
+            <span class="ir-lines"><span class="ir-line"><span class="ir-out neu">{s.note}</span></span></span>
+          </summary>
+          <p class="ir-why">{s.why}</p>
         </details>
       ))}
     </div>
@@ -674,9 +737,9 @@ const INTERACTIONS: Interaction[] = [
   .cs-dt-scope[data-dt='fwd'] .fix-card.dt-only[data-dt='rwd'] { display: none; }
 
   /* ---- how settings work together ---- */
-  /* Rule-first rows: the one-line rule + the pair of settings it links are the
-     headline; the reasoning sits behind a native <details>, so the section reads
-     as nine short rules and still works with JS disabled. */
+  /* Comparison notation as the headline (`Rear > Front = rotates the car`), with
+     the researched reasoning behind a native <details>, so the section reads as a
+     scannable list and still works with JS disabled. */
   .cs-inter-list { display: flex; flex-direction: column; gap: 0.4rem; }
 
   .inter-row {
@@ -706,21 +769,31 @@ const INTERACTIONS: Interaction[] = [
   }
   .inter-row[open] .ir-tw { transform: rotate(90deg); }
 
-  .ir-rule { font-size: 0.93rem; color: var(--text); flex: 1 1 22ch; }
+  .ir-name { font-size: 0.93rem; color: var(--text); font-weight: 600; flex: 0 0 auto; min-width: 10rem; }
 
-  /* the pair of settings the rule links — scan these to find a relationship */
-  .ir-pair { display: inline-flex; align-items: center; gap: 0.3rem; flex-wrap: wrap; }
-  .ir-chip {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    background: var(--bg-panel-2);
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    padding: 0.1rem 0.4rem;
-    color: var(--text-dim);
-    white-space: nowrap;
+  /* the comparison itself — one line per direction, so the inversion is visible */
+  .ir-lines { display: flex; flex-direction: column; gap: 0.2rem; flex: 1 1 24ch; }
+  .ir-line { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.1rem 0.3rem; }
+  .ir-n { font-family: var(--mono); font-size: 0.8rem; white-space: nowrap; }
+  .ir-lhs { color: var(--text); }
+  .ir-op { color: var(--accent); margin: 0 0.25rem; }
+  .ir-eq { color: var(--text-faint); margin: 0 0.35rem; }
+
+  /* outcome tone: warm = rotation, cool = push, dim = neither */
+  .ir-out { font-size: 0.85rem; }
+  .ir-out.over { color: #e08a5a; }
+  .ir-out.under { color: #5aa0d0; }
+  .ir-out.neu { color: var(--text-dim); }
+
+  .ir-grouplabel {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.11em;
+    color: var(--text-faint);
+    margin: 1.1rem 0 0.1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.3rem;
   }
-  .ir-x { color: var(--accent); font-family: var(--mono); font-size: 0.72rem; }
 
   .ir-warn {
     font-size: 0.62rem;
@@ -730,9 +803,17 @@ const INTERACTIONS: Interaction[] = [
     border: 1px solid var(--border);
     border-radius: 999px;
     padding: 0.05rem 0.45rem;
+    margin-left: 0.4rem;
     white-space: nowrap;
+    font-weight: 400;
   }
   .inter-row.is-warn { border-left-color: var(--text-faint); }
+
+  @media (max-width: 620px) {
+    /* stack the name above its comparison rather than squeezing both */
+    .ir-name { min-width: 0; flex: 1 1 100%; }
+    .ir-lines { flex-basis: 100%; padding-left: 0.1rem; }
+  }
 
   .ir-why {
     margin: 0;
