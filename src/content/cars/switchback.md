@@ -12,6 +12,18 @@ imageCredit: Sicnag
 heroImage: /cars/switchback.webp
 summary: A front-biased V8 brawler built for straight-line speed — strong on fast tracks, but it understeers hard in tight corners.
 order: 11
+handling:
+  feel: forgiving
+  balance: understeers
+  frontWeightPct: 55
+  massKg: 1700
+  massBand: heavy
+  wheelbase: long
+  breakaway: progressive
+  reasons:
+    - "A heavy straight-line brawler — strong on fast tracks, understeers in tight corners."
+    - "Long and heavy, so slides build slowly and take distance to gather — steer it with the throttle."
+    - "Set it up for high-speed sections and brake early into the technical bits."
 ---
 
 The Switchback is a late-'60s Chevrolet Chevelle-style muscle car, a front-biased V8

@@ -12,6 +12,18 @@ imageCredit: Elise240SX
 heroImage: /cars/roadslayer.webp
 summary: The front-heavy V8 muscle car most players start with — stable and forgiving, but the torque will step the rear out if you ask too much.
 order: 1
+handling:
+  feel: forgiving
+  balance: neutral
+  frontWeightPct: 56
+  massKg: 1750
+  massBand: heavy
+  wheelbase: long
+  breakaway: progressive
+  reasons:
+    - "Nose-heavy 56/44 — it understeers into a corner, the failure that just runs you wide instead of spinning."
+    - "Heavy and long in the wheelbase — high inertia, so it changes attitude slowly and gives you time to react."
+    - "The power-oversteer only shows up when you ask for it with throttle on the way out."
 ---
 
 The RoadSlayer is the car the game hands you as a default, and it is a genuinely good

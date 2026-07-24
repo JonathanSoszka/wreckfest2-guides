@@ -12,6 +12,17 @@ imageCredit: OSX
 heroImage: /cars/phaser.webp
 summary: A nose-heavy front-drive sports coupe with a peaky, high-revving engine — a corner-carver that snaps its light rear over kerbs.
 order: 12
+handling:
+  feel: neutral
+  balance: understeers
+  frontWeightPct: 62
+  massKg: 1250
+  massBand: mid
+  breakaway: fast
+  reasons:
+    - "Nose-heavy front-driver — understeer-limited under power, so rotate it on entry."
+    - "A peaky, high-revving engine: gear it short and keep the revs up, it won't lug like a V8."
+    - "The light FWD rear can snap over kerbs and jumps — add a touch of rear stability on rough tracks."
 ---
 
 The Phaser is a front-wheel-drive sports coupe in the mould of an early-90s Honda Prelude.

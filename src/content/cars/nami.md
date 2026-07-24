@@ -12,6 +12,18 @@ imageCredit: Elise240SX
 heroImage: /cars/nami.webp
 summary: A tiny, balanced NA Miata roadster that rotates beautifully and bites just as fast — a momentum car you drive on line, not power.
 order: 14
+handling:
+  feel: demanding
+  balance: oversteers
+  frontWeightPct: 50
+  massKg: 990
+  massBand: light
+  wheelbase: short
+  breakaway: fast
+  reasons:
+    - "A 50/50 rear-driver — it rotates on both throttle and lift, so it bites on entry and exit alike."
+    - "Very light (≈990 kg) and short — low inertia, it changes attitude the instant you move the wheel."
+    - "Peaky and low on torque: win on momentum and line, and don't set it so loose it scrubs its exit drive."
 ---
 
 The Nami is a light rear-drive roadster in the mould of a 1989 Mazda MX-5 Miata (NA), and it is

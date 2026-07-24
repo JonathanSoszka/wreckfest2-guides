@@ -9,6 +9,25 @@ const bodyStyle = z.enum([
 ]);
 const surface = z.enum(['tarmac', 'dirt', 'gravel', 'mixed']);
 
+// Handling character — the "by feel" attributes surfaced on the car index.
+// All grounded in src/data/tuning/car-reference.md (its Balance column, masses,
+// and "signature to tune around"); nothing here needs in-game capture. `feel`
+// drives the beginner-friendly sort + filter; `reasons` are the always-shown
+// "why <feel>" bullets. Masses are approximate — some are the in-game figure,
+// some the real car's curb weight where the game value isn't known — so they
+// always render with a leading ≈.
+const handling = z.object({
+  feel: z.enum(['forgiving', 'neutral', 'demanding']),
+  balance: z.enum(['understeers', 'neutral', 'oversteers']),
+  enginePlacement: z.enum(['front', 'rear']).default('front'),
+  frontWeightPct: z.number().min(30).max(70), // front axle share; rear = 100 − this
+  massKg: z.number().optional(), // shown as "≈{n} kg"
+  massBand: z.enum(['light', 'mid', 'heavy', 'very-heavy']),
+  wheelbase: z.enum(['short', 'long']).optional(),
+  breakaway: z.enum(['progressive', 'moderate', 'fast', 'sudden']),
+  reasons: z.array(z.string()).min(1).max(4),
+});
+
 // Car profiles — one Markdown file per car. Numeric stats are intentionally
 // optional for now (see project notes: headline stats deferred).
 const cars = defineCollection({
@@ -19,6 +38,7 @@ const cars = defineCollection({
     drivetrain: drivetrain,
     inspiration: z.string().optional(), // real-world lookalike (from car-reference.md)
     archetype: z.string().optional(), // handling archetype, e.g. "RWD muscle", "FWD hatch"
+    handling: handling.optional(), // "by feel" attributes for the index (see above)
     bodyStyle: bodyStyle.optional(), // silhouette for the index art
     summary: z.string(),
     heroImage: z.string().optional(),

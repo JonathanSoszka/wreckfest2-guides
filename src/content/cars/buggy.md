@@ -12,6 +12,19 @@ imageCredit: Greg Gjerdingen
 heroImage: /cars/buggy.webp
 summary: A light rear-engined Beetle with its weight over the back axle — darty and quick to rotate, with a pendulum tail that swings wide off-throttle.
 order: 9
+handling:
+  feel: demanding
+  balance: oversteers
+  enginePlacement: rear
+  frontWeightPct: 40
+  massKg: 934
+  massBand: light
+  wheelbase: short
+  breakaway: sudden
+  reasons:
+    - "Weight sits behind the rear axle (40/60) — once the tail lets go, the mass keeps swinging like a pendulum."
+    - "Light (≈934 kg) and short — low inertia, so it changes direction the instant you move the wheel."
+    - "Rear-engine lift-off oversteer: back off mid-corner and the tail steps out on its own, with little warning."
 ---
 
 The Buggy is a rear-engined car based on the 1971 VW Beetle, with its flat-four hung out behind

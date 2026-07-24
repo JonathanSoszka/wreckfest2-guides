@@ -12,6 +12,17 @@ imageCredit: Cutlass
 heroImage: /cars/bravion.webp
 summary: A near-50/50 rear-drive sports saloon that rotates willingly — quick and rewarding, but happy to swing the tail on both power and lift.
 order: 4
+handling:
+  feel: demanding
+  balance: oversteers
+  frontWeightPct: 50
+  massKg: 1450
+  massBand: mid
+  breakaway: fast
+  reasons:
+    - "A true 50/50 rear-driver — it rotates willingly and is prone to both power and lift-off oversteer."
+    - "Rev-happy: back off or add throttle mid-corner and the tail answers quickly."
+    - "A point-and-shoot exit car — calm the rear in setup rather than adding more rotation."
 ---
 
 The Bravion is a compact rear-drive sports saloon in the mould of a BMW E46 3 Series, and it

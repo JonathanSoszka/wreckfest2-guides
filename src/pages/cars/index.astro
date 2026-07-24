@@ -3,18 +3,53 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CarArt from '../../components/CarArt.astro';
 import { getPublished } from '../../lib/content';
 
-const cars = (await getPublished('cars'))
-  .sort((a, b) => a.data.name.localeCompare(b.data.name));
+// Beginner-friendly is the default order (calm cars first), so no-JS visitors get
+// the useful sort too; the "A–Z" toggle reorders client-side. Cars without handling
+// data sort last (there are none today, but the guard keeps the page honest).
+const FEEL = {
+  forgiving: { label: 'Forgiving', cls: 'g', segs: 1, rank: 0 },
+  neutral: { label: 'Neutral', cls: 'm', segs: 2, rank: 1 },
+  demanding: { label: 'Demanding', cls: 'h', segs: 3, rank: 2 },
+} as const;
+
+const cars = (await getPublished('cars')).sort((a, b) => {
+  const ra = a.data.handling ? FEEL[a.data.handling.feel].rank : 9;
+  const rb = b.data.handling ? FEEL[b.data.handling.feel].rank : 9;
+  return ra - rb || a.data.name.localeCompare(b.data.name);
+});
 
 const drivetrains = [...new Set(cars.map((c) => c.data.drivetrain))].sort();
-const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
+
+const MASS_BAND = { light: 'light', mid: 'mid weight', heavy: 'heavy', 'very-heavy': 'very heavy' };
+const driveLabel = (dt: string, engine: string) =>
+  dt === 'RWD' ? `RWD ${engine === 'rear' ? 'rear' : 'front'}-engine` : dt;
 ---
-<BaseLayout title="Car Profiles" description="Every Wreckfest 2 car: drivetrain, handling, and setup notes.">
+<BaseLayout title="Car Profiles" description="Every Wreckfest 2 car: how it behaves on track, why, and the setup to match.">
   <p class="eyebrow">Car Profiles</p>
   <h1>Cars</h1>
-  <p class="lead">How each car behaves on track, and the setup to match.</p>
+  <p class="lead">How each car behaves on track — and why — with the setup to match.</p>
 
-  <div class="car-filters" aria-label="Filter cars">
+  <div class="feel-explain">
+    <div class="fx fx-g">
+      <h2>Forgiving because…</h2>
+      <ul>
+        <li>Nose-heavy (55–62% front) → understeers first, the safe failure</li>
+        <li>Understeer self-corrects — lift off and it tucks back in</li>
+        <li>Heavy or long-wheelbase → slow to change, time to react</li>
+      </ul>
+    </div>
+    <div class="fx fx-h">
+      <h2>Demanding because…</h2>
+      <ul>
+        <li>Weight over the rear (≈40/60) → the tail swings like a pendulum</li>
+        <li>Balanced rear-drive → bites on both throttle and lift</li>
+        <li>Light or short → darty, snaps with little warning</li>
+      </ul>
+    </div>
+  </div>
+  <p class="feel-hedge">≈ marks approximate masses — some are the in-game figure, some the real car's curb weight where the game value isn't known.</p>
+
+  <div class="car-filters" aria-label="Filter and sort cars">
     <div class="filter-group">
       <span class="filter-label">Drive</span>
       <button type="button" class="filter-chip active" data-filter="dt:all">All</button>
@@ -22,31 +57,93 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
         <button type="button" class="filter-chip" data-filter={`dt:${d}`}>{d}</button>
       ))}
     </div>
+    <div class="filter-group">
+      <span class="filter-label">Feel</span>
+      <button type="button" class="filter-chip active" data-filter="feel:all">All</button>
+      <button type="button" class="filter-chip" data-filter="feel:forgiving">Forgiving</button>
+      <button type="button" class="filter-chip" data-filter="feel:neutral">Neutral</button>
+      <button type="button" class="filter-chip" data-filter="feel:demanding">Demanding</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Balance</span>
+      <button type="button" class="filter-chip active" data-filter="balance:all">Any</button>
+      <button type="button" class="filter-chip" data-filter="balance:understeers">Understeers</button>
+      <button type="button" class="filter-chip" data-filter="balance:neutral">Neutral</button>
+      <button type="button" class="filter-chip" data-filter="balance:oversteers">Oversteers</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Sort</span>
+      <button type="button" class="filter-chip active" data-sort="feel">Beginner-friendly</button>
+      <button type="button" class="filter-chip" data-sort="name">A–Z</button>
+    </div>
   </div>
 
   <div class="car-rows">
-    {cars.map((car) => (
-      <a href={`/cars/${car.id}/`} class="car-row" data-dt={car.data.drivetrain}>
-        <span class="car-stage">
-          <CarArt
-            name={car.data.name}
-            drivetrain={car.data.drivetrain}
-            bodyStyle={car.data.bodyStyle}
-            heroImage={car.data.heroImage}
-            inspiration={car.data.inspiration}
-          />
-        </span>
-        <span class="car-row-main">
-          {car.data.inspiration && <span class="card-eyebrow">{car.data.inspiration}</span>}
-          <h3>{car.data.name}</h3>
-          <span class="car-row-sum">{car.data.summary}</span>
-        </span>
-        <span class="car-row-side">
-          <span class={dtClass(car.data.drivetrain)}>{car.data.drivetrain}</span>
-          {car.data.archetype && <span class="card-arch">{car.data.archetype}</span>}
-        </span>
-      </a>
-    ))}
+    {cars.map((car) => {
+      const h = car.data.handling;
+      const f = h ? FEEL[h.feel] : null;
+      return (
+        <a
+          href={`/cars/${car.id}/`}
+          class="car-row"
+          data-dt={car.data.drivetrain}
+          data-feel={h?.feel ?? ''}
+          data-balance={h?.balance ?? ''}
+          data-name={car.data.name}
+          data-rank={f ? f.rank : 9}
+        >
+          <span class="car-stage">
+            <CarArt
+              name={car.data.name}
+              drivetrain={car.data.drivetrain}
+              bodyStyle={car.data.bodyStyle}
+              heroImage={car.data.heroImage}
+              inspiration={car.data.inspiration}
+            />
+          </span>
+          <span class="car-row-main">
+            {car.data.inspiration && <span class="card-eyebrow">{car.data.inspiration}</span>}
+            <h3>{car.data.name}</h3>
+            <span class="car-row-sum">{car.data.summary}</span>
+            {h && (
+              <>
+                <span class="car-specs">
+                  <span class="spec spec-dt">{driveLabel(car.data.drivetrain, h.enginePlacement)}</span>
+                  <span class="spec">
+                    {MASS_BAND[h.massBand]}{h.massKg ? ` ≈${h.massKg.toLocaleString('en-US')} kg` : ''}
+                  </span>
+                  {h.wheelbase && <span class="spec">{h.wheelbase} wheelbase</span>}
+                  <span class="spec">breakaway: {h.breakaway}</span>
+                </span>
+                <span class="car-bal">
+                  <span class="car-bal-track" aria-hidden="true">
+                    <span class="fr" style={`flex-basis:${h.frontWeightPct}%`}></span>
+                    <span class="re" style={`flex-basis:${100 - h.frontWeightPct}%`}></span>
+                  </span>
+                  <span class="car-bal-txt">
+                    {h.frontWeightPct}% front / {100 - h.frontWeightPct}% rear · {h.balance}
+                  </span>
+                </span>
+                <span class:list={['car-why', `why-${f!.cls}`]}>
+                  <span class="car-why-h">Why {h.feel}</span>
+                  <ul>{h.reasons.map((r) => <li>{r}</li>)}</ul>
+                </span>
+              </>
+            )}
+          </span>
+          <span class="car-row-side">
+            {f && (
+              <span class:list={['feel-badge', `feel-${f.cls}`]}>
+                <span class="feel-meter" aria-hidden="true">
+                  {[0, 1, 2].map((i) => <span class:list={['seg', i < f.segs && 'on']}></span>)}
+                </span>
+                <span class="feel-lbl">{f.label}</span>
+              </span>
+            )}
+          </span>
+        </a>
+      );
+    })}
   </div>
   <p class="lead car-empty" style="display:none;">No cars match that filter.</p>
   <p class="photo-note">
@@ -58,23 +155,54 @@ const dtClass = (dt: string) => `tag tag-${dt.toLowerCase()}`;
 
 <script>
   const bar = document.querySelector<HTMLElement>('.car-filters');
-  if (bar) {
-    const rows = Array.from(document.querySelectorAll<HTMLElement>('.car-rows .car-row'));
+  const list = document.querySelector<HTMLElement>('.car-rows');
+  if (bar && list) {
+    const rows = Array.from(list.querySelectorAll<HTMLElement>('.car-row'));
     const empty = document.querySelector<HTMLElement>('.car-empty');
-    const state: Record<string, string> = { dt: 'all' };
-    bar.addEventListener('click', (e) => {
-      const chip = (e.target as HTMLElement).closest<HTMLElement>('[data-filter]');
-      if (!chip) return;
-      const [kind, val] = chip.dataset.filter!.split(':');
-      state[kind] = val;
-      bar.querySelectorAll(`[data-filter^="${kind}:"]`).forEach((c) => c.classList.toggle('active', c === chip));
+    const state: Record<string, string> = { dt: 'all', feel: 'all', balance: 'all' };
+    let sort = 'feel';
+
+    const markActive = (chip: HTMLElement) =>
+      chip.parentElement
+        ?.querySelectorAll('.filter-chip')
+        .forEach((c) => c.classList.toggle('active', c === chip));
+
+    const applyFilters = () => {
       let shown = 0;
       for (const row of rows) {
-        const ok = state.dt === 'all' || row.dataset.dt === state.dt;
+        const ok =
+          (state.dt === 'all' || row.dataset.dt === state.dt) &&
+          (state.feel === 'all' || row.dataset.feel === state.feel) &&
+          (state.balance === 'all' || row.dataset.balance === state.balance);
         row.style.display = ok ? '' : 'none';
         if (ok) shown++;
       }
       if (empty) empty.style.display = shown ? 'none' : '';
+    };
+
+    const resort = () => {
+      const sorted = [...rows].sort((a, b) =>
+        sort === 'name'
+          ? a.dataset.name!.localeCompare(b.dataset.name!)
+          : Number(a.dataset.rank) - Number(b.dataset.rank) ||
+            a.dataset.name!.localeCompare(b.dataset.name!),
+      );
+      for (const row of sorted) list.appendChild(row);
+    };
+
+    bar.addEventListener('click', (e) => {
+      const chip = (e.target as HTMLElement).closest<HTMLElement>('[data-filter],[data-sort]');
+      if (!chip) return;
+      if (chip.dataset.sort) {
+        sort = chip.dataset.sort;
+        markActive(chip);
+        resort();
+        return;
+      }
+      const [kind, val] = chip.dataset.filter!.split(':');
+      state[kind] = val;
+      markActive(chip);
+      applyFilters();
     });
   }
 </script>

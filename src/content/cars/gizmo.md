@@ -12,6 +12,18 @@ imageCredit: Rudolf Stricker
 heroImage: /cars/gizmo.webp
 summary: A light front-drive hatchback — nimble and quick to change direction, but it fights you under power.
 order: 6
+handling:
+  feel: neutral
+  balance: understeers
+  frontWeightPct: 61
+  massKg: 850
+  massBand: light
+  wheelbase: short
+  breakaway: fast
+  reasons:
+    - "Light and short — nimble and quick to change direction, but that also makes it lively."
+    - "Front-heavy 61/39 understeers under power, yet it has pronounced lift-off oversteer you can use to rotate."
+    - "Weak power-down out of slow corners — carry your speed rather than relying on traction off the apex."
 ---
 
 The Gizmo is a small front-wheel-drive car, and it asks for a completely different driving

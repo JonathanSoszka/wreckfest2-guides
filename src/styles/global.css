@@ -137,7 +137,7 @@ main { padding: 2rem 0 1rem; }
   display: grid;
   grid-template-columns: 190px minmax(0, 1fr) auto;
   gap: 1.3rem;
-  align-items: center;
+  align-items: start;
   padding: 0.9rem 1.1rem;
   background: var(--bg-panel);
   border: 1px solid var(--border);
@@ -231,6 +231,107 @@ main { padding: 2rem 0 1rem; }
 }
 .filter-chip:hover { color: var(--text); border-color: var(--accent); }
 .filter-chip.active { color: var(--bg); background: var(--accent); border-color: var(--accent); }
+
+/* --- "by feel": explainer, per-row attributes, forgiveness meter --- */
+/* Feel colours are local to this section — green forgiving, amber neutral, red
+   demanding, echoing the site's up/down delta greens and reds. */
+.car-rows { --feel-g: #6cbf73; --feel-m: #d6a44b; --feel-h: #d9634a; }
+
+.feel-explain {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin: 0 0 0.7rem;
+}
+.fx {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.7rem 0.9rem;
+}
+.fx-g { border-left: 3px solid #6cbf73; }
+.fx-h { border-left: 3px solid #d9634a; }
+.fx h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.fx-g h2 { color: #6cbf73; }
+.fx-h h2 { color: #d9634a; }
+.fx ul { margin: 0; padding-left: 1rem; }
+.fx li { font-size: 0.85rem; color: var(--text-dim); margin: 0.15rem 0; }
+.feel-hedge { font-size: 0.76rem; color: var(--text-faint); font-style: italic; margin: 0 0 1.5rem; }
+
+@media (max-width: 620px) {
+  .feel-explain { grid-template-columns: 1fr; }
+}
+
+/* attribute chips */
+.car-specs { display: flex; flex-wrap: wrap; gap: 0.3rem; margin: 0.6rem 0 0.4rem; }
+.spec {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.1rem 0.42rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+.spec-dt { color: var(--link); border-color: color-mix(in srgb, var(--link) 55%, var(--border)); }
+
+/* weight-balance bar: front share vs rear share */
+.car-bal { display: flex; align-items: center; gap: 0.5rem; margin: 0.2rem 0 0.1rem; flex-wrap: wrap; }
+.car-bal-track {
+  display: flex;
+  flex: 0 1 220px;
+  height: 9px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.car-bal-track .fr { background: #3a4152; }
+.car-bal-track .re { background: #232733; }
+.car-bal-txt { font-size: 0.72rem; color: var(--text-faint); font-family: var(--mono); }
+
+/* the always-shown "why <feel>" breakdown */
+.car-why {
+  display: block;
+  margin: 0.55rem 0 0.1rem;
+  padding: 0.5rem 0.7rem;
+  background: var(--bg-panel-2);
+  border-radius: 8px;
+  border-left: 3px solid var(--border);
+}
+.why-g { border-left-color: var(--feel-g); }
+.why-m { border-left-color: var(--feel-m); }
+.why-h { border-left-color: var(--feel-h); }
+.car-why-h {
+  display: block;
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+.why-g .car-why-h { color: var(--feel-g); }
+.why-m .car-why-h { color: var(--feel-m); }
+.why-h .car-why-h { color: var(--feel-h); }
+.car-why ul { margin: 0; padding-left: 1rem; }
+.car-why li { font-size: 0.82rem; color: var(--text-dim); margin: 0.15rem 0; }
+
+/* the forgiveness badge in the row's side column */
+.feel-badge { display: flex; flex-direction: column; align-items: flex-end; gap: 0.25rem; }
+.feel-meter { display: flex; gap: 2px; }
+.feel-meter .seg { width: 16px; height: 5px; border-radius: 2px; background: var(--bg-panel-2); }
+.feel-lbl { font-size: 0.74rem; font-weight: 600; }
+.feel-g .seg.on { background: var(--feel-g); } .feel-g .feel-lbl { color: var(--feel-g); }
+.feel-m .seg.on { background: var(--feel-m); } .feel-m .feel-lbl { color: var(--feel-m); }
+.feel-h .seg.on { background: var(--feel-h); } .feel-h .feel-lbl { color: var(--feel-h); }
+
+@media (max-width: 760px) {
+  /* the feel badge joins the drivetrain-tag row, left-aligned */
+  .feel-badge { flex-direction: row; align-items: center; gap: 0.4rem; }
+}
 
 /* --- car tuning page: presets left, notes right --- */
 .car-wide { max-width: none; }

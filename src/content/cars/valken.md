@@ -12,6 +12,17 @@ imageCredit: OSX
 heroImage: /cars/valken.webp
 summary: A nose-heavy front-drive hatch with modest power that handles well — a momentum car you drive on line and corner speed, not muscle.
 order: 16
+handling:
+  feel: neutral
+  balance: understeers
+  frontWeightPct: 62
+  massKg: 1300
+  massBand: mid
+  breakaway: moderate
+  reasons:
+    - "Nose-heavy front-driver with modest power — understeer-prone but it genuinely handles well."
+    - "A momentum-driven all-rounder: tune for agility and cornering, not straight-line speed."
+    - "Watch for launch wheelspin, and the light rear can get snappy if you overdrive it."
 ---
 
 The Valken is a front-wheel-drive hatch in the mould of a late-90s Saab 900. Its weight sits

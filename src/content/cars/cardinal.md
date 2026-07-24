@@ -12,6 +12,18 @@ imageCredit: IFCAR
 heroImage: /cars/cardinal.webp
 summary: The heaviest car in the roster — a front-biased full-size sedan that understeers hard but survives contact and runs a huge top speed.
 order: 8
+handling:
+  feel: forgiving
+  balance: understeers
+  frontWeightPct: 55
+  massKg: 1937
+  massBand: very-heavy
+  wheelbase: long
+  breakaway: progressive
+  reasons:
+    - "The heaviest car in the roster (≈1,937 kg) — a front-biased understeer tank with the lowest cornering grip."
+    - "That mass is huge inertia: it changes attitude slowly and pushes wide with plenty of warning."
+    - "High top speed and strength — the ultimate high-speed tank; brake early for the tight stuff."
 ---
 
 The Cardinal is a full-size rear-drive sedan modelled on a 2010 Ford Crown Victoria, and it is

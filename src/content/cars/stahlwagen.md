@@ -12,6 +12,18 @@ imageCredit: MoCars
 heroImage: /cars/stahlwagen.webp
 summary: A long-wheelbase rear-drive estate — the stable, predictable one, with a slightly rearward balance that aids traction and controllable oversteer.
 order: 15
+handling:
+  feel: forgiving
+  balance: neutral
+  frontWeightPct: 53
+  massKg: 1500
+  massBand: heavy
+  wheelbase: long
+  breakaway: progressive
+  reasons:
+    - "The stable one — a long-wheelbase wagon whose slightly rearward mass (53/47) actually aids rear traction."
+    - "Predictable and controllable, even when the tail does move; it slides in slow motion."
+    - "Torque-rich midrange — brake bias and diff tuning matter more here than on a nose-heavy car."
 ---
 
 The Stahlwagen is a rear-drive estate modelled on a 2001 Mercedes C-Class Estate (W203), and it is

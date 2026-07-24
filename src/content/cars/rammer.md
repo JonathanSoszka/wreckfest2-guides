@@ -12,6 +12,18 @@ imageCredit: Urbansuburban86
 heroImage: /cars/rammer.webp
 summary: A heavy, front-biased full-size sedan — a momentum rammer that understeers and changes direction lazily but survives contact.
 order: 7
+handling:
+  feel: forgiving
+  balance: understeers
+  frontWeightPct: 56
+  massKg: 1633
+  massBand: heavy
+  wheelbase: long
+  breakaway: progressive
+  reasons:
+    - "Very heavy (≈1,633 kg) and front-biased — strong understeer and lazy direction changes."
+    - "Enormous inertia means it changes attitude slowly; smooth, early braking beats trail-braking."
+    - "Built as a momentum weapon — its mass and durability are the point, not agility."
 ---
 
 The Rammer is a 1986 Chevrolet Caprice — a big full-size sedan, around 1,633 kg, with a

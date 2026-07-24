@@ -12,6 +12,19 @@ imageCredit: IFCAR
 heroImage: /cars/popper.webp
 summary: A tiny rear-engine city car — a nimble technical-track toy that swings its tail wide the moment you lift off.
 order: 10
+handling:
+  feel: demanding
+  balance: oversteers
+  enginePlacement: rear
+  frontWeightPct: 40
+  massKg: 560
+  massBand: light
+  wheelbase: short
+  breakaway: sudden
+  reasons:
+    - "A tiny rear-engine car — weight over the back axle gives it lift-off / pendulum oversteer."
+    - "Featherweight and short-wheelbase — darty and quick to rotate, a technical-track toy."
+    - "Torque-poor: gear it short and keep it in the powerband; hopeless on long straights."
 ---
 
 The Popper is a tiny rear-engine city car in the mould of a classic Fiat 500 or 600. The

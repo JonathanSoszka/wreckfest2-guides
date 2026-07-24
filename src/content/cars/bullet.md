@@ -12,6 +12,18 @@ imageCredit: Kieran White
 heroImage: /cars/bullet.webp
 summary: A long, heavy long-wheelbase muscle car — the most stable at speed and the least agile, with slides that build momentum.
 order: 21
+handling:
+  feel: forgiving
+  balance: understeers
+  frontWeightPct: 56
+  massKg: 1795
+  massBand: heavy
+  wheelbase: long
+  breakaway: progressive
+  reasons:
+    - "Long, heavy and long-wheelbase — the best high-speed stability in the roster and the worst agility."
+    - "Slow to rotate: slides build momentum and take distance to gather, so steer it with the throttle."
+    - "Buy rotation in setup for the slow corners; on fast tracks its stability is a gift."
 ---
 
 The Bullet is a 1970 Dodge Charger — long, heavy, and riding a long wheelbase at around

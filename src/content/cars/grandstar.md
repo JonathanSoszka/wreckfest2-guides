@@ -12,6 +12,17 @@ imageCredit: Elise240SX
 heroImage: /cars/grandstar.webp
 summary: A heavy, tall front-drive minivan — strong understeer and a high centre of gravity make it roll-prone, but its mass is a ramming asset.
 order: 13
+handling:
+  feel: forgiving
+  balance: understeers
+  frontWeightPct: 59
+  massKg: 1860
+  massBand: very-heavy
+  breakaway: progressive
+  reasons:
+    - "A heavy, very nose-heavy minivan — strong, predictable understeer under power."
+    - "But a high centre of gravity makes it roll-prone: it understeers safely yet can tip if you fling it."
+    - "Stiffen anti-roll and lower it where allowed; use the mass as a ramming asset, stability over agility."
 ---
 
 The Grandstar is a front-wheel-drive minivan in the mould of an early-2000s Dodge Caravan.

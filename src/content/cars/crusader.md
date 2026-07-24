@@ -12,6 +12,17 @@ imageCredit: Elise240SX
 heroImage: /cars/crusader.webp
 summary: A front-heavy front-drive economy coupe — a textbook FWD car that understeers on power unless you rotate it on entry.
 order: 5
+handling:
+  feel: forgiving
+  balance: understeers
+  frontWeightPct: 62
+  massKg: 1270
+  massBand: mid
+  breakaway: progressive
+  reasons:
+    - "Front-drive and very nose-heavy at 62/38 — adding power just makes it push, the safest failure there is."
+    - "Understeer self-corrects: ease off the throttle and the nose tucks back into the corner."
+    - "A textbook FWD car — rotate it on entry, then protect the loaded front on the way out."
 ---
 
 The Crusader is a front-wheel-drive economy coupe in the mould of an early-2000s Chevrolet

@@ -12,6 +12,18 @@ imageCredit: Mr.choppers
 heroImage: /cars/jackal.webp
 summary: The lightest, twitchiest muscle car — a short-wheelbase live-axle coupe that snaps into oversteer on lift and hops over bumps.
 order: 26
+handling:
+  feel: demanding
+  balance: oversteers
+  frontWeightPct: 57
+  massKg: 1400
+  massBand: mid
+  wheelbase: short
+  breakaway: sudden
+  reasons:
+    - "The lightest, twitchiest muscle car — a short-wheelbase coupe over a live rear axle."
+    - "Snap oversteer on lift and axle/wheel hop over bumps — it bites suddenly, with little warning."
+    - "Easy wheelspin too; reward smooth inputs, add rear grip and ease the diff lock."
 ---
 
 The Jackal is a Fox Body Mustang, the lightest and twitchiest of the muscle group. A short

@@ -12,6 +12,17 @@ imageCredit: MercurySable99
 heroImage: /cars/rocket.webp
 summary: A lighter, well-balanced V8 pony car — the neutral all-rounder of the muscle group with only mild power oversteer.
 order: 3
+handling:
+  feel: neutral
+  balance: neutral
+  frontWeightPct: 55
+  massKg: 1350
+  massBand: mid
+  breakaway: moderate
+  reasons:
+    - "Near-balanced 55/45 — neither end dominates, so it turns in cleanly without pushing or snapping."
+    - "Only mild power-oversteer — the rear steps out when you provoke it, not on its own."
+    - "The neutral all-rounder: small setup changes swing it either way, so tune it to taste."
 ---
 
 The Rocket is a 1968 Ford Mustang at heart, and it sits in the middle of the muscle-car

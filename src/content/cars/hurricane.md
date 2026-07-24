@@ -12,6 +12,17 @@ imageCredit: MercurySable99
 heroImage: /cars/hurricane.webp
 summary: The torque-forward muscle cousin — lighter and nimbler than the RoadSlayer, but eager to oversteer on power and short on revs.
 order: 2
+handling:
+  feel: neutral
+  balance: oversteers
+  frontWeightPct: 54
+  massKg: 1490
+  massBand: mid
+  breakaway: moderate
+  reasons:
+    - "Near-balanced 54/46 with a torque-rich V8 — power oversteer arrives the instant you get on the throttle."
+    - "A low redline means it runs out of revs early, so exit grip sets your pace, not top speed."
+    - "The mild entry push gives a little warning before the rear steps out."
 ---
 
 The Hurricane is a rear-drive muscle coupe cut from the same cloth as the RoadSlayer, but it
