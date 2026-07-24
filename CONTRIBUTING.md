@@ -5,6 +5,34 @@ profiles, track profiles, tuning guides, and racing lessons**. This file is the 
 for adding and editing content. For the architectural overview and house conventions, see
 [`CLAUDE.md`](./CLAUDE.md); agents should also read [`AGENTS.md`](./AGENTS.md).
 
+## New here? (no Astro experience needed)
+
+**Adding or editing a guide means editing Markdown files under `src/content/**` — nothing else.**
+No framework code, no JavaScript. If that's all you're doing, you can stop after
+[Adding content](#adding-content) and skip the build-internals sections (feature flags, gating) at
+the end — those are only for changing how the site is wired together.
+
+When you do venture past content, here's the whole stack in five bullets:
+
+- **File-based routing** — a file in `src/pages/` becomes a page at the matching URL. The
+  `[...slug].astro` files are templates that render one page per guide in a collection.
+- **Content collections** — the guides live in `src/content/{cars,tracks,tuning,lessons}/`. The
+  `key: value` block fenced by `---` at the top of each file is its *frontmatter* (structured
+  metadata); `src/content.config.ts` declares which fields each type allows and **validates them at
+  build time**, so a wrong field fails the build with a clear message.
+- **Components** — reusable building blocks in `src/components/` (`.astro` files: HTML with a small
+  JavaScript header). The tuning setup widget is one.
+- **MDX** — Markdown that can embed components. Only the tuning guides use it, so they can drop in
+  that interactive widget; everything else is plain Markdown.
+- **Static build** — `npm run build` turns all of it into plain HTML in `dist/`. There is no server
+  and no database; whatever the build emits *is* the entire site.
+
+### Prerequisites
+
+- **Node.js** — the version is pinned in [`.nvmrc`](./.nvmrc) (currently 22); with
+  [nvm](https://github.com/nvm-sh/nvm) installed, `nvm use` picks it up. Node includes `npm`.
+- **git** and a text editor. Everything runs locally; nothing else to install.
+
 ## Getting started
 
 ```sh
@@ -16,6 +44,10 @@ npm run preview   # serve the built dist/
 
 Always run `npm run build` before opening a PR — the content schemas are validated at build time,
 so a bad frontmatter field or MDX syntax error fails the build.
+
+**Your first change.** The gentlest contribution is a prose fix: open the relevant Markdown file
+under `src/content/` (a car profile is `src/content/cars/<name>.md`), edit the text, and `npm run
+dev` shows it live as you save. Run `npm run build` to confirm it still validates, then open a PR.
 
 ## Repository layout
 
@@ -81,8 +113,26 @@ inspiration: 1973 Pontiac Firebird / Trans Am   # optional, from car-reference.m
 archetype: Front-heavy RWD muscle                # optional, from car-reference.md
 summary: One-line hook shown on the card and page lead.
 order: 1                   # sort order (car number)
+handling:                  # optional; drives the "by feel" attributes on the car index
+  feel: forgiving          # forgiving | neutral | demanding — the headline rating + sort key
+  balance: neutral         # understeers | neutral | oversteers — cornering tendency
+  enginePlacement: front   # front | rear (default front) — splits front-engine RWD from rear-engine
+  frontWeightPct: 56       # front axle weight share (rear = 100 − this); draws the balance bar
+  massKg: 1750             # optional; rendered "≈1,750 kg" (masses are approximate)
+  massBand: heavy          # light | mid | heavy | very-heavy
+  wheelbase: long          # optional; short | long
+  breakaway: progressive   # progressive | moderate | fast | sudden — how suddenly grip lets go
+  reasons:                 # 1–4 bullets; the always-shown "Why <feel>" breakdown on the index
+    - "Nose-heavy 56/44 — it understeers first, the failure that runs you wide instead of spinning."
+    - "Heavy and long in the wheelbase — high inertia, so it changes attitude slowly."
 ---
 ```
+
+The `handling` block is **all sourced from `car-reference.md`** — its Balance column, masses, and
+"signature to tune around". Don't invent these any more than tuning numbers: `feel`/`balance`/
+`breakaway` are a reading of the car's documented vice, and the masses carry a leading `≈` because
+some are in-game figures and some the real car's curb weight. See `src/content.config.ts` for the
+exact enums and the full field comments.
 
 Body: a short intro paragraph, then a `## How it drives` section. Keep it to handling character —
 there is **no parts/upgrades section** (that feature was removed; don't reintroduce "where to spend
@@ -210,7 +260,9 @@ order: 1
 Lessons should ground their technique in a cited reference (like the tuning guides do) and end with a
 `## Sources` section linking the major sources. The car-control lessons are checked against
 `src/data/lessons/car-control-reference.md`; `order` sorts lessons within their `category`, and the
-index groups by `category` in a fixed order (`src/pages/lessons/index.astro`). Lesson diagrams are
+index groups by `category` in a fixed order (`src/routes/lessons/index.astro` — lessons are a gated
+section, so their pages live under `src/routes/`, see [Gating a whole section](#gating-a-whole-section)).
+Lesson diagrams are
 produced by `scripts/gen_diagrams.py`, which derives the road and racing line from a shared track
 centerline (Frenet lateral offset) so the line always follows the track — never hand-draw racing lines.
 Jumps are the one exception to that model: a side elevation drawn from a ground profile plus a
@@ -294,23 +346,24 @@ across ten call sites — ten chances to leak an unfinished guide.
 
 ## Deploy
 
-Two ways to publish to Cloudflare Pages:
+**Automatic, via GitHub Actions — you don't deploy by hand.** Merging to `main` is the whole
+workflow: [`.github/workflows/deploy.yml`](./.github/workflows/deploy.yml) runs on every push to
+`main` (and on manual dispatch), builds the site, and uploads `dist/` to Cloudflare Pages with
+`wrangler pages deploy`. It authenticates with two repo secrets, `CLOUDFLARE_API_TOKEN` and
+`CLOUDFLARE_ACCOUNT_ID`.
 
-**Git integration (default).** Cloudflare builds and deploys on every push to `main` — build command
-`npm run build`, output directory `dist`. This is the primary path.
+The `wreckfest2-guides` Pages project is **direct-upload**, which is *why* the deploy is driven from
+Actions rather than Cloudflare's own Git integration — Cloudflare isn't watching the repo; the
+workflow is. (A direct-upload project can't be converted to git-connected later, so this is the
+setup we have.)
 
-**Manual deploy (Wrangler direct upload).** Build locally and push `dist/` straight to Pages:
+**Manual deploy (fallback).** Only needed to push a build without going through `main` — e.g. a
+one-off preview. Build locally and upload straight to Pages:
 
 ```sh
-npm run deploy            # build + deploy to production (main)
+npm run deploy            # build + deploy to production (main branch)
 npm run deploy:preview    # build + deploy as a preview deployment
 ```
 
-Both target the `wreckfest2-guides` Pages project. Notes:
-
-- Log in once with Pages write access: `npx wrangler login`.
-- The `wreckfest2-guides` project must exist; Git integration creates it, otherwise the first
-  `npm run deploy` offers to create it.
-- **Order matters if you also want Git integration:** set that up first (it creates a git-connected
-  project). Running the manual deploy first creates a *direct-upload* project of the same name, which
-  can't be converted to git-connected later.
+Both target the same `wreckfest2-guides` project and need a one-time `npx wrangler login` with Pages
+write access.

@@ -134,8 +134,10 @@ per-car part catalog, but the site no longer surfaces parts/upgrades.)
 
 ## Deploy (Cloudflare Pages)
 
-Static build. Two paths (details in `CONTRIBUTING.md`):
-- **Git integration** — Pages config: build command `npm run build`, output directory `dist`;
-  auto-deploys on push to `main`.
-- **Manual** — `npm run deploy` (build + `wrangler pages deploy dist` to the `wreckfest2-guides`
+Static build, deployed via **GitHub Actions** (details in `CONTRIBUTING.md`):
+- **Automatic (the real path)** — `.github/workflows/deploy.yml` runs on every push to `main`:
+  builds and uploads `dist/` with `wrangler pages deploy` (secrets `CLOUDFLARE_API_TOKEN` +
+  `CLOUDFLARE_ACCOUNT_ID`). The `wreckfest2-guides` project is **direct-upload**, so Actions drives
+  the deploy — Cloudflare's own Git integration is not used.
+- **Manual (fallback)** — `npm run deploy` (build + `wrangler pages deploy dist` to the same
   project); `npm run deploy:preview` for a preview deployment. Needs `npx wrangler login` once.

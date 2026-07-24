@@ -8,6 +8,8 @@ Not affiliated with Bugbear or THQ Nordic.
 
 ## Quick start
 
+Needs [Node.js](https://nodejs.org) at the version in [`.nvmrc`](./.nvmrc) (`nvm use` picks it up).
+
 ```sh
 npm install
 npm run dev       # local dev server at localhost:4321
@@ -27,6 +29,10 @@ Content lives in `src/content/{cars,tracks,tuning,lessons}/`; the tuning referen
 of truth for every number) lives in `src/data/tuning/`.
 
 ## Contributing
+
+**No Astro experience needed to write guides** — adding or editing one is just Markdown under
+`src/content/**`. [`CONTRIBUTING.md`](./CONTRIBUTING.md) opens with a short primer and a content-only
+fast path.
 
 - [`CONTRIBUTING.md`](./CONTRIBUTING.md) — how to add or edit each content type, the reference-data
   workflow, and the house conventions.
