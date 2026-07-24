@@ -11,7 +11,7 @@ existing items (new work gets the next number).
 ---
 
 ## 1. Remove the AWD tuning guide
-**Status:** TODO · **Effort:** S
+**Status:** REFINED · **Effort:** S
 
 There are **no AWD cars** in the roster — `car-reference.md` resolves it as 11 front-engine RWD,
 5 FWD, 2 rear-engine RWD, and zero AWD. So the generic AWD guide is dead weight, and the tuning
@@ -31,8 +31,21 @@ index advertises a drivetrain nobody drives.
   `src/styles/global.css`, `src/pages/tuning/index.astro`, `src/pages/cars/[...slug].astro`,
   `src/config/flags.ts`, `README.md`.
 
+**Decision:** Full purge — AWD is impossible in this game's roster, so leaving it authorable in the
+enum and advertised in copy is a trap for a future contributor. Remove the guide *and* make AWD
+unauthorable, keeping only the reference-doc mentions that explain why there's no AWD.
+
+**Steps:** _refined 2026-07-24_
+- [ ] Delete `src/content/tuning/generic-awd.mdx` — drops its route and its "By drivetrain" card automatically (`src/content/tuning/generic-awd.mdx`)
+- [ ] Drop `'AWD'` from the `drivetrain` enum so no car or guide can declare it (`src/content.config.ts`)
+- [ ] Remove the dead AWD styling: the `--dt-awd` token and `.tag-awd` rule (`src/styles/global.css`) and the `.car-art--awd` paint rule (`src/components/CarArt.astro`)
+- [ ] Drop `'AWD'` from `switchGroups` so the car-switcher has no empty AWD group (`src/pages/cars/[...slug].astro`)
+- [ ] Fix "FWD/RWD/AWD" copy → "FWD/RWD" in the tuning card blurb (`src/config/flags.ts`), the tuning page description (`src/pages/tuning/index.astro`), and the README bullet (`README.md`)
+- [ ] Leave AWD mentions in `src/data/tuning/*` and the rally reference untouched — they explain *why* there's no AWD
+- [ ] `npm run build` passes; `/tuning/generic-awd/` is no longer emitted and nothing references AWD in app code
+
 ## 2. Put the Tracks section behind a feature flag
-**Status:** TODO · **Effort:** M
+**Status:** REFINED · **Effort:** M
 
 Track profiles are text-only (no hero/map images) and mostly medium-confidence on the real-name
 mapping, so gate them off in production until they're ready — exactly the way Racing Lessons is
@@ -54,8 +67,20 @@ following the recipe in CONTRIBUTING.md → "Gating a whole section".
 - Files: `astro.config.mjs`, `src/config/flags.ts`, move `src/pages/tracks/*` → `src/routes/tracks/*`,
   `.env.development`.
 
+**Decision:** Off in production, on in local dev — mirroring the Racing Lessons gating exactly.
+
+**Steps:** _refined 2026-07-24_
+- [ ] Add `FEATURE_TRACKS` to `FLAG_NAMES` and to `env.schema` (boolean, `default: false`) (`astro.config.mjs`)
+- [ ] Register a `tracks` entry in the `featureRoutes([...])` array — `enabled: envFlag('FEATURE_TRACKS')`, `prefix: '/tracks'`, routes for `/tracks` and `/tracks/[...slug]` pointing at `./src/routes/tracks/…` (`astro.config.mjs`)
+- [ ] Re-export `FEATURE_TRACKS` and set the Tracks `SECTIONS` entry's `enabled` to `FEATURE_TRACKS` (`src/config/flags.ts`)
+- [ ] `git mv` `src/pages/tracks/index.astro` and `src/pages/tracks/[...slug].astro` into `src/routes/tracks/`; remove the now-empty `src/pages/tracks/` (`src/pages/tracks/*` → `src/routes/tracks/*`)
+- [ ] Add `FEATURE_TRACKS=true` to `.env.development` so local authoring still shows tracks (`.env.development`)
+- [ ] Re-grep `href="/tracks` for template links needing a `{FEATURE_TRACKS && …}` guard (none today, but confirm)
+- [ ] Add `FEATURE_TRACKS` to the flags tables in `CONTRIBUTING.md` and `CLAUDE.md`
+- [ ] Verify: `npm run build` (flag off) emits no `/tracks/` HTML and drops the Tracks nav + home card; `FEATURE_TRACKS=1 npm run build` restores both
+
 ## 3. Replace the "By car" grid on the tuning page with a link to the cars page
-**Status:** TODO · **Effort:** S
+**Status:** REFINED · **Effort:** S
 
 The `/tuning/` page has a "By car" section that renders a full card grid of all 18 per-car sheets,
 but every card just links to `/cars/<slug>/#setup` — the setup already lives on the car page. The
@@ -68,3 +93,9 @@ grid duplicates the cars index and drifts from it. Replace it with a short callo
   [car profiles](/cars/)."
 - Keep the "By drivetrain" section and the cheat-sheet callout as they are.
 - Files: `src/pages/tuning/index.astro`.
+
+**Steps:** _refined 2026-07-24_
+- [ ] Remove the "By car" heading, its lead line, and the `perCar` card grid (`src/pages/tuning/index.astro`)
+- [ ] Delete the now-unused `perCar` filter, the `cars` fetch, and the `carHref` helper (`src/pages/tuning/index.astro`)
+- [ ] Add a one-line callout linking to `/cars/`, e.g. "Every car's setup lives on its profile — browse the car profiles." (`src/pages/tuning/index.astro`)
+- [ ] `npm run build` passes; `/tuning/` shows By drivetrain + the cars link and no per-car grid
