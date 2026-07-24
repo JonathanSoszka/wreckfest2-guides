@@ -3,8 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import CarArt from '../../components/CarArt.astro';
 import { getPublished } from '../../lib/content';
 
-// Beginner-friendly is the default order (calm cars first), so no-JS visitors get
-// the useful sort too; the "A–Z" toggle reorders client-side. Cars without handling
+
 // data sort last (there are none today, but the guard keeps the page honest).
 const FEEL = {
   forgiving: { label: 'Forgiving', cls: 'g', segs: 1, rank: 0 },
@@ -13,9 +12,7 @@ const FEEL = {
 } as const;
 
 const cars = (await getPublished('cars')).sort((a, b) => {
-  const ra = a.data.handling ? FEEL[a.data.handling.feel].rank : 9;
-  const rb = b.data.handling ? FEEL[b.data.handling.feel].rank : 9;
-  return ra - rb || a.data.name.localeCompare(b.data.name);
+  return  a.data.name.localeCompare(b.data.name);
 });
 
 const drivetrains = [...new Set(cars.map((c) => c.data.drivetrain))].sort();
@@ -29,26 +26,6 @@ const driveLabel = (dt: string, engine: string) =>
   <h1>Cars</h1>
   <p class="lead">How each car behaves on track — and why — with the setup to match.</p>
 
-  <div class="feel-explain">
-    <div class="fx fx-g">
-      <h2>Forgiving because…</h2>
-      <ul>
-        <li>Nose-heavy (55–62% front) → understeers first, the safe failure</li>
-        <li>Understeer self-corrects — lift off and it tucks back in</li>
-        <li>Heavy or long-wheelbase → slow to change, time to react</li>
-      </ul>
-    </div>
-    <div class="fx fx-h">
-      <h2>Demanding because…</h2>
-      <ul>
-        <li>Weight over the rear (≈40/60) → the tail swings like a pendulum</li>
-        <li>Balanced rear-drive → bites on both throttle and lift</li>
-        <li>Light or short → darty, snaps with little warning</li>
-      </ul>
-    </div>
-  </div>
-  <p class="feel-hedge">≈ marks approximate masses — some are the in-game figure, some the real car's curb weight where the game value isn't known.</p>
-
   <div class="car-filters" aria-label="Filter and sort cars">
     <div class="filter-group">
       <span class="filter-label">Drive</span>
@@ -56,13 +33,6 @@ const driveLabel = (dt: string, engine: string) =>
       {drivetrains.map((d) => (
         <button type="button" class="filter-chip" data-filter={`dt:${d}`}>{d}</button>
       ))}
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">Feel</span>
-      <button type="button" class="filter-chip active" data-filter="feel:all">All</button>
-      <button type="button" class="filter-chip" data-filter="feel:forgiving">Forgiving</button>
-      <button type="button" class="filter-chip" data-filter="feel:neutral">Neutral</button>
-      <button type="button" class="filter-chip" data-filter="feel:demanding">Demanding</button>
     </div>
     <div class="filter-group">
       <span class="filter-label">Balance</span>
@@ -73,8 +43,9 @@ const driveLabel = (dt: string, engine: string) =>
     </div>
     <div class="filter-group">
       <span class="filter-label">Sort</span>
-      <button type="button" class="filter-chip active" data-sort="feel">Beginner-friendly</button>
-      <button type="button" class="filter-chip" data-sort="name">A–Z</button>
+      <button type="button" class="filter-chip active" data-sort="name">A–Z</button>
+      <button type="button" class="filter-chip" data-sort="feel">Beginner-friendly</button>
+
     </div>
   </div>
 
@@ -160,7 +131,7 @@ const driveLabel = (dt: string, engine: string) =>
     const rows = Array.from(list.querySelectorAll<HTMLElement>('.car-row'));
     const empty = document.querySelector<HTMLElement>('.car-empty');
     const state: Record<string, string> = { dt: 'all', feel: 'all', balance: 'all' };
-    let sort = 'feel';
+    let sort = 'name';
 
     const markActive = (chip: HTMLElement) =>
       chip.parentElement
